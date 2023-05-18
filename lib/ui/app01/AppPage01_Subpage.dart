@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:actthemoon/model/themoon/Da035List_model.dart';
+import 'package:actthemoon/model/kosep/Da035List_model.dart';
+import 'package:actthemoon/model/themoon/padlist_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,17 +12,44 @@ import 'package:intl/intl.dart';
 import 'package:pointmobile_scanner/pointmobile_scanner.dart';
 import '../../config/constant.dart';
 import '../../config/global_style.dart';
+import '../../model/themoon/storelist_model.dart';
+import '../home/tab_home.dart';
 import 'AppPage01.dart';
 
 class AppPage01_Subpage extends StatefulWidget {
-  final Da035List_model da035Data;
-  const AppPage01_Subpage({Key? key, required this.da035Data}) : super(key: key);
+  final padlist_model padlistmodel;
+  final String date;
+  const AppPage01_Subpage({Key? key, required this.padlistmodel, required this.date}) : super(key: key);
 
   @override
   State<AppPage01_Subpage> createState() => _AppPage01_SubpageState();
 }
 
 class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
+
+
+
+  String resultsum = "";
+  List<String> resultset = [];
+  List<String> resultset2 = [];
+  List<String> resultset3 = [];
+  List<String> resultset4 = [];
+  List<String> resultset5 = [];
+  List<String> resultset6 = [];
+
+
+
+
+  TextEditingController _etDate = TextEditingController();
+  TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
+  DateTime _selectedDate = DateTime.now(), initialDate = DateTime.now();
+  List<storelist_model> storelists = storelist;
+
+  List<TextEditingController> textControllers = List.generate(storelist.length, (index) => TextEditingController());
+
+
+
+
 
   String arrBarcode = "";
   final List<String> arrBarcodeText = <String>[];
@@ -29,48 +58,24 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
   String _userid = '';
   String _username = '';
   int _totqty = 0;
-  String _uamt = '';
-  String _lsEtGrade = '';
-  String _lsEtWidth = '';
-  String _lsEtThick = '';
-  String _lsEtColor = '';
-  String _lsDeldate = '';
-  String _lsDelnum = '';
-  String _lsDelseq = '';
-  String _lsDelcltcd = '';
-  String _lsDelpcode = '';
-  String _lsDeldatetext = '';
+  String checkvalue = 'true';
   String _perid = '';
-  String _lsItemcd = '';
   String? _decodeResult = "Unknown";
-  TextEditingController _etCltnm = TextEditingController();
-  TextEditingController _etPname = TextEditingController();
-  TextEditingController _etColor = TextEditingController();
-  TextEditingController _etThick = TextEditingController();
-  TextEditingController _etWidth = TextEditingController();
-  TextEditingController _etGrade = TextEditingController();
-  TextEditingController _etQty = TextEditingController();
-  TextEditingController _etBarcode = TextEditingController();
 
+  
   @override
   void initState() {
     sessionData();
     super.initState();
+    _initalizeState();
     setData();
-    arrBarcode = "";
-    arrBarcodeText.clear();
-    PointmobileScanner.channel.setMethodCallHandler(_onBarcodeScannerHandler);
-    PointmobileScanner.initScanner();
-    PointmobileScanner.enableScanner();
-    PointmobileScanner.enableBeep();
-    PointmobileScanner.enableSymbology(PointmobileScanner.SYM_CODE128);
-    PointmobileScanner.enableSymbology(PointmobileScanner.SYM_EAN13);
-    PointmobileScanner.enableSymbology(PointmobileScanner.SYM_QR);
-    PointmobileScanner.enableSymbology(PointmobileScanner.SYM_UPCA);
+    resultsum = storelists.where((item) => item.isChecked).map((item) => item.cltnm).join('|');
 
-    setState(() {
-      _decodeResult = "Ready to decode";
-    });
+
+  }
+
+  Future<void> _initalizeState() async {
+    await PDAlist_getdata2();
   }
 
   String getToday(){
@@ -83,89 +88,169 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
     _dbnm     = (await SessionManager().get("dbnm")).toString();
     _userid   = (await SessionManager().get("userid")).toString();
     _username = (await SessionManager().get("username")).toString();
-    _perid    = (await SessionManager().get("perid")).toString();
-    // print(_perid);
+    _perid    = (await SessionManager().get("perid")).toString().replaceAll("p", "");
+     print(_perid);
   }
 
 
   @override
   void setData(){
-    _totqty =  int.parse(widget.da035Data.qty);
-    _uamt =  widget.da035Data.uamt;
-    _etCltnm = TextEditingController(text: widget.da035Data.cltnm + '(수량: ' + widget.da035Data.qty + ')'   );
-    _etPname = TextEditingController(text: widget.da035Data.pname);
-    _etGrade = TextEditingController(text:  widget.da035Data.grade);
-    _etColor = TextEditingController(text: widget.da035Data.color);
-    _etWidth = TextEditingController(text: widget.da035Data.width);
-    _etThick = TextEditingController(text: widget.da035Data.thick);
-    _etQty = TextEditingController(text: widget.da035Data.qty);
-    _lsEtGrade = widget.da035Data.grade;
-    _lsEtWidth = widget.da035Data.width;
-    _lsEtThick = widget.da035Data.thick;
-    _lsEtColor = widget.da035Data.color;
-    _lsDeldate = widget.da035Data.fdeldate;
-    _lsDelnum = widget.da035Data.fdelnum;
-    _lsDelseq = widget.da035Data.fdelseq;
-    _lsDelcltcd = widget.da035Data.cltcd;
-    _lsDelpcode = widget.da035Data.pcode;
-    _lsDeldatetext = widget.da035Data.fdeldatetext;
+
+    _etDate = TextEditingController(text: widget.date);
+  }
+
+
+  @override
+  void dispose(){
+
+    storelist.clear();
+    super.dispose();
+  }
+
+  Future PDAlist_getdata2() async {
+    String _dbnm = await SessionManager().get("dbnm");
+
+    var uritxt = CLOUD_URL + "/themoon/list02";
+    var encoded = Uri.encodeFull(uritxt);
+
+    Uri uri = Uri.parse(encoded);
+    final response = await http.post(
+      uri,
+      headers: <String, String>{
+        'Content-Type' : 'application/x-www-form-urlencoded',
+        'Accept' : 'application/json'
+      },
+      body: <String, String> {
+        'dbnm': "ERP_THEMOON",
+        'wendt': _etDate.text,
+        'pcode': widget.padlistmodel.phm_pcod,
+      },
+    );
+    if(response.statusCode == 200){
+      List<dynamic> alllist = [];
+      alllist = jsonDecode(utf8.decode(response.bodyBytes));
+      storelist.clear();
+
+      for(int i=0; i< alllist.length; i++){
+        storelist_model emObject = storelist_model(
+          cltnm : alllist[i]["cltnm"],
+          pname: alllist[i]["pname"],
+          psize: alllist[i]["psize"],
+          wfokqt: alllist[i]["wfokqt"],
+          plan_no: alllist[i]["plan_no"],
+          wono: alllist[i]["wono"],
+          lotno: alllist[i]["lotno"],
+          pcode: alllist[i]["pcode"],
+          isChecked: true,
+          textEditingController: TextEditingController(text: alllist[i]["wfokqt"]),
+
+
+
+        );
+
+        /*Set<String> cltnm = Set();*/
+
+
+
+          resultset.add(alllist[i]["wfokqt"]);
+          resultset2.add(alllist[i]["plan_no"]);
+          resultset3.add(alllist[i]["wono"]);
+          resultset4.add(alllist[i]["pcode"]);
+          resultset5.add(alllist[i]["lotno"]);
+
+        setState(() {
+          storelists.add(emObject);
+        });
+
+      }
+      print("서버통신 성공");
+      print(alllist);
+      return storelists;
+    }else{
+      throw Exception('불러오는데 실패했습니다.');
+    }
   }
 
 
 
-  Future da006list_getdata() async {
-    String _dbnm = await  SessionManager().get("dbnm");
-
-    var uritxt = CLOUD_URL + '/kosep/list02';
+  @override
+  Future<bool> save_fplandata()async {
+    _dbnm = await  SessionManager().get("dbnm");
+    var uritxt = CLOUD_URL + '/themoon/Update_TB_FPLAN';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
-    // print(arrBarcode);
-    // print("_lsEtGrade=>" + _lsEtGrade);
-    // print("_lsEtThick=>" + _lsEtThick);
-    //  arrBarcode = 'R1022204247|R1022204248';
+    print("----------------------------");
+
     final response = await http.post(
       uri,
+      headers: <String, String> {
+        'Content-Type': 'application/json',
+        'Accept' : 'application/json'
+      },
+      body: json.encode({
+        'dbnm': _dbnm,
+        'close_perid': _perid,
+        'wokqtList' : resultset,
+        'planNoList': resultset2,
+        'wonolist' : resultset3,
+        'close_date': widget.date,
+        'lotnoList' : resultset5,
+        'pcodeList' : resultset4,
+        'end_qty'   : resultset6
+
+      }));
+    if(response.statusCode == 200){
+      print("저장됨");
+      return   true;
+    }else{
+      //만약 응답이 ok가 아니면 에러를 던집니다.
+      throw Exception('고장부위 불러오는데 실패했습니다');
+      return   false;
+    }
+  }
+
+  Future log_history_h2() async {
+
+    String ipAddress = '';
+    for (var interface in await NetworkInterface.list()) {
+      for (var address in interface.addresses) {
+        ipAddress = address.address;
+      }
+    }
+
+    String _username = '';
+    String username = (await SessionManager().get("username")).toString().replaceAll("p", "");
+    _username = utf8.decode(username.runes.toList());
+
+
+    var uritxt = CLOUD_URL + '/themoon/loginlog_h';
+    var encoded = Uri.encodeFull(uritxt);
+
+    Uri uri = Uri.parse(encoded);
+    final response = await http.post(
+        uri,
       headers: <String, String> {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm': _dbnm,
-        'itemcd': arrBarcode,
-        'pcode': _lsDelpcode,
-        'cltcd': _lsDelcltcd,
-        'fdeldate': _lsDeldate,
-        'fdelnum': _lsDelnum,
-        'fdelseq': _lsDelseq,
-        'grade': _lsEtGrade,
-        'width': _lsEtWidth,
-        'thick': _lsEtThick,
-        'color': _lsEtColor,
-        'qty'  : _totqty.toString(),
-        'uamt'  : _uamt.toString(),
-        'perid': _perid
+          'userid' : _perid,
+          'ipaddr' : ipAddress,
+          'usernm' : _username,
+          'winnm'  : '입고등록',
+          'winid'  : '입고등록',
+          'buton'  : '030'
       },
     );
     if(response.statusCode == 200){
-      try{
-        // var result =  jsonDecode(utf8.decode(response.bodyBytes))  ;
-        var result =  utf8.decode(response.bodyBytes);
-        if (result == "SUCCESS"){
-          showAlertDialog(context, "등록되었습니다.");
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage01()));
-        }else{
-          showAlertDialog(context, result + " : 관리자에게 문의하세요");
-        }
-        return ;
-      }catch(e){
-        // print(e.toString());
-        showAlertDialog(context, e.toString() + " : 관리자에게 문의하세요");
-      }
+      return true;
     }else{
-      //만약 응답이 ok가 아니면 에러를 던집니다.
-      throw Exception('불러오는데 실패했습니다');
+      print("통신에러");
     }
   }
+
+
+
 
 
 
@@ -175,262 +260,262 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
       appBar: AppBar(
         iconTheme: IconThemeData(
           color: GlobalStyle.appBarIconThemeColor,
-
         ),
         elevation: GlobalStyle.appBarElevation,
-        title: Text('출고등록 상세',
+        title: Text('입고등록 상세' + '(' + widget.padlistmodel.Count.toString() + '개' + ')',
           style: GlobalStyle.appBarTitle,
         ),
         backgroundColor: GlobalStyle.appBarBackgroundColor,
         systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
-        actions: <Widget>[
-          PopupMenuButton(
-            icon: Icon(Icons.more_vert),
-            onSelected: (value) {
-              if (value == 1) _onExit();
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-              const PopupMenuItem(child: Text('Exit'), value: 1),
-            ],
-          ),
-
-        ],
       ),
 
         body:
-        ListView(
-          padding: EdgeInsets.all(16),
-          children: [
-            TextField(
-              controller: _etCltnm,
-              readOnly: true,
-              decoration: InputDecoration(
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                      BorderSide(color: PRIMARY_COLOR, width: 2.0)),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFCCCCCC)),
-                  ),
-                  labelText: '거래처 :',
-                  labelStyle:
-                  TextStyle(color: BLACK_GREY)),
-            ),
-            // SizedBox(
-            //   height: 10,
-            // ),
-            TextField(
-              controller: _etPname,
-              readOnly: true,
-              decoration: InputDecoration(
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                      BorderSide(color: PRIMARY_COLOR, width: 2.0)),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFCCCCCC)),
-                  ),
-                  labelText: '품목 :',
-                  labelStyle:
-                  TextStyle(color: BLACK_GREY)),
-            ),
-            TextField(
-              controller: _etGrade,
-              readOnly: true,
-              decoration: InputDecoration(
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                      BorderSide(color: PRIMARY_COLOR, width: 2.0)),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFCCCCCC)),
-                  ),
-                  labelText: '제품 :',
-                  labelStyle:
-                  TextStyle(color: BLACK_GREY)),
-            ),
-            TextField(
-              controller: _etThick,
-              readOnly: true,
-              decoration: InputDecoration(
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                      BorderSide(color: PRIMARY_COLOR, width: 2.0)),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFCCCCCC)),
-                  ),
-                  labelText: '두께 :',
-                  labelStyle:
-                  TextStyle(color: BLACK_GREY)),
-            ),
-            TextField(
-              controller: _etWidth,
-              readOnly: true,
-              decoration: InputDecoration(
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                      BorderSide(color: PRIMARY_COLOR, width: 2.0)),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFCCCCCC)),
-                  ),
-                  labelText: '폭 :',
-                  labelStyle:
-                  TextStyle(color: BLACK_GREY)),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            TextField(
-              controller: _etColor,
-              readOnly: true,
-              decoration: InputDecoration(
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                      BorderSide(color: PRIMARY_COLOR, width: 2.0)),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFCCCCCC)),
-                  ),
-                  labelText: '색상 :',
-                  labelStyle:
-                  TextStyle(color: BLACK_GREY)),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              width: 100,
-              child: TextField(
-                controller: _etBarcode,
-                readOnly: true,
-                maxLines: 3,
-                autofocus: true,
-                onTap: (){
-                  print(arrBarcode);
-                  if(arrBarcode.length > 0){
-                    showAlertDialog_Clear(context);
-                  }
-                },
-                decoration: InputDecoration(
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide:
-                        BorderSide(color: PRIMARY_COLOR, width: 2.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFCCCCCC)),
+        WillPopScope(
+            onWillPop: (){
+              Navigator.pop(context);
+              return Future.value(true);
+            },
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _etDate,
+                      readOnly: true,
+                      onTap: () {
+                        _selectDateWithMinMaxDate(context);
+                        print(_etDate.text);
+                      },
+                      maxLines: 1,
+                      cursorColor: Colors.grey[600],
+                      style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding:  EdgeInsets.all(10),
+                        suffixIcon: Icon(Icons.date_range, color: Colors.indigo),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey[600]!),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey[600]!),
+                        ),
+                        labelText: '입고예정일',
+                        labelStyle: TextStyle(color: BLACK_GREY),
+                      ),
                     ),
-                    hintText: "여기를 누르시면 리셋됩니다.",
-                    hintStyle: TextStyle(
-                      color: Colors.redAccent,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    labelText: 'LOTNO :',
-                    labelStyle:
-                    TextStyle(color: Colors.redAccent)),
+                  ),
+                ],
               ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.178,
-              margin: EdgeInsets.only(bottom: 10),
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: Colors.black45),
-                  onPressed: (){
-                    setState(() {
-                      if(arrBarcodeText.length == 0){
-                        showAlertDialog(context, "등록할 lotno를 스캔하세요.");
-                        return;
-                      }
-                      showAlertDialog_chulgoSave(context);
-                    });
-              }, child: Text('출고등록')),
-            )
+             /* Container(
+                height: MediaQuery.of(context).size.height * 0.56,
+                child: WillPopScope(
+                    child: ListView.builder(
+                      itemCount: storelist.length,
+                      padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      physics: AlwaysScrollableScrollPhysics(),
+                      itemBuilder: (BuildContext context, int index) {
+                        return _buildListCard(storelist[index]);
+                      },
+                    ),
+                    onWillPop: (){
+                      Navigator.pop(context);
+                      return Future.value(true);
+                    }),
+              ),*/
+              Expanded(child: ListView.builder(itemCount: storelist.length,
+                padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                physics: AlwaysScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index){
+                  return _buildListCard(storelist[index]);
+                },
+              )),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                width: double.infinity,
+                child: TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) => SOFT_BLUE,
+                      ),
+                      overlayColor: MaterialStateProperty.all(Colors.transparent),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3.0),
+                        ),
+                      ),
+                    ),
+                    onPressed: () async
+                    {
+                        print(storelists.toString());
+                        print(resultset);
+                        print(resultset2);
+                        print(resultset3);
+                        print(resultset4);
+                        print(resultset5);
 
-            // ListView.builder(
-            //     padding: const EdgeInsets.all(8.0),
-            //     itemCount: arrBarcode.length,
-            //     itemBuilder: (BuildContext context2 , int icnt){
-            //       return Container(
-            //         height: 50,
-            //         color: Colors.amber[colorCodes[icnt]],
-            //         child: Center(child: Text('LotNo ${arrBarcode[icnt]}')),
-            //       );
-            //     })
-          ],
+
+                        showDialog(context: context, builder: (context){
+                          return AlertDialog(
+                            content: Text('입고등록 하시겠습니까?'),
+                            actions: <Widget>[
+                              TextButton(onPressed: (){
+
+                                for(var item in storelist){
+                                  if(item.isChecked){
+                                    for(int i=0; i<storelist.length; i++){
+                                      String? value = storelist[i].textEditingController?.text;
+                                      resultset6.add(value ?? '');
+                                    }
+                                  }
+                                }
+
+                                save_fplandata();
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+                              }, child: Text('OK'))
+                            ],
+                          );
+                        });
+                        //save_fplandata();
+
+                    }, child: Padding(padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Text('입고등록',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white
+                ),
+                  textAlign: TextAlign.center,
+                ),)),
+              )
+            ],
+          ),
         ),
     );
 
   }
 
-  Future<void> _onBarcodeScannerHandler(MethodCall call) async {
-    try {
-      if (call.method == PointmobileScanner.ON_DECODE) {
-        _onDecode(call);
-      } else if (call.method == PointmobileScanner.ON_ERROR) {
-        _onError(call.arguments);
-      } else {
-        print(call.arguments);
-      }
-    } catch(e) {
-      print(e);
-    }
+
+  Widget _buildListCard(storelist_model storelist){
+
+    //storelist.textEditingController = TextEditingController();
+
+    return Card(
+      margin: EdgeInsets.only(top: 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+
+      ),
+      elevation: 2,
+      color: Colors.white,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: (){
+
+        },
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: (){
+
+          },
+          child: Container(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('업체명: ' + storelist.cltnm, style: GlobalStyle.couponName),
+                Text('품목명: ' + storelist.pname, style: GlobalStyle.couponName),
+                SizedBox(height: 12),
+                Row(
+                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        GlobalStyle.iconTime,
+                        SizedBox(
+                          width: 4,
+                        ),
+                        Text('규격: ' + storelist.psize, style: GlobalStyle.couponName)
+                      ],
+                    ),
+                    GestureDetector(
+                      onTap: (){
+
+                      },
+                      child: Text('완료수량: ' + storelist.wfokqt, style: TextStyle(
+                        fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
+                      )),
+                    ),
+                    Checkbox(
+                        value: storelist.isChecked,
+                        onChanged: (bool? value){
+                      setState(() {
+                        storelist.isChecked = value ?? true;
+
+                        if(storelist.isChecked) {
+                          resultset.add(storelist.wfokqt);
+                          resultset2.add(storelist.plan_no);
+                          resultset3.add(storelist.wono);
+                          resultset4.add(storelist.pcode);
+                          resultset5.add(storelist.lotno);
+                          resultsum += storelist.wfokqt + "|";
+
+                        }else{
+                          resultset.remove(storelist.wfokqt);
+                          resultset2.remove(storelist.plan_no);
+                          resultset3.remove(storelist.wono);
+                          resultset4.remove(storelist.pcode);
+                          resultset5.remove(storelist.lotno);
+
+                          resultsum = resultsum.replaceAll(storelist.wfokqt, "");
+
+                        }
+                        checkvalue = storelist.isChecked ? 'Y' : '';
+                        print('값 확인 ::: ' + checkvalue.toString());
+                        print(resultset);
+                        print(resultset2);
+                        print(resultset3);
+
+                      });
+                    })
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text("수량 : ", style: TextStyle(
+                      fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
+                    )),
+                    Container(
+                      width: 120,
+                      height: 30,
+                      child: TextField(
+                        maxLength: 9,
+                        controller: storelist.textEditingController,
+                        cursorColor: Colors.grey[600],
+                        style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          counterText: '',
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
-  void _onDecode(MethodCall call) {
-    setState(() {
-      final List lDecodeResult = call.arguments;
-      _decodeResult = "Symbology: ${lDecodeResult[0]}\nValue: ${lDecodeResult[1]}";
-      _lsItemcd = lDecodeResult[1];
-    });
-    if(_lsItemcd == 'READ_FAIL'){
-      showAlertDialog(context, "바코드 스캔을 실패했습니다.");
-    }else{
-
-      for(var code in arrBarcodeText){
-        if(code == _lsItemcd){
-          showAlertDialog(context, "동일한 코드가 스캔되었습니다.");
-          return ;
-        }
-      }
-
-      setState(() {
-        arrBarcodeText.add(_lsItemcd);
-      });
-      // print(arrBarcodeText);
-      if(arrBarcodeText.length > _totqty){
-        showAlertDialog(context, "출고수량을 초과했습니다.");
-        return;
-      }
-      String ls_arrcode = "";
-      arrBarcode = "";
-      for(var code in arrBarcodeText){
-        if(ls_arrcode.length > 0){
-          ls_arrcode = ls_arrcode + " * " + code;
-        }else{
-          ls_arrcode =  code;
-        }
-      }
-      for(var code in arrBarcodeText){
-        if(arrBarcode.length > 0){
-          arrBarcode = arrBarcode + "|" + code;
-        }else{
-          arrBarcode =  code;
-        }
-      }
-      _etBarcode = TextEditingController(text: ls_arrcode);
-      // showAlertDialog_chulgoSave(context, _lsItemcd);
-    }
-  }
-
-  void _onExit() {
-    PointmobileScanner.disableScanner();
-    // SystemNavigator.pop();
-  }
-
-  void _onError(Exception error) {
-    setState(() {
-      _decodeResult = error.toString();
-    });
-    print("_onError : " );
-    print(_decodeResult );
-  }
 
 
-  void showAlertDialog_chulgoSave(BuildContext context) async {
+
+/*  void showAlertDialog_chulgoSave(BuildContext context) async {
     String result = await showDialog(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -469,7 +554,7 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
         );
       },
     );
-  }
+  }*/
 
   void showAlertDialog_Clear(BuildContext context) async {
     String result = await showDialog(
@@ -486,7 +571,7 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
                   setState(() {
                     arrBarcode = "";
                     arrBarcodeText.clear();
-                    _etBarcode =TextEditingController(text: "");
+
                   });
                   Navigator.pop(context, "닫기");
               },
@@ -510,7 +595,7 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('ACTAS 출고등록'),
+          title: Text('ACTAS 입고등록'),
           content: Text(as_msg),
           actions: <Widget>[
             TextButton(
@@ -524,4 +609,35 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
       },
     );
   }
+
+  Future<Null> _selectDateWithMinMaxDate(BuildContext context) async {
+    var firstDate = DateTime(initialDate.year, initialDate.month - 3, initialDate.day);
+    var lastDate = DateTime(initialDate.year, initialDate.month, initialDate.day + 7);
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            primaryColor: Colors.indigo,
+            colorScheme: ColorScheme.light(primary: Colors.indigo, secondary: Colors.indigo),
+            buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+
+        _etDate = TextEditingController(
+            text: _selectedDate.toLocal().toString().split('-')[0]+_selectedDate.toLocal().toString().split('-')[1]+_selectedDate.toLocal().toString().split('-')[2].substring(0,2));
+      });
+    }
+  }
+
+
 }

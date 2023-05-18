@@ -75,14 +75,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               )
           ),
           BottomNavigationBarItem(
-              label: '출고등록',
+              label: '입고등록',
               icon: Icon(
                   Icons.favorite,
                   color: _currentIndex == 1 ? ASSENT_COLOR : CHARCOAL
               )
           ),
           BottomNavigationBarItem(
-              label: '출고현황',
+              label: '입고현황',
               icon: Icon(
                   Icons.perm_contact_cal,
                   color: _currentIndex == 2 ? PRIMARY_COLOR : CHARCOAL

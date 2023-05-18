@@ -58,10 +58,10 @@ class _Home1PageState extends State<TabHomePage> {
     _bannerData.add(BannerSliderModel(id: 4, image: HYUNDAI_URL + '/product_gallery/THE EL_2(1).jpg'));
     _bannerData.add(BannerSliderModel(id: 5, image: HYUNDAI_URL + '/product_characteristic/특징_02(0).jpg'));
 
-    _categoryData.add(CategoryModel(id: 1, name: '출 고 등 록', image: GLOBAL_URL+'/menu/store.png', color:0xD3D3D3));
-    _categoryData.add(CategoryModel(id: 2, name: '출 고 현 황(LOT)', image: GLOBAL_URL+'/menu/products.png', color:0xD3D3D3));
+    _categoryData.add(CategoryModel(id: 1, name: '입 고 등 록', image: GLOBAL_URL+'/menu/store.png', color:0xD3D3D3));
+    _categoryData.add(CategoryModel(id: 2, name: '입 고 현 황', image: GLOBAL_URL+'/menu/products.png', color:0xD3D3D3));
     // _categoryData.add(CategoryModel(id: 3, name: '출 고 현 황', image: GLOBAL_URL+'/menu/buy_online.png', color:0xD3D3D3));
-    _categoryData.add(CategoryModel(id: 4, name: '사 용 자 정 보', image: GLOBAL_URL+'/menu/apply_credit.png', color:0xD3D3D3));
+    _categoryData.add(CategoryModel(id: 4, name: '재 고 실 사', image: GLOBAL_URL+'/menu/apply_credit.png', color:0xD3D3D3));
 
 
 
@@ -255,17 +255,17 @@ bottomNavigationBar: SizedBox.shrink(),
                 // Fluttertoast.showToast(msg: 'Click '+_categoryData[index].name.replaceAll('\n', ' '), toastLength: Toast.LENGTH_SHORT);
                 String ls_name = _categoryData[index].name.replaceAll('\n', ' ');
                 switch (ls_name){
-                  case '출 고 등 록' :
+                  case '입 고 등 록' :
                      Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage01()));
                     break;
-                  case '출 고 현 황(LOT)' :
+                  case '입 고 현 황' :
                     Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage02()));
                     break;
                   // case '출 고 현 황' :
                   //   Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage03()));
                   //   break;
-                  case '사 용 자 정 보' :
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => TabAccountPage()));
+                  case '재 고 실 사' :
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage03()));
                     break;
                   default:
                     break;

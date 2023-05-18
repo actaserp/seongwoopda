@@ -1,8 +1,12 @@
 
 import 'dart:convert';
-
+import 'dart:async';
+import 'dart:io';
+import 'package:actthemoon/model/themoon/padlist_model.dart';
+import 'package:flutter/services.dart';
+import 'package:pointmobile_scanner/pointmobile_scanner.dart';
 import 'package:actthemoon/ui/app01/AppPage01_Subpage.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +14,7 @@ import 'package:http/http.dart' as http;
 
 import '../../config/constant.dart';
 import '../../config/global_style.dart';
-import '../../model/themoon/Da035List_model.dart';
+import '../../model/kosep/Da035List_model.dart';
 
 class AppPage01 extends StatefulWidget {
   const AppPage01({Key? key}) : super(key: key);
@@ -21,27 +25,52 @@ class AppPage01 extends StatefulWidget {
 
 class _AppPage01State extends State<AppPage01>   {
 
+  String? _decodeResult = "Unknown";
+  int _decodeCount = 0;
+  List<String> _decodeResults = [];
+  List<String> _decodePda = [];
+  String result  = '';
+  String resultset = '';
+
   TextEditingController _etDate = TextEditingController();
   TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
   DateTime _selectedDate = DateTime.now(), initialDate = DateTime.now();
-  List<Da035List_model> da035Datas = da035Data;
+  List<padlist_model> padlist = padlists;
   String _dbnm = '';
   String _userid = '';
   String _username = '';
   String _perid = '';
+  String _custcd = "";
+
 
 
   @override
   void initState() {
     sessionData();
+
     super.initState();
     _etDate.text = getToday();
+
+    PointmobileScanner.channel.setMethodCallHandler(_onBarcodeScannerHandler);
+    PointmobileScanner.initScanner();
+    PointmobileScanner.enableScanner();
+    PointmobileScanner.enableBeep();
+    PointmobileScanner.enableSymbology(PointmobileScanner.SYM_CODE128);
+    PointmobileScanner.enableSymbology(PointmobileScanner.SYM_EAN13);
+    PointmobileScanner.enableSymbology(PointmobileScanner.SYM_QR);
+    PointmobileScanner.enableSymbology(PointmobileScanner.SYM_UPCA);
+
+    setState(() {
+      _decodeResult = "Read to decode";
+      _decodeCount = 0;
+    });
   }
 
   @override
   void dispose() {
     _etDate.dispose();
     da035Data.clear();
+    padlists.clear();
     super.dispose();
   }
 
@@ -51,19 +80,70 @@ class _AppPage01State extends State<AppPage01>   {
     String formattedDate = formatter.format(now);
     return formattedDate;
   }
-  Future<void> sessionData() async{
+  Future<void> sessionData() async {
     _dbnm     = (await SessionManager().get("dbnm")).toString();
     _userid   = (await SessionManager().get("userid")).toString();
     _username = (await SessionManager().get("username")).toString();
     _perid    = (await SessionManager().get("perid")).toString();
-    print(_perid);
+    _custcd = (await SessionManager().get("custcd")).toString();
+
+    await log_history_h();
+
+
+
+
   }
 
 
-  Future da035list_getdata() async {
+  Future log_history_h() async {
+
+    String ipAddress = '';
+    for (var interface in await NetworkInterface.list()) {
+      for (var address in interface.addresses){
+        ipAddress = address.address;
+      }
+    }
+
+
+    String _username  = '';
+    String username = (await SessionManager().get("username")).toString();
+    _username = utf8.decode(username.runes.toList());
+
+    var uritxt = CLOUD_URL + '/themoon/loginlog_h';
+    var encoded = Uri.encodeFull(uritxt);
+
+    Uri uri = Uri.parse(encoded);
+    final response = await http.post(
+        uri,
+      headers: <String, String> {
+
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept' : 'application/json'
+      },
+      body: <String, String> {
+          'userid' : _perid,
+          'ipaddr' : ipAddress,
+          'usernm' : _username,
+          'winnm'  : '입고등록',
+          'winid'  : '입고등록',
+          'buton'  : '020'
+        },
+    );
+    if(response.statusCode == 200){
+      return true;
+    }else{
+      print("통신에러");
+    }
+
+  }
+
+
+
+
+  Future PDAlist_getdata(String? decodeResult, int arg) async {
     String _dbnm = await  SessionManager().get("dbnm");
 
-    var uritxt = CLOUD_URL + '/kosep/list01';
+    var uritxt = CLOUD_URL + '/themoon/list01';
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);
@@ -74,42 +154,57 @@ class _AppPage01State extends State<AppPage01>   {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm': _dbnm,
-        'todate': _etDate.text
+        'dbnm': "ERP_THEMOON",
+        'code88': decodeResult ?? '',
       },
     );
     if(response.statusCode == 200){
       List<dynamic> alllist = [];
       alllist =  jsonDecode(utf8.decode(response.bodyBytes))  ;
-      da035Data.clear();
+      /*padlists.clear();
+      */
+
+
       for (int i = 0; i < alllist.length; i++) {
-        Da035List_model emObject= Da035List_model(
-            custcd:alllist[i]['custcd'],
-            spjangcd:alllist[i]['spjangcd'],
-            fdeldate:alllist[i]['fdeldate'],
-            fdeldatetext:alllist[i]['fdeldatetext'],
-            fdelnum:alllist[i]['fdelnum'],
-            fdelseq:alllist[i]['fdelseq'],
-            cltcd:alllist[i]['cltcd'],
-            cltnm:alllist[i]['cltnm'],
-            pcode:alllist[i]['pcode'],
-            pname:alllist[i]['pname'],
-            width:alllist[i]['width'],
-            thick:alllist[i]['thick'],
-            color:alllist[i]['color'],
-            deldate:alllist[i]['deldate'],
-            delnum:alllist[i]['delnum'],
-            delseq:alllist[i]['delseq'],
-            grade:alllist[i]['grade'],
-            qty:alllist[i]['qty'],
-            uamt:alllist[i]['uamt']
+        padlist_model emObject= padlist_model(
+            phm_pcod: alllist[i]["phm_pcod"],
+            phm_pnam: alllist[i]["phm_pnam"],
+            phm_size: alllist[i]["phm_size"],
+            phm_unit: alllist[i]["phm_unit"],
+            Count:  arg,
+            code88: alllist[i]["code88"]
         );
+
+        String prefixToRemove = emObject.phm_pcod;
+        print(prefixToRemove);
+
+        bool isFirstMatched = true;
+        padlists.removeWhere((element) {
+          if (element.startsWith(prefixToRemove)) {
+
+              // 두번째 이후로 매칭된 요소는 제거한다.
+              return true;
+
+          }
+          return false;
+        });
+
+        /*if(padlists.contains(emObject.phm_pcod)){
+          setState(() {
+              padlists.
+          });
+        }*/
+
         setState(() {
-          da035Data.add(emObject);
+          padlists.add(emObject);
+          /*_decodePda.add(emObject.phm_pcod);
+          */
         });
 
       }
-      return da035Data;
+      print("서버통신 성공");
+
+      return padlists;
     }else{
       //만약 응답이 ok가 아니면 에러를 던집니다.
       throw Exception('불러오는데 실패했습니다');
@@ -127,7 +222,7 @@ class _AppPage01State extends State<AppPage01>   {
         ),
         elevation: GlobalStyle.appBarElevation,
         title: Text(
-          '출고등록',
+          '입고등록',
           style: GlobalStyle.appBarTitle,
         ),
         backgroundColor: GlobalStyle.appBarBackgroundColor,
@@ -164,7 +259,7 @@ class _AppPage01State extends State<AppPage01>   {
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.grey[600]!),
                       ),
-                      labelText: '출고예정일',
+                      labelText: '입고예정일',
                       labelStyle: TextStyle(color: BLACK_GREY),
                     ),
                   ),
@@ -172,14 +267,14 @@ class _AppPage01State extends State<AppPage01>   {
                 TextButton(
                   onPressed: () {
                     setState(() {
-                      _etDate.text  ;
+                      _etDate.text;
                     });
                     String ls_etdate = _etDate.text  ;
                     if(ls_etdate.length == 0){
                       print("일자를 입력하세요");
                       return;
                     }
-                    da035list_getdata();
+                    /*da035list_getdata();*/
                     print(_etDate.text );
                   },
                   child: Text(
@@ -205,26 +300,110 @@ class _AppPage01State extends State<AppPage01>   {
                 ),
               ),
             ),
-            Expanded(child: ListView.builder(itemCount: da035Datas.length,
+            Container(
+              child: Text('$_decodeResult\n'),
+            ),
+            Container(
+              child: Text('$_decodeCount\n'),
+            ),
+            Expanded(child: ListView.builder(itemCount: /*da035Datas.length*/   /*_decodeResults.length*/ padlists.length,
               padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
               physics: AlwaysScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index){
-                return _buildListCard(da035Datas[index]);
+                return _buildListCard(/*da035Datas[index]*/ padlists[index]);
               },
             ))
           ],
         ),
 
       ),
-
-
     );
 
   }
 
+  Future<void> _onBarcodeScannerHandler(MethodCall call) async {
+    try{
+      if(call.method == PointmobileScanner.ON_DECODE) {
+        setState(() {
+          final List lDecodeResult = call.arguments;
+           result = lDecodeResult[1];
+
+        });
+
+        int count = 0;
+
+        _decodeResults.add(result);
+
+        for(String value in _decodeResults){
+          if(value == result){
+            count ++;
+          }
+        }
 
 
-  Widget _buildListCard(Da035List_model da035Data){
+        await PDAlist_getdata(result,count);
+        print(count);
+        print("수량체크");
+        _onDecode(call);
+        print(padlists.toString());
+
+
+
+      } else if (call.method == PointmobileScanner.ON_ERROR){
+        _onError(call.arguments);
+      } else {
+        print(call.arguments);
+      }
+    } catch(e) {
+      print(e);
+    }
+  }
+
+
+
+  void _onDecode(MethodCall call) async{
+
+    setState(() {
+      final List lDecodeResult = call.arguments;
+      String result = "Symbology: ${lDecodeResult[0]}\nValue: ${lDecodeResult[1]}";
+
+      String result1 = "${lDecodeResult[1]}";
+
+      if(!_decodePda.contains(result1)){
+        _decodePda.add(result1);
+        print(_decodePda);
+        print("object");
+      }
+
+      if(!_decodeResults.contains(result)){
+        _decodeResults.add(result);
+      }
+
+      if(lDecodeResult.contains("READ_FAIL"))
+      {
+        _decodeCount;
+      }
+      else
+      {
+        _decodeCount++;
+      }
+      /*_decodeResult = "Symbology: ${lDecodeResult[0]}\nValue: ${lDecodeResult[1]}";
+      */
+      _decodeResult = "${lDecodeResult[1]}";
+    });
+
+
+  }
+
+  void _onError(Exception error){
+    setState(() {
+        _decodeResult = error.toString();
+    });
+  }
+
+
+
+  Widget _buildListCard(padlist_model padlistmodel /*String decodeResults*/){
     return Card(
         margin: EdgeInsets.only(top: 16),
         shape: RoundedRectangleBorder(
@@ -240,17 +419,19 @@ class _AppPage01State extends State<AppPage01>   {
           child: GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: (){
-              print(da035Data);
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage01_Subpage(da035Data: da035Data)));
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AppPage01_Subpage(padlistmodel : padlistmodel, date : _etDate.text)));
             },
             child: Container(
               padding: EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(da035Data.cltnm, style: GlobalStyle.couponName),
+                  /*Text(da035Data.cltnm, style: GlobalStyle.couponName),
                   Text(da035Data.grade, style: GlobalStyle.couponName),
-                  Text(da035Data.thick+' ['+da035Data.width+'] '+da035Data.color, style: GlobalStyle.couponName),
+                  Text(da035Data.thick+' ['+da035Data.width+'] '+da035Data.color, style: GlobalStyle.couponName),*/
+                  Text("품목명: " + padlistmodel.phm_pcod, style: GlobalStyle.couponName),
+                  Text("사이즈: " + padlistmodel.phm_size, style: GlobalStyle.couponName),
+                  Text("Code88: " + padlistmodel.code88, style: GlobalStyle.couponName),
                   SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -261,15 +442,15 @@ class _AppPage01State extends State<AppPage01>   {
                           SizedBox(
                             width: 4,
                           ),
-                          Text(da035Data.pname , style: GlobalStyle.couponName),
+                          Text(/*da035Data.pname*/"collapse" , style: GlobalStyle.couponName),
                         ],
                       ),
                       GestureDetector(
                         onTap: (){
-                          print(da035Data);
+
                           // Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage11Detail(da035Data: da035Data)));
                         },
-                        child: Text('수량 : ' + da035Data.qty, style: TextStyle(
+                        child: Text('수량 : ' + padlistmodel.Count.toString(), style: TextStyle(
                             fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
                         )),
                       ),

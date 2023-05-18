@@ -1,6 +1,8 @@
 
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:actthemoon/model/themoon/storelist_model.dart';
 import 'package:actthemoon/ui/app01/AppPage01_Subpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,8 @@ import 'package:http/http.dart' as http;
 
 import '../../config/constant.dart';
 import '../../config/global_style.dart';
-import '../../model/themoon/Da035List_model.dart';
+import '../../model/kosep/Da035List_model.dart';
+import '../home/tab_home.dart';
 
 class AppPage02 extends StatefulWidget {
   const AppPage02({Key? key}) : super(key: key);
@@ -24,11 +27,13 @@ class _AppPage02State extends State<AppPage02>   {
   TextEditingController _etDate = TextEditingController();
   TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
   DateTime _selectedDate = DateTime.now(), initialDate = DateTime.now();
-  List<Da035List_model> da035Datas = da035Data;
-  String _dbnm = '';
-  String _userid = '';
-  String _username = '';
+  List<storelist_model> storelistes = storelist;
+
+
   String _perid = '';
+  List<String> resultset = [];
+  String checkvalue = 'true';
+
 
 
   @override
@@ -36,14 +41,150 @@ class _AppPage02State extends State<AppPage02>   {
     sessionData();
     super.initState();
     _etDate.text = getToday();
+    //_initalizeState();
+
+  }
+
+
+  Future<void> _initalizeState() async {
+    await PDAlist_getdata3();
   }
 
   @override
   void dispose() {
     _etDate.dispose();
-    da035Data.clear();
+    storelist.clear();
     super.dispose();
   }
+
+
+  Future PDAlist_getdata3() async {
+
+    var uritxt = CLOUD_URL + "/themoon/list03";
+    var encoded = Uri.encodeFull(uritxt);
+    Uri uri = Uri.parse(encoded);
+
+    final response = await http.post(
+        uri,
+        headers: <String, String>{
+      'Content-Type' : 'application/x-www-form-urlencoded',
+      'Accept' : 'application/json'
+    },
+    body: <String, String> {
+          'dbnm' : "ERP_THEMOON",
+          'gs_today' : _etDate.text,
+    },
+
+    );
+    if(response.statusCode == 200){
+      List<dynamic> alllist = [];
+      alllist = jsonDecode(utf8.decode(response.bodyBytes));
+      storelist.clear();
+
+      for(int i=0; i< alllist.length; i++){
+        storelist_model emObject = storelist_model(
+          wendt: alllist[i]["wendt"],
+          wono: alllist[i]["wono"],
+          lotno: alllist[i]["lotno"],
+          plan_no: alllist[i]["plan_no"],
+          cltcd: alllist[i]["cltcd"],
+          cltnm: alllist[i]["cltnm"],
+          pcode: alllist[i]["pcode"],
+          pname: alllist[i]["pname"],
+          psize: alllist[i]["psize"],
+          punit: alllist[i]["punit"],
+          wotqt: alllist[i]["wotqt"],
+          isChecked: true,
+
+        );
+
+
+        resultset.add(alllist[i]["plan_no"]);
+
+        setState(() {
+          storelistes.add(emObject);
+        });
+
+      }
+      print("이게 왜 실행?");
+
+      return storelist;
+    }else{
+      throw Exception('불러오는데 실패했습니다.');
+    }
+  }
+
+
+  @override
+  Future<bool> update_fplandata()async {
+
+    var uritxt = CLOUD_URL + '/themoon/Update_cancel';
+    var encoded = Uri.encodeFull(uritxt);
+    Uri uri = Uri.parse(encoded);
+
+    final response = await http.post(
+        uri,
+        headers: <String, String> {
+          'Content-Type': 'application/json',
+          'Accept' : 'application/json'
+        },
+        body: json.encode({
+          'planNoList' : resultset,
+        }));
+    if(response.statusCode == 200){
+      print("저장됨");
+      return   true;
+    }else{
+      //만약 응답이 ok가 아니면 에러를 던집니다.
+      throw Exception('고장부위 불러오는데 실패했습니다');
+      return   false;
+    }
+  }
+
+  Future log_history_h() async {
+
+    String ipAddress = '';
+    for(var interface in await NetworkInterface.list()) {
+      for(var address in interface.addresses) {
+        ipAddress = address.address;
+      }
+    }
+
+    String _username = '';
+    String username = (await SessionManager().get("username")).toString();
+    _username = utf8.decode(username.runes.toList());
+
+    var uritxt = CLOUD_URL + '/themoon/loginlog_h';
+    var encoded = Uri.encodeFull(uritxt);
+
+    Uri uri = Uri.parse(encoded);
+    final response = await http.post(
+        uri,
+      headers: <String, String> {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept' : 'application/json'
+      },
+      body: <String, String> {
+          'userid' : _perid,
+          'ipaddr' : ipAddress,
+          'usernm' : _username,
+          'winnm'  : '입고현황',
+          'winid'  : '입고현황',
+          'buton'  : '010'
+      }
+    );
+    if(response.statusCode == 200){
+      return true;
+    }else{
+      print("object");
+    }
+
+
+  }
+
+
+
+
 
   String getToday(){
     var now = new DateTime.now();
@@ -52,115 +193,14 @@ class _AppPage02State extends State<AppPage02>   {
     return formattedDate;
   }
   Future<void> sessionData() async{
-    _dbnm     = (await SessionManager().get("dbnm")).toString();
-    _userid   = (await SessionManager().get("userid")).toString();
-    _username = (await SessionManager().get("username")).toString();
+    
     _perid    = (await SessionManager().get("perid")).toString();
+    await log_history_h();
     print(_perid);
   }
 
 
-  Future da035list_getdata() async {
-    String _dbnm = await  SessionManager().get("dbnm");
 
-    var uritxt = CLOUD_URL + '/kosep/list03';
-    var encoded = Uri.encodeFull(uritxt);
-
-    Uri uri = Uri.parse(encoded);
-    final response = await http.post(
-      uri,
-      headers: <String, String> {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept' : 'application/json'
-      },
-      body: <String, String> {
-        'dbnm': _dbnm,
-        'todate': _etDate.text
-      },
-    );
-    if(response.statusCode == 200){
-      List<dynamic> alllist = [];
-      alllist =  jsonDecode(utf8.decode(response.bodyBytes))  ;
-      da035Data.clear();
-      for (int i = 0; i < alllist.length; i++) {
-        Da035List_model emObject= Da035List_model(
-            custcd:alllist[i]['custcd'],
-            spjangcd:alllist[i]['spjangcd'],
-            fdeldate:alllist[i]['fdeldate'],
-            fdeldatetext:alllist[i]['fdeldatetext'],
-            fdelnum:alllist[i]['fdelnum'],
-            fdelseq:alllist[i]['fdelseq'],
-            cltcd:alllist[i]['cltcd'],
-            cltnm:alllist[i]['cltnm'],
-            pcode:alllist[i]['pcode'],
-            pname:alllist[i]['pname'],
-            width:alllist[i]['width'],
-            thick:alllist[i]['thick'],
-            color:alllist[i]['color'],
-            deldate:alllist[i]['deldate'],
-            delnum:alllist[i]['delnum'],
-            delseq:alllist[i]['delseq'],
-            grade:alllist[i]['grade'],
-            qty:alllist[i]['qty'],
-            lotno:alllist[i]['lotno']
-        );
-        setState(() {
-          da035Data.add(emObject);
-        });
-
-      }
-      return da035Data;
-    }else{
-      //만약 응답이 ok가 아니면 에러를 던집니다.
-      throw Exception('불러오는데 실패했습니다');
-    }
-  }
-
-  Future Del_getdata(argcode, arg1, arg2, arg3) async {
-    String _dbnm = await  SessionManager().get("dbnm");
-
-    var uritxt = CLOUD_URL + '/kosep/list03del';
-    var encoded = Uri.encodeFull(uritxt);
-    Uri uri = Uri.parse(encoded);
-    // print(arrBarcode);
-    // print("_lsEtGrade=>" + _lsEtGrade);
-    // print("_lsEtThick=>" + _lsEtThick);
-    // arrBarcode = 'R1022204246|R1022204246';
-    final response = await http.post(
-      uri,
-      headers: <String, String> {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept' : 'application/json'
-      },
-      body: <String, String> {
-        'dbnm': _dbnm,
-        'barcode': argcode,
-        'deldate': arg1,
-        'delnum': arg2,
-        'delseq': arg3,
-        'perid': _perid
-      },
-    );
-    if(response.statusCode == 200){
-      try{
-        // var result =  jsonDecode(utf8.decode(response.bodyBytes))  ;
-        var result =  utf8.decode(response.bodyBytes);
-        if (result == "SUCCESS"){
-          showAlertDialog(context, "삭제되었습니다.");
-          da035list_getdata();
-        }else{
-          showAlertDialog(context, result + " : 관리자에게 문의하세요");
-        }
-        return ;
-      }catch(e){
-        // print(e.toString());
-        showAlertDialog(context, e.toString() + " : 관리자에게 문의하세요");
-      }
-    }else{
-      //만약 응답이 ok가 아니면 에러를 던집니다.
-      throw Exception('불러오는데 실패했습니다');
-    }
-  }
 
 
   @override
@@ -172,7 +212,7 @@ class _AppPage02State extends State<AppPage02>   {
         ),
         elevation: GlobalStyle.appBarElevation,
         title: Text(
-          '출고현황(Lot)',
+          '입고현황',
           style: GlobalStyle.appBarTitle,
         ),
         backgroundColor: GlobalStyle.appBarBackgroundColor,
@@ -218,14 +258,18 @@ class _AppPage02State extends State<AppPage02>   {
                   onPressed: () {
                     setState(() {
                       _etDate.text  ;
+                       PDAlist_getdata3();
+
                     });
                     String ls_etdate = _etDate.text  ;
                     if(ls_etdate.length == 0){
                       print("일자를 입력하세요");
                       return;
                     }
-                    da035list_getdata();
+
                     print(_etDate.text );
+
+
                   },
                   child: Text(
                     '목록조회',
@@ -250,17 +294,79 @@ class _AppPage02State extends State<AppPage02>   {
                 ),
               ),
             ),
-            Expanded(child: ListView.builder(itemCount: da035Datas.length,
+            storelist.length == 0 || storelist == null ?
+                Text('정보가 없습니다.',
+                style: TextStyle(
+                  color: BLACK_GREY,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                )
+                :
+            Expanded(child: ListView.builder(itemCount: storelist.length,
               padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
               physics: AlwaysScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index){
-                return _buildListCard(da035Datas[index]);
+                return _buildListCard(storelist[index]);
               },
-            ))
+            )),
+            SizedBox(
+              height: 50,
+            ),
+            Container(
+              width: double.infinity,
+              child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) => SOFT_BLUE,
+                    ),
+                    overlayColor: MaterialStateProperty.all(Colors.transparent),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(3.0),
+                      ),
+                    ),
+                  ),
+                  onPressed: () async
+                  {
+                    print(storelistes.toString());
+                    /*print(resultset);
+                    print(resultset2);
+                    print(resultset3);
+                    print(resultset4);
+                    print(resultset5);*/
+
+
+                    showDialog(context: context, builder: (context){
+                      return AlertDialog(
+                        content: Text('입고취소를 하시겠습니까?'),
+                        actions: <Widget>[
+                          TextButton(onPressed: (){
+                            update_fplandata();
+                            print(resultset);
+                            Navigator.pop(context, "확인");
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+                          }, child: Text('OK'))
+                        ],
+                      );
+                    });
+                    //save_fplandata();
+
+                  }, child: Padding(padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Text('입고취소',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white
+                  ),
+                  textAlign: TextAlign.center,
+                ),)),
+            )
           ],
         ),
 
       ),
+
 
 
     );
@@ -269,7 +375,7 @@ class _AppPage02State extends State<AppPage02>   {
 
 
 
-  Widget _buildListCard(Da035List_model da035Data){
+  Widget _buildListCard(storelist_model storelists){
     return Card(
         margin: EdgeInsets.only(top: 16),
         shape: RoundedRectangleBorder(
@@ -285,7 +391,6 @@ class _AppPage02State extends State<AppPage02>   {
           child: GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: (){
-              showAlertDialog_chulgoDelete(context, da035Data.lotno, da035Data.deldate, da035Data.delnum, da035Data.delseq);
               print(da035Data);
               // Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage01_Subpage(da035Data: da035Data)));
             },
@@ -294,9 +399,9 @@ class _AppPage02State extends State<AppPage02>   {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(da035Data.cltnm, style: GlobalStyle.couponName),
-                  Text(da035Data.grade, style: GlobalStyle.couponName),
-                  Text(da035Data.thick+' ['+da035Data.width+'] '+da035Data.color, style: GlobalStyle.couponName),
+                  Text('거래처: ' + storelists.cltnm, style: GlobalStyle.couponName),
+                  Text('품목명: ' + storelists.pname, style: GlobalStyle.couponName),
+                  Text('입고량: ' + storelists.wotqt, style: GlobalStyle.couponName),
                   SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -307,18 +412,33 @@ class _AppPage02State extends State<AppPage02>   {
                           SizedBox(
                             width: 4,
                           ),
-                          Text(da035Data.pname , style: GlobalStyle.couponName),
+                          Text('규격: ' + storelists.psize, style: GlobalStyle.couponName),
+
                         ],
                       ),
-                      GestureDetector(
+                      /*GestureDetector(
                         onTap: (){
-                          print(da035Data);
-                          // Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage11Detail(da035Data: da035Data)));
+
                         },
-                        child: Text( da035Data.lotno, style: TextStyle(
-                            fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
+                        child: Text('입고량: ' + storelists.wotqt, style: TextStyle(
+                          fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
                         )),
-                      ),
+                      ),*/
+                      Checkbox(
+                          value: storelists.isChecked, onChanged: (bool? value){
+                        setState(() {
+                          storelists.isChecked = value ?? true;
+
+                          if(storelists.isChecked){
+                            resultset.add(storelists.plan_no);
+                          }else{
+                            resultset.remove(storelists.plan_no);
+
+                          }
+                          checkvalue = storelists.isChecked ? 'Y' : '';
+                          print(resultset);
+                        });
+                      })
                     ],
                   ),
                 ],
@@ -330,46 +450,6 @@ class _AppPage02State extends State<AppPage02>   {
 
 
 
-  void showAlertDialog_chulgoDelete(BuildContext context, String argcode, String arg1, String arg2, String arg3) async {
-    String result = await showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('ACTAS 출고등록'),
-          content: Text(argcode + " : 삭제 하시겠습니까?"),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () async{
-                Navigator.pop(context, "삭제");
-                var result = await Del_getdata(argcode, arg1, arg2, arg3);
-                if(result){
-                  setState(() {
-                  });
-                  // Navigator.pushReplacement(
-                  //     context, MaterialPageRoute(builder: (context) =>
-                  //     mpuchase(pernm: widget.pernm, perid: widget.perid, userid: widget.userid)
-                  // ));
-                  // print("저장성공!");
-                }else{
-                  // showAlertDialog(context, "출고저장 중 오류가 ");
-                  return ;
-                }
-                print("chulgo_delete result=>" + result.toString());
-              },
-            ),
-            TextButton(
-              child: Text('취소'),
-              onPressed: () {
-                Navigator.pop(context, "닫기");
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
 
   Future<Null> _selectDateWithMinMaxDate(BuildContext context) async {
