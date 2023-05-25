@@ -54,11 +54,11 @@ class _Home1PageState extends State<TabHomePage> {
   void initState()  {
     setData();
     //GLOBAL_URL+'/home_banner/1.jpg'));  LOCAL_IMAGES_URL+'/elvimg/1.jpg'
-    _bannerData.add(BannerSliderModel(id: 1, image: HYUNDAI_URL + '/product_gallery/THE EL_main_Web(0).jpg'));
-    _bannerData.add(BannerSliderModel(id: 2, image: HYUNDAI_URL + '/product_gallery/THE EL_4(1).jpg'));
-    _bannerData.add(BannerSliderModel(id: 3, image: HYUNDAI_URL + '/product_gallery/THE EL_3(1).jpg'));
-    _bannerData.add(BannerSliderModel(id: 4, image: HYUNDAI_URL + '/product_gallery/THE EL_2(1).jpg'));
-    _bannerData.add(BannerSliderModel(id: 5, image: HYUNDAI_URL + '/product_characteristic/특징_02(0).jpg'));
+    _bannerData.add(BannerSliderModel(id: 1, image: HYUNDAI_URL + '/tm1-2-5-S.jpg'));
+    _bannerData.add(BannerSliderModel(id: 2, image: HYUNDAI_URL + '/tm1-1-3-S.jpg'));
+    _bannerData.add(BannerSliderModel(id: 3, image: HYUNDAI_URL + '/tm1-3-1-2-S.jpg'));
+    _bannerData.add(BannerSliderModel(id: 4, image: HYUNDAI_URL + '/tm1-4-2-S.jpg'));
+    _bannerData.add(BannerSliderModel(id: 5, image: HYUNDAI_URL + '/tm1-6-1-S.jpg'));
 
     _categoryData.add(CategoryModel(id: 1, name: '입 고 등 록', image: GLOBAL_URL+'/menu/store.png', color:0xD3D3D3));
     _categoryData.add(CategoryModel(id: 2, name: '입 고 현 황', image: GLOBAL_URL+'/menu/products.png', color:0xD3D3D3));
