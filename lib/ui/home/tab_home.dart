@@ -18,6 +18,8 @@ import '../account/tab_account.dart';
 import '../app01/AppPage01.dart';
 import '../app01/AppPage02.dart';
 import '../app01/AppPage03.dart';
+import '../app02/App02Now.dart';
+import '../app02/App02Reg.dart';
 
 class TabHomePage extends StatefulWidget {
   final String? id;
@@ -62,6 +64,8 @@ class _Home1PageState extends State<TabHomePage> {
     _categoryData.add(CategoryModel(id: 2, name: '입 고 현 황', image: GLOBAL_URL+'/menu/products.png', color:0xD3D3D3));
     // _categoryData.add(CategoryModel(id: 3, name: '출 고 현 황', image: GLOBAL_URL+'/menu/buy_online.png', color:0xD3D3D3));
     _categoryData.add(CategoryModel(id: 4, name: '재 고 실 사', image: GLOBAL_URL+'/menu/apply_credit.png', color:0xD3D3D3));
+    _categoryData.add(CategoryModel(id: 5, name: '수입검사등록', image: GLOBAL_URL+'/menu/store.png', color:0xD3D3D3));
+    _categoryData.add(CategoryModel(id: 6, name: '수입검사현황', image: GLOBAL_URL+'/menu/products.png', color:0xD3D3D3));
 
 
 
@@ -266,6 +270,12 @@ bottomNavigationBar: SizedBox.shrink(),
                   //   break;
                   case '재 고 실 사' :
                     Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage03()));
+                    break;
+                  case '수입검사등록' :
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => App02Reg()));
+                    break;
+                  case '수입검사현황' :
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => App02Now()));
                     break;
                   default:
                     break;
