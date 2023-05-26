@@ -111,7 +111,7 @@ class _App02RegState extends State<App02Reg>   {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm': "ERP_THEMOONN",
+        'dbnm': "ERP_THEMOON",
         'code88': decodeResult ?? '',
         'custcd': _custcd
       },
