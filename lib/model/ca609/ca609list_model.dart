@@ -95,6 +95,7 @@ class ca609list_model{
   late var wmqty;
   late var qcnum;
   late var qcdv;
+  late var qcseq;
 
   bool isChecked = true;
 
@@ -108,7 +109,7 @@ class ca609list_model{
     this.budnum, this.budseq, this.budflag, this.size, this.code88, this.baldv, this.balno, this.pumdivicd, this.taxcls, this.setcls, this.store, this.domcls, this.wqty,
     this.sunflag, this.sunamt, this.ischdate, this.bigo, this.maildv, this.cdflag, this.taxgubun, this.ibgdate, this.ibgnum, this.compperid, this.compdivicd, this.compdate,
     this.state, this.hagigan, this.sogigan, this.balpernm, this.pumperid, this.title, this.cltcd, this.delnum, this.delseq, this.pname, this.coilqty, this.lotno, this.balqty, this.cltnm, this.textEditingController,
-    required this.isChecked, this.qcnum, this.qcdv
+    required this.isChecked, this.qcnum, this.qcdv, this.qcseq
 
   });
 

@@ -31,6 +31,7 @@ class _App02NowState extends State<App02Now>   {
   List<String> resultset4 = [];
   List<String> resultset5 = [];
   List<String> resultset6 = [];
+  List<String> resultset7 = [];
 
   TextEditingController _etDate = TextEditingController();
   TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
@@ -120,6 +121,7 @@ class _App02NowState extends State<App02Now>   {
         ca609list_model emObject= ca609list_model(
             qcdate: alllist[i]["qcdate"],
             qcnum: alllist[i]["qcnum"],
+            qcseq: alllist[i]["qcseq"],
             cltcd: alllist[i]["cltcd"],
             cltnm: alllist[i]["cltnm"],
             pname: alllist[i]["pname"],
@@ -168,7 +170,8 @@ class _App02NowState extends State<App02Now>   {
           'balseq': resultset3.join(','),
           'wqty': resultset4.join(','),
           'qcdate': resultset5.join(','),
-          'qcnum' : resultset6.join(',')
+          'qcnum' : resultset6.join(','),
+          'qcseq' : resultset7.join(',')
         });
     if(response.statusCode == 200){
       print("저장됨");
@@ -460,6 +463,7 @@ class _App02NowState extends State<App02Now>   {
                                 resultset4.add(ca609Data.wqty);
                                 resultset5.add(ca609Data.qcdate);
                                 resultset6.add(ca609Data.qcnum);
+                                resultset7.add(ca609Data.qcseq);
                               } else {
                                 resultset.remove(ca609Data.baldate);
                                 resultset2.remove(ca609Data.balnum);
@@ -467,6 +471,7 @@ class _App02NowState extends State<App02Now>   {
                                 resultset4.remove(ca609Data.wqty);
                                 resultset5.remove(ca609Data.qcdate);
                                 resultset6.remove(ca609Data.qcnum);
+                                resultset7.remove(ca609Data.qcseq);
                               }
 
                               checkvalue = ca609Data.isChecked ? 'Y' : '';
