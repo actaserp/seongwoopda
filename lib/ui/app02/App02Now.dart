@@ -162,7 +162,7 @@ class _App02NowState extends State<App02Now>   {
           'Accept' : 'application/json'
         },
         body: <String, String> {
-          'dbnm': _dbnm,
+          'dbnm': 'ERP_THEMOON',
           'custcd': 'THEMOON',
           'spjangcd': 'ZZ',
           'baldate': resultset.join(','),
