@@ -164,28 +164,28 @@ class _App02ListState extends State<App02List>   {
           divicd: alllist[i]['divicd'],
           qty:    alllist[i]['qty'],
           qcdv:   alllist[i]['qcdv'],
-          isChecked: false,
+          isChecked: true,
           textEditingController: TextEditingController(text: alllist[i]["wmqty"]),
         );
 
 
-        // resultset.add(alllist[i]["qcflag"]);
-        // resultset2.add(alllist[i]["ibgflag"]);
-        // resultset3.add(alllist[i]["baldate"]);
-        // resultset4.add(alllist[i]["balnum"]);
-        // resultset6.add(alllist[i]["cltcd"]);
-        // resultset7.add(alllist[i]["divicd"]);
-        // resultset8.add(alllist[i]["store"]);
-        // resultset9.add(alllist[i]["ischdate"]);
-        // resultset10.add(alllist[i]["comcd"]);
-        // resultset11.add(alllist[i]["pcode"]);
-        // resultset12.add(alllist[i]["pname"]);
-        // resultset13.add(alllist[i]["psize"]);
-        // resultset14.add(alllist[i]["punit"]);
-        // resultset15.add(alllist[i]["qty"]);
-        // resultset16.add(alllist[i]["qcdv"]);
-        // resultset17.add(alllist[i]["balseq"]);
-        // resultset18.add(alllist[i]["wmqty"]);
+        resultset.add(alllist[i]["qcflag"]);
+        resultset2.add(alllist[i]["ibgflag"]);
+        resultset3.add(alllist[i]["baldate"]);
+        resultset4.add(alllist[i]["balnum"]);
+        resultset6.add(alllist[i]["cltcd"]);
+        resultset7.add(alllist[i]["divicd"]);
+        resultset8.add(alllist[i]["store"]);
+        resultset9.add(alllist[i]["ischdate"]);
+        resultset10.add(alllist[i]["comcd"]);
+        resultset11.add(alllist[i]["pcode"]);
+        resultset12.add(alllist[i]["pname"]);
+        resultset13.add(alllist[i]["psize"]);
+        resultset14.add(alllist[i]["punit"]);
+        resultset15.add(alllist[i]["qty"]);
+        resultset16.add(alllist[i]["qcdv"]);
+        resultset17.add(alllist[i]["balseq"]);
+        resultset18.add(alllist[i]["wmqty"]);
 
 
 
