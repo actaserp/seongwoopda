@@ -164,28 +164,28 @@ class _App02ListState extends State<App02List>   {
           divicd: alllist[i]['divicd'],
           qty:    alllist[i]['qty'],
           qcdv:   alllist[i]['qcdv'],
-          isChecked: true,
+          isChecked: false,
           textEditingController: TextEditingController(text: alllist[i]["wmqty"]),
         );
 
 
-        resultset.add(alllist[i]["qcflag"]);
-        resultset2.add(alllist[i]["ibgflag"]);
-        resultset3.add(alllist[i]["baldate"]);
-        resultset4.add(alllist[i]["balnum"]);
-        resultset6.add(alllist[i]["cltcd"]);
-        resultset7.add(alllist[i]["divicd"]);
-        resultset8.add(alllist[i]["store"]);
-        resultset9.add(alllist[i]["ischdate"]);
-        resultset10.add(alllist[i]["comcd"]);
-        resultset11.add(alllist[i]["pcode"]);
-        resultset12.add(alllist[i]["pname"]);
-        resultset13.add(alllist[i]["psize"]);
-        resultset14.add(alllist[i]["punit"]);
-        resultset15.add(alllist[i]["qty"]);
-        resultset16.add(alllist[i]["qcdv"]);
-        resultset17.add(alllist[i]["balseq"]);
-        resultset18.add(alllist[i]["wmqty"]);
+        // resultset.add(alllist[i]["qcflag"]);
+        // resultset2.add(alllist[i]["ibgflag"]);
+        // resultset3.add(alllist[i]["baldate"]);
+        // resultset4.add(alllist[i]["balnum"]);
+        // resultset6.add(alllist[i]["cltcd"]);
+        // resultset7.add(alllist[i]["divicd"]);
+        // resultset8.add(alllist[i]["store"]);
+        // resultset9.add(alllist[i]["ischdate"]);
+        // resultset10.add(alllist[i]["comcd"]);
+        // resultset11.add(alllist[i]["pcode"]);
+        // resultset12.add(alllist[i]["pname"]);
+        // resultset13.add(alllist[i]["psize"]);
+        // resultset14.add(alllist[i]["punit"]);
+        // resultset15.add(alllist[i]["qty"]);
+        // resultset16.add(alllist[i]["qcdv"]);
+        // resultset17.add(alllist[i]["balseq"]);
+        // resultset18.add(alllist[i]["wmqty"]);
 
 
 
@@ -344,15 +344,16 @@ class _App02ListState extends State<App02List>   {
                         actions: <Widget>[
                           TextButton(onPressed: (){
 
-                            for(var item in ca609datal){
-                              if(item.isChecked){
-                                for(int i=0; i<ca609datal.length; i++){
-                                  String? value = ca609datal[i].textEditingController?.text;
-                                  resultset5.add(value ?? '0');
-
-                                }
-                              }
-                            }
+                            // for(var item in ca609datal){
+                            //   if(item.isChecked){
+                            //     for(int i=0; i<ca609datal.length; i++){
+                            //       String? value = ca609datal[i].textEditingController?.text;
+                            //       resultset5.add(value ?? '0');
+                            //
+                            //     }
+                            //   }
+                            // }
+                            // print(resultset5);
 
                             save_CA();
                             if(tf = true){
@@ -464,7 +465,7 @@ class _App02ListState extends State<App02List>   {
                               resultset12.add(ca609Data.pname);
                               resultset13.add(ca609Data.psize);
                               resultset14.add(ca609Data.punit);
-                              //resultset5.add(ca609Data.qty);
+                              resultset5.add(ca609Data.qty);
                               resultset16.add(ca609Data.qcdv);
                               resultset17.add(ca609Data.balseq);
                               resultset18.add(ca609Data.wmqty);
@@ -484,7 +485,7 @@ class _App02ListState extends State<App02List>   {
                               resultset12.remove(ca609Data.pname);
                               resultset13.remove(ca609Data.psize);
                               resultset14.remove(ca609Data.punit);
-                              //resultset5.remove(ca609Data.qty);
+                              resultset5.remove(ca609Data.qty);
                               resultset16.remove(ca609Data.qcdv);
                               resultset17.remove(ca609Data.balseq);
                               resultset18.remove(ca609Data.wmqty);
