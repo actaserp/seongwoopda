@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 import '../../config/constant.dart';
 import '../../config/global_style.dart';
 import '../../model/ca609/ca609list_model.dart';
+import '../home/tab_home.dart';
 
 class App02Now extends StatefulWidget {
   const App02Now({Key? key}) : super(key: key);
@@ -46,6 +47,7 @@ class _App02NowState extends State<App02Now>   {
   String _winnm = "";
 
   String checkvalue = 'true';
+  bool tf = false;
 
 
 
@@ -54,6 +56,7 @@ class _App02NowState extends State<App02Now>   {
     sessionData();
     resultset.clear();
     resultset2.clear();
+    Nowlist_getdata();
 
     super.initState();
     _etDate.text = getToday();
@@ -104,7 +107,7 @@ class _App02NowState extends State<App02Now>   {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm': "ERP_THEMOONN",
+        'dbnm': "ERP_THEMOON",
         'custcd': 'THEMOON',
         'spjangcd': 'ZZ',
         'qcdate': _etDate.text
@@ -132,8 +135,15 @@ class _App02NowState extends State<App02Now>   {
             baldate: alllist[i]["baldate"],
             balnum: alllist[i]["balnum"],
             balseq: alllist[i]["balseq"],
-            isChecked: false
+            isChecked: true
         );
+        resultset.add(alllist[i]["baldate"]);
+        resultset2.add(alllist[i]["balnum"]);
+        resultset3.add(alllist[i]["balseq"]);
+        resultset4.add(alllist[i]["qty"]);
+        resultset5.add(alllist[i]["qcdate"]);
+        resultset6.add(alllist[i]["qcnum"]);
+        resultset7.add(alllist[i]["qcseq"]);
 
         setState(() {
           ca609Data.add(emObject);
@@ -175,6 +185,8 @@ class _App02NowState extends State<App02Now>   {
         });
     if(response.statusCode == 200){
       print("저장됨");
+      tf = true;
+      Nowlist_getdata();
       return   true;
     }else{
       //만약 응답이 ok가 아니면 에러를 던집니다.
@@ -303,6 +315,7 @@ class _App02NowState extends State<App02Now>   {
                     resultset4.clear();
                     resultset5.clear();
                     resultset6.clear();
+                    resultset7.clear();
 
                     Nowlist_getdata();
 
@@ -349,42 +362,55 @@ class _App02NowState extends State<App02Now>   {
                 children: [
                   Expanded(
                       child: Container(
-                        margin: EdgeInsets.only(top: 10),
-                        padding: EdgeInsets.all(12),
-                        child: OutlinedButton(
-                            onPressed: () {
-                              delete_data();
+                        width: double.infinity,
+                        child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                                    (Set<MaterialState> states) => SOFT_BLUE,
+                              ),
+                              overlayColor: MaterialStateProperty.all(Colors.transparent),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(3.0),
+                                ),
+                              ),
+                            ),
+                            onPressed: () async
+                            {
+
+
                               _winid = "수입검사취소";
                               _winnm = "수입검사취소";
 
-                            },
-                            style: ButtonStyle(
-                                overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5.0),
+
+                              showDialog(context: context, builder: (context){
+                                return AlertDialog(
+                                  content: Text('수입검사 취소 하시겠습니까?'),
+                                  actions: <Widget>[
+                                    TextButton(onPressed: (){
+
+                                      delete_data();
+                                      if(tf = true){
+                                        openPopup();
+                                      }else{
+                                        openErrorPopup();
+                                      }
+                                    }, child: Text('OK')
                                     )
-                                ),
-                                side: MaterialStateProperty.all(
-                                  BorderSide(
-                                      color: SOFT_BLUE,
-                                      width: 1.0
-                                  ),
-                                )
+                                  ],
+                                );
+                              });
+                              //save_fplandata();
+
+                            }, child: Padding(padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: Text('수입검사 취소',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12.0),
-                              child: Text(
-                                '수입검사 취소',
-                                style: TextStyle(
-                                    color: SOFT_BLUE,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            )
-                        ),
+                            textAlign: TextAlign.center,
+                          ),)),
                       )
                   )
                 ]
@@ -523,8 +549,47 @@ class _App02NowState extends State<App02Now>   {
     }
   }
 
+  void openPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('수입검사취소'),
+          content: Text('취소되었습니다.'),
+          actions: [
+            TextButton(
+              child: Text('확인'),
+              onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void openErrorPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('수입검사취소'),
+          content: Text('취소 실패하였습니다.'),
+          actions: [
+            TextButton(
+              child: Text('확인'),
+              onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
 }
-
 
 

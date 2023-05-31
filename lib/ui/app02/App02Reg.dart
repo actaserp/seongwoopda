@@ -47,7 +47,11 @@ class _App02RegState extends State<App02Reg>   {
 
   @override
   void initState() {
+
+    ca609Data.clear();
+    padlists.clear();
     sessionData();
+
 
     super.initState();
     _etDate.text = getToday();
@@ -140,8 +144,8 @@ class _App02RegState extends State<App02Reg>   {
         padlists.removeWhere((element) {
           if (element.startsWith(prefixToRemove)) {
 
-              // 두번째 이후로 매칭된 요소는 제거한다.
-              return true;
+            // 두번째 이후로 매칭된 요소는 제거한다.
+            return true;
 
           }
           return false;
@@ -257,7 +261,7 @@ class _App02RegState extends State<App02Reg>   {
       if(call.method == PointmobileScanner.ON_DECODE) {
         setState(() {
           final List lDecodeResult = call.arguments;
-           result = lDecodeResult[1];
+          result = lDecodeResult[1];
 
         });
 
@@ -328,7 +332,7 @@ class _App02RegState extends State<App02Reg>   {
 
   void _onError(Exception error){
     setState(() {
-        _decodeResult = error.toString();
+      _decodeResult = error.toString();
     });
   }
 
@@ -336,70 +340,66 @@ class _App02RegState extends State<App02Reg>   {
 
   Widget _buildListCard(padlist_model padlistmodel /*String decodeResults*/){
     return Card(
-        margin: EdgeInsets.only(top: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-        ),
-        elevation: 2,
-        color: Colors.white,
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: (){
-            //Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage11view(ca609Data: da035Data)));
-          },
-          child: GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTap: (){
+      margin: EdgeInsets.only(top: 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+      ),
+      elevation: 2,
+      color: Colors.white,
 
-              print(padlistmodel);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => App02List(padlistmodel: padlistmodel)
-                  )
-              );
-            },
-            child: Container(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  /*Text(da035Data.cltnm, style: GlobalStyle.couponName),
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: (){
+
+          print(padlistmodel);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => App02List(padlistmodel: padlistmodel)
+              )
+          );
+        },
+        child: Container(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /*Text(da035Data.cltnm, style: GlobalStyle.couponName),
                   Text(da035Data.grade, style: GlobalStyle.couponName),
                   Text(da035Data.thick+' ['+da035Data.width+'] '+da035Data.color, style: GlobalStyle.couponName),*/
-                  Text("코드: " + padlistmodel.phm_pcod, style: GlobalStyle.couponName),
-                  Text("품목명: " + padlistmodel.phm_pnam, style: GlobalStyle.couponName),
-                  Text("규격: " + padlistmodel.phm_size, style: GlobalStyle.couponName),
-                  Text("단위: " + padlistmodel.phm_unit, style: GlobalStyle.couponName),
+              Text("코드: " + padlistmodel.phm_pcod, style: GlobalStyle.couponName),
+              Text("품목명: " + padlistmodel.phm_pnam, style: GlobalStyle.couponName),
+              Text("규격: " + padlistmodel.phm_size, style: GlobalStyle.couponName),
+              Text("단위: " + padlistmodel.phm_unit, style: GlobalStyle.couponName),
 
-                  Text("Code88: " + padlistmodel.code88, style: GlobalStyle.couponName),
-                  SizedBox(height: 16),
+              Text("Code88: " + padlistmodel.code88, style: GlobalStyle.couponName),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          GlobalStyle.iconTime,
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text(/*da035Data.pname*/"collapse" , style: GlobalStyle.couponName),
-                        ],
+                      GlobalStyle.iconTime,
+                      SizedBox(
+                        width: 4,
                       ),
-                      GestureDetector(
-
-                        child: Text('수량 : ' + padlistmodel.Count.toString(), style: TextStyle(
-                            fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
-                        ),
-                        ),
-                      ),
+                      Text(/*da035Data.pname*/"collapse" , style: GlobalStyle.couponName),
                     ],
+                  ),
+                  GestureDetector(
+
+                    child: Text('수량 : ' + padlistmodel.Count.toString(), style: TextStyle(
+                        fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
+                    ),
+                    ),
                   ),
                 ],
               ),
-            ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
 

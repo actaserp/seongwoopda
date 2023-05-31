@@ -54,7 +54,7 @@ class _App02ListState extends State<App02List>   {
   List<ca609list_modell> ca609Datas = ca609datal;
   List<TextEditingController> textControllers = List.generate(ca609datal.length, (index) => TextEditingController());
 
-
+  bool tf = false;
 
 
 
@@ -82,10 +82,6 @@ class _App02ListState extends State<App02List>   {
     _initalizeState();
     _etDate.text = getToday();
     super.initState();
-
-
-
-
 
   }
 
@@ -221,7 +217,7 @@ class _App02ListState extends State<App02List>   {
           'Accept' : 'application/json'
         },
         body: json.encode({
-          'dbnm': 'ERP_THEMOON',
+          'dbnm': _dbnm,
           'ls_qcflag' : resultset,
           'ls_ibgflag' : resultset2,
           'as_baldate' : resultset3,
@@ -244,10 +240,10 @@ class _App02ListState extends State<App02List>   {
 
         }));
     if(response.statusCode == 200){
-      print("저장됨");
+      tf = true;
       return true;
     }else{
-      throw Exception('고장부위를 불러오는데 실패했습니다.');
+      throw Exception('입력 실패했습니다..');
 
     }
 
@@ -344,7 +340,7 @@ class _App02ListState extends State<App02List>   {
 
                     showDialog(context: context, builder: (context){
                       return AlertDialog(
-                        content: Text('입고등록 하시겠습니까?'),
+                        content: Text('수입검사 등록 하시겠습니까?'),
                         actions: <Widget>[
                           TextButton(onPressed: (){
 
@@ -359,16 +355,21 @@ class _App02ListState extends State<App02List>   {
                             }
 
                             save_CA();
-                            Navigator.pop(context);
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
-                          }, child: Text('OK'))
+                            if(tf = true){
+                              openPopup();
+                            }else{
+                              openErrorPopup();
+                            }
+
+                          }, child: Text('OK')
+                          )
                         ],
                       );
                     });
                     //save_fplandata();
 
                   }, child: Padding(padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: Text('입고등록',
+                child: Text('수입검사 등록',
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -514,58 +515,6 @@ class _App02ListState extends State<App02List>   {
   }
 
 
-  void showAlertDialog_Clear(BuildContext context) async {
-    String result = await showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('ACTAS 출고등록'),
-          content: Text("스캔한 LotNo를 리셋하시겠습니까?"),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () async{
-                setState(() {
-
-                });
-                Navigator.pop(context, "닫기");
-              },
-            ),
-            TextButton(
-              child: Text('취소'),
-              onPressed: () {
-                Navigator.pop(context, "닫기");
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-
-  void showAlertDialog(BuildContext context, String as_msg) async {
-    String result = await showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('ACTAS 입고등록'),
-          content: Text(as_msg),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.pop(context, "확인");
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
 
   Future<Null> _selectDateWithMinMaxDate(BuildContext context) async {
     var firstDate = DateTime(initialDate.year, initialDate.month - 3, initialDate.day);
@@ -596,10 +545,45 @@ class _App02ListState extends State<App02List>   {
     }
   }
 
+  void openPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('수입검사등록'),
+          content: Text('등록되었습니다.'),
+          actions: [
+            TextButton(
+              child: Text('확인'),
+              onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
+  void openErrorPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('수입검사등록'),
+          content: Text('등록 실패하였습니다.'),
+          actions: [
+            TextButton(
+              child: Text('확인'),
+              onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 
 }
-
-
-
