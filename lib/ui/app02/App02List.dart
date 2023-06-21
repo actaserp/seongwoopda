@@ -226,7 +226,6 @@ class _App02ListState extends State<App02List>   {
         resultset2.add(alllist[i]["ibgflag"]);
         resultset3.add(alllist[i]["baldate"]);
         resultset4.add(alllist[i]["balnum"]);
-        resultset5.add(alllist[i]["qty"]);
         resultset6.add(alllist[i]["cltcd"]);
         resultset7.add(alllist[i]["divicd"]);
         resultset8.add(alllist[i]["store"]);
@@ -399,16 +398,16 @@ class _App02ListState extends State<App02List>   {
                         actions: <Widget>[
                           TextButton(onPressed: (){
 
-                            // for(var item in ca609datal){
-                            //   if(item.isChecked){
-                            //     for(int i=0; i<ca609datal.length; i++){
-                            //       String? value = ca609datal[i].textEditingController?.text;
-                            //       resultset5.add(value ?? '0');
-                            //
-                            //     }
-                            //   }
-                            // }
-                            // print(resultset5);
+                            for(var item in ca609datal){
+                              if(item.isChecked){
+                                for(int i=0; i<ca609datal.length; i++){
+                                  String? value = ca609datal[i].textEditingController?.text;
+                                  resultset5.add(value ?? '0');
+
+                                }
+                              }
+                            }
+                            print(resultset5);
 
                             save_CA();
                             if(tf = true){
@@ -520,7 +519,7 @@ class _App02ListState extends State<App02List>   {
                               resultset12.add(ca609Data.pname);
                               resultset13.add(ca609Data.psize);
                               resultset14.add(ca609Data.punit);
-                              resultset5.add(ca609Data.qty);
+                              // resultset5.add(ca609Data.qty);
                               resultset16.add(ca609Data.qcdv);
                               resultset17.add(ca609Data.balseq);
                               resultset18.add(ca609Data.wmqty);
@@ -540,7 +539,7 @@ class _App02ListState extends State<App02List>   {
                               resultset12.remove(ca609Data.pname);
                               resultset13.remove(ca609Data.psize);
                               resultset14.remove(ca609Data.punit);
-                              resultset5.remove(ca609Data.qty);
+                              // resultset5.remove(ca609Data.qty);
                               resultset16.remove(ca609Data.qcdv);
                               resultset17.remove(ca609Data.balseq);
                               resultset18.remove(ca609Data.wmqty);

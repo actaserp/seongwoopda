@@ -158,7 +158,6 @@ class _App02RegState extends State<App02Reg>   {
 
     var uritxt = CLOUD_URL + '/ca609/list01';
     var encoded = Uri.encodeFull(uritxt);
-
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
       uri,
@@ -172,12 +171,16 @@ class _App02RegState extends State<App02Reg>   {
         'custcd': _custcd
       },
     );
+    print("response.statusCode===>");
+    print(response.statusCode.toString());
     if(response.statusCode == 200){
       List<dynamic> alllist = [];
       alllist =  jsonDecode(utf8.decode(response.bodyBytes))  ;
       /*padlists.clear();
       */
 
+      print("length===>");
+      print(alllist.length);
 
       for (int i = 0; i < alllist.length; i++) {
         padlist_model emObject= padlist_model(
@@ -328,8 +331,6 @@ class _App02RegState extends State<App02Reg>   {
             count ++;
           }
         }
-
-
         await PDAlist_getdata(result,count);
         print(count);
         print("수량체크");
@@ -421,34 +422,12 @@ class _App02RegState extends State<App02Reg>   {
               /*Text(da035Data.cltnm, style: GlobalStyle.couponName),
                   Text(da035Data.grade, style: GlobalStyle.couponName),
                   Text(da035Data.thick+' ['+da035Data.width+'] '+da035Data.color, style: GlobalStyle.couponName),*/
-              Text("코드: " + padlistmodel.phm_pcod, style: GlobalStyle.couponName),
+              Text("품목코드: " + padlistmodel.phm_pcod, style: GlobalStyle.couponName),
               Text("품목명: " + padlistmodel.phm_pnam, style: GlobalStyle.couponName),
               Text("규격: " + padlistmodel.phm_size, style: GlobalStyle.couponName),
-              Text("단위: " + padlistmodel.phm_unit, style: GlobalStyle.couponName),
+              Text("바코드: " + padlistmodel.code88, style: GlobalStyle.couponName),
+              SizedBox(height: 10),
 
-              Text("Code88: " + padlistmodel.code88, style: GlobalStyle.couponName),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      GlobalStyle.iconTime,
-                      SizedBox(
-                        width: 4,
-                      ),
-                      Text(/*da035Data.pname*/"collapse" , style: GlobalStyle.couponName),
-                    ],
-                  ),
-                  GestureDetector(
-
-                    child: Text('수량 : ' + padlistmodel.Count.toString(), style: TextStyle(
-                        fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
-                    ),
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),
