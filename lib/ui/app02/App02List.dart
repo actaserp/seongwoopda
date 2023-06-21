@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,7 @@ class _App02ListState extends State<App02List>   {
   String _custcd = '';
   String _spjangcd = '';
   String checkvalue = 'true';
+  String _ipaddr = '';
 
 
   @override
@@ -99,6 +101,7 @@ class _App02ListState extends State<App02List>   {
     String formattedDate = formatter.format(now);
     return formattedDate;
   }
+
   Future<void> sessionData() async{
     _dbnm     = (await SessionManager().get("dbnm")).toString();
     _userid   = (await SessionManager().get("userid")).toString();
@@ -107,6 +110,54 @@ class _App02ListState extends State<App02List>   {
     _custcd    = (await SessionManager().get("custcd")).toString();
     _spjangcd    = (await SessionManager().get("spjangcd")).toString();
     print(_perid);
+    print(_ipaddr);
+
+  }
+
+  Future log_history_h() async {
+
+    String ipAddress = '';
+    for (var interface in await NetworkInterface.list()) {
+      for (var address in interface.addresses){
+        ipAddress = address.address;
+      }
+    }
+
+
+    String _username  = '';
+    String username = (await SessionManager().get("username")).toString();
+    _username = utf8.decode(username.runes.toList());
+
+    var uritxt = CLOUD_URL + '/ca609/insertLog';
+    var encoded = Uri.encodeFull(uritxt);
+
+    Uri uri = Uri.parse(encoded);
+    final response = await http.post(
+      uri,
+      headers: <String, String> {
+
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept' : 'application/json'
+      },
+      body: <String, String> {
+        'dbnm'   : 'ERP_THEMOON',
+        'custcd' : 'THEMOON',
+        'spjangcd': 'ZZ',
+        'userid' : _perid,
+        'ipaddr' : ipAddress,
+        'usernm' : _username,
+        'winnm'  : '수입검사작업',
+        'winid'  : '수입검사작업',
+        'buton'  : '030'
+      },
+    );
+    if(response.statusCode == 200){
+      print("로그 저장됨");
+      return true;
+    }else{
+      print("통신에러");
+    }
+
   }
 
 
@@ -117,6 +168,8 @@ class _App02ListState extends State<App02List>   {
     ca609datal.clear();
     super.dispose();
   }
+
+
 
   Future ca609list_getdata() async {
     String _dbnm = await  SessionManager().get("dbnm");
@@ -173,6 +226,7 @@ class _App02ListState extends State<App02List>   {
         resultset2.add(alllist[i]["ibgflag"]);
         resultset3.add(alllist[i]["baldate"]);
         resultset4.add(alllist[i]["balnum"]);
+        resultset5.add(alllist[i]["qty"]);
         resultset6.add(alllist[i]["cltcd"]);
         resultset7.add(alllist[i]["divicd"]);
         resultset8.add(alllist[i]["store"]);
@@ -241,6 +295,7 @@ class _App02ListState extends State<App02List>   {
         }));
     if(response.statusCode == 200){
       tf = true;
+      log_history_h();
       return true;
     }else{
       throw Exception('입력 실패했습니다..');
@@ -514,6 +569,9 @@ class _App02ListState extends State<App02List>   {
       ),
     );
   }
+
+
+
 
 
 

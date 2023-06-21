@@ -42,6 +42,8 @@ class _App02RegState extends State<App02Reg>   {
   String _username = '';
   String _perid = '';
   String _custcd = "";
+  String _ipaddr = "";
+  String _spjangcd = "";
 
 
 
@@ -91,10 +93,60 @@ class _App02RegState extends State<App02Reg>   {
     _username = (await SessionManager().get("username")).toString();
     _perid    = (await SessionManager().get("perid")).toString();
     _custcd = (await SessionManager().get("custcd")).toString();
+    _spjangcd = (await SessionManager().get("spjangcd")).toString();
+    _ipaddr = (await SessionManager().get("ipaddr")).toString();
     print(_perid);
     print("임경현");
     print(_custcd);
 
+    await log_history_h();
+
+
+  }
+
+  Future log_history_h() async {
+
+    String ipAddress = '';
+    for (var interface in await NetworkInterface.list()) {
+      for (var address in interface.addresses){
+        ipAddress = address.address;
+      }
+    }
+
+
+    String _username  = '';
+    String username = (await SessionManager().get("username")).toString();
+    _username = utf8.decode(username.runes.toList());
+
+    var uritxt = CLOUD_URL + '/ca609/insertLog';
+    var encoded = Uri.encodeFull(uritxt);
+
+    Uri uri = Uri.parse(encoded);
+    final response = await http.post(
+      uri,
+      headers: <String, String> {
+
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept' : 'application/json'
+      },
+      body: <String, String> {
+        'dbnm'   : 'ERP_THEMOON',
+        'custcd' : 'THEMOON',
+        'spjangcd': 'ZZ',
+        'userid' : _perid,
+        'ipaddr' : ipAddress,
+        'usernm' : _username,
+        'winnm'  : '수입검사등록',
+        'winid'  : '수입검사등록',
+        'buton'  : '020'
+      },
+    );
+    if(response.statusCode == 200){
+      print("로그 저장됨");
+      return true;
+    }else{
+      print("통신에러");
+    }
 
   }
 
@@ -173,6 +225,8 @@ class _App02RegState extends State<App02Reg>   {
       throw Exception('불러오는데 실패했습니다');
     }
   }
+
+
 
 
 
@@ -436,6 +490,7 @@ class _App02RegState extends State<App02Reg>   {
 
 
 }
+
 
 
 
