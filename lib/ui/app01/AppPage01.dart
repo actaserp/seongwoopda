@@ -14,6 +14,7 @@ import '../../config/constant.dart';
 import '../../config/global_style.dart';
 import '../../model/ca609/padlist_model.dart';
 import '../../model/kosep/Da035List_model.dart';
+import '../../model/themoon/storelist_model.dart';
 import 'AppPage01_Subpage.dart';
 
 class AppPage01 extends StatefulWidget {
@@ -39,10 +40,14 @@ class _AppPage01State extends State<AppPage01>   {
   String _dbnm = '';
   String _userid = '';
   String _username = '';
+  String pcode = '';
+  bool chk = false;
+  num sum  = 0;
+
   String _perid = '';
   String _custcd = "";
 
-
+  List<storelist_model> storelists = storelist;
 
   @override
   void initState() {
@@ -140,7 +145,7 @@ class _AppPage01State extends State<AppPage01>   {
 
 
 
-  Future PDAlist_getdata(String? decodeResult, int arg) async {
+  Future PDAlist_getdata(String? decodeResult) async {
     String _dbnm = await  SessionManager().get("dbnm");
 
     var uritxt = CLOUD_URL + '/themoon/list01';
@@ -161,8 +166,7 @@ class _AppPage01State extends State<AppPage01>   {
     if(response.statusCode == 200){
       List<dynamic> alllist = [];
       alllist =  jsonDecode(utf8.decode(response.bodyBytes))  ;
-      /*padlists.clear();
-      */
+      padlists.clear();
 
 
       for (int i = 0; i < alllist.length; i++) {
@@ -171,29 +175,28 @@ class _AppPage01State extends State<AppPage01>   {
             phm_pnam: alllist[i]["phm_pnam"],
             phm_size: alllist[i]["phm_size"],
             phm_unit: alllist[i]["phm_unit"],
-            Count:  arg,
             code88: alllist[i]["code88"]
         );
+
+        pcode = alllist[i]["phm_pcod"];
+
+
 
         String prefixToRemove = emObject.phm_pcod;
         print(prefixToRemove);
 
-        bool isFirstMatched = true;
+        /*bool isFirstMatched = true;
         padlists.removeWhere((element) {
           if (element.startsWith(prefixToRemove)) {
 
-            // 두번째 이후로 매칭된 요소는 제거한다.
-            return true;
+              // 두번째 이후로 매칭된 요소는 제거한다.
+              return true;
 
           }
           return false;
         });
+*/
 
-        /*if(padlists.contains(emObject.phm_pcod)){
-          setState(() {
-              padlists.
-          });
-        }*/
 
         setState(() {
           padlists.add(emObject);
@@ -208,6 +211,70 @@ class _AppPage01State extends State<AppPage01>   {
     }else{
       //만약 응답이 ok가 아니면 에러를 던집니다.
       throw Exception('불러오는데 실패했습니다');
+    }
+  }
+
+
+  Future PDAlist_getdata2() async {
+
+
+    String _dbnm = await SessionManager().get("dbnm");
+
+    var uritxt = CLOUD_URL + "/themoon/list02";
+    var encoded = Uri.encodeFull(uritxt);
+
+    Uri uri = Uri.parse(encoded);
+    final response = await http.post(
+      uri,
+      headers: <String, String>{
+        'Content-Type' : 'application/x-www-form-urlencoded',
+        'Accept' : 'application/json'
+      },
+      body: <String, String> {
+        'dbnm': "ERP_THEMOON",
+        'wendt': _etDate.text,
+        'pcode': pcode,
+      },
+    );
+    if(response.statusCode == 200){
+      List<dynamic> alllist = [];
+      alllist = jsonDecode(utf8.decode(response.bodyBytes));
+      storelist.clear();
+
+      for(int i=0; i< alllist.length; i++){
+
+
+        storelist_model emObject = storelist_model(
+          cltnm : alllist[i]["cltnm"],
+          pname: alllist[i]["pname"],
+          psize: alllist[i]["psize"],
+          wfokqt: alllist[i]["wfokqt"],
+          plan_no: alllist[i]["plan_no"],
+          wono: alllist[i]["wono"],
+          lotno: alllist[i]["lotno"],
+          pcode: alllist[i]["pcode"],
+          isChecked: true,
+          textEditingController: TextEditingController(text: alllist[i]["wfokqt"]),
+
+
+        );
+        sum +=  double.parse(alllist[i]["wfokqt"]);
+
+        /*Set<String> cltnm = Set();*/
+
+        setState(() {
+          storelists.add(emObject);
+        });
+
+      }
+      if(alllist.isNotEmpty){
+        chk = true;
+      }
+      print("서버통신 성공");
+      print(alllist);
+      return storelists;
+    }else{
+      throw Exception('불러오는데 실패했습니다.');
     }
   }
 
@@ -310,7 +377,13 @@ class _AppPage01State extends State<AppPage01>   {
               padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
               physics: AlwaysScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index){
-                return _buildListCard(/*da035Datas[index]*/ padlists[index]);
+                if(chk){
+                  return _buildListCard(/*da035Datas[index]*/ padlists[index]);
+                }else{
+                  return Center(child: Text("해당 날짜에 데이터가 없습니다."));
+
+                }
+
               },
             ))
           ],
@@ -341,7 +414,11 @@ class _AppPage01State extends State<AppPage01>   {
         }
 
 
-        await PDAlist_getdata(result,count);
+        await PDAlist_getdata(result);
+        await PDAlist_getdata2();
+        if (chk == true){
+          return;
+        }
         print(count);
         print("수량체크");
         _onDecode(call);
@@ -375,9 +452,9 @@ class _AppPage01State extends State<AppPage01>   {
         print("object");
       }
 
-      if(!_decodeResults.contains(result)){
+      /*if(!_decodeResults.contains(result)){
         _decodeResults.add(result);
-      }
+      }*/
 
       if(lDecodeResult.contains("READ_FAIL"))
       {
@@ -419,7 +496,7 @@ class _AppPage01State extends State<AppPage01>   {
           child: GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: (){
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AppPage01_Subpage(padlistmodel : padlistmodel, date : _etDate.text)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage01_Subpage(padlistmodel : padlistmodel, date : _etDate.text)));
             },
             child: Container(
               padding: EdgeInsets.all(16),
@@ -450,7 +527,7 @@ class _AppPage01State extends State<AppPage01>   {
 
                           // Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage11Detail(da035Data: da035Data)));
                         },
-                        child: Text('수량 : ' + padlistmodel.Count.toString(), style: TextStyle(
+                        child: Text('수량 : ' + sum.toString() , style: TextStyle(
                             fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
                         )),
                       ),
