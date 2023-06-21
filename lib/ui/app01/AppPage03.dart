@@ -1,7 +1,6 @@
 
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -539,10 +538,10 @@ class _AppPage03State extends State<AppPage03>   {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text('품목코드: ' + storelist.pcode, style: GlobalStyle.couponName),
                   Text('품목명: ' + storelist.pname, style: GlobalStyle.couponName),
                   Text('규격: ' + storelist.psize, style: GlobalStyle.couponName),
                   Text('재고량: ' + storelist.jaeqty   , style: GlobalStyle.couponName),
-                  SizedBox(height: 12),
                   Row(
 
                     children: [

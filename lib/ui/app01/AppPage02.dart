@@ -451,23 +451,19 @@ class _AppPage02State extends State<AppPage02>   {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text('품목코드: ' + storelists.pcode, style: GlobalStyle.couponName),
                   Text('거래처: ' + storelists.cltnm, style: GlobalStyle.couponName),
                   Text('품목명: ' + storelists.pname, style: GlobalStyle.couponName),
                   Text('입고량: ' + storelists.wotqt, style: GlobalStyle.couponName),
-                  SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          GlobalStyle.iconTime,
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text('규격: ' + storelists.psize, style: GlobalStyle.couponName),
 
-                        ],
-                      ),
+
+                      Text('규격: ' + storelists.psize, style: GlobalStyle.couponName),
+
+
+
                       /*GestureDetector(
                         onTap: (){
 

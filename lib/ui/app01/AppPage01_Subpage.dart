@@ -271,7 +271,7 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
           color: GlobalStyle.appBarIconThemeColor,
         ),
         elevation: GlobalStyle.appBarElevation,
-        title: Text('입고등록 상세' + '(' + widget.padlistmodel.Count.toString() + '개' + ')',
+        title: Text('입고등록 상세',
           style: GlobalStyle.appBarTitle,
         ),
         backgroundColor: GlobalStyle.appBarBackgroundColor,
@@ -436,21 +436,19 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('업체명: ' + storelist.cltnm, style: GlobalStyle.couponName),
+                Text('품목코드: ' + storelist.pcode, style: GlobalStyle.couponName),
+                Text('거래처: ' + storelist.cltnm, style: GlobalStyle.couponName),
                 Text('품목명: ' + storelist.pname, style: GlobalStyle.couponName),
-                SizedBox(height: 12),
                 Row(
                   //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        GlobalStyle.iconTime,
-                        SizedBox(
-                          width: 4,
-                        ),
+
                         Text('규격: ' + storelist.psize, style: GlobalStyle.couponName)
                       ],
                     ),
+                    SizedBox(width: 20,),
                     GestureDetector(
                       onTap: (){
 

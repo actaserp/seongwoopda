@@ -367,12 +367,12 @@ class _AppPage01State extends State<AppPage01>   {
                 ),
               ),
             ),
-            Container(
+            /* Container(
               child: Text('$_decodeResult\n'),
             ),
             Container(
               child: Text('$_decodeCount\n'),
-            ),
+            ),*/
             Expanded(child: ListView.builder(itemCount: /*da035Datas.length*/   /*_decodeResults.length*/ padlists.length,
               padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
               physics: AlwaysScrollableScrollPhysics(),
@@ -506,33 +506,35 @@ class _AppPage01State extends State<AppPage01>   {
                   /*Text(da035Data.cltnm, style: GlobalStyle.couponName),
                   Text(da035Data.grade, style: GlobalStyle.couponName),
                   Text(da035Data.thick+' ['+da035Data.width+'] '+da035Data.color, style: GlobalStyle.couponName),*/
-                  Text("품목명: " + padlistmodel.phm_pcod, style: GlobalStyle.couponName),
-                  Text("사이즈: " + padlistmodel.phm_size, style: GlobalStyle.couponName),
-                  Text("Code88: " + padlistmodel.code88, style: GlobalStyle.couponName),
-                  SizedBox(height: 12),
+                  Text("품목코드: " + padlistmodel.phm_pcod, style: GlobalStyle.couponName),
+                  Text("규격: " + padlistmodel.phm_size, style: GlobalStyle.couponName),
+                  Text("바코드: " + padlistmodel.code88, style: GlobalStyle.couponName),
+                  SizedBox(height: 10),
+
+                  GestureDetector(
+                    onTap: (){
+
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage11Detail(da035Data: da035Data)));
+                    },
+                    child: Text('수량 : ' + sum.toString() , style: TextStyle(
+                        fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
+                    )),
+                  ),
+                  /*SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
-                          GlobalStyle.iconTime,
                           SizedBox(
                             width: 4,
                           ),
-                          Text(/*da035Data.pname*/"collapse" , style: GlobalStyle.couponName),
+
                         ],
                       ),
-                      GestureDetector(
-                        onTap: (){
 
-                          // Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage11Detail(da035Data: da035Data)));
-                        },
-                        child: Text('수량 : ' + sum.toString() , style: TextStyle(
-                            fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
-                        )),
-                      ),
                     ],
-                  ),
+                  ),*/
                 ],
               ),
             ),
