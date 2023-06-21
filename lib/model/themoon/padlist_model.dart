@@ -12,11 +12,11 @@ class padlist_model{
   padlist_model({
     required this.phm_pnam,
     required this.phm_size,
-             this.phm_pcod,
-             this.phm_unit,
-             this.code88,
-             this.Count = 0,
-});
+    this.phm_pcod,
+    this.phm_unit,
+    this.code88,
+    this.Count = 0,
+  });
 
   bool startsWith(String prefix){
     return phm_pcod.toString().startsWith(prefix);

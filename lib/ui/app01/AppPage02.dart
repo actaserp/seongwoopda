@@ -2,8 +2,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:actthemoon/model/themoon/storelist_model.dart';
-import 'package:actthemoon/ui/app01/AppPage01_Subpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
@@ -13,6 +11,7 @@ import 'package:http/http.dart' as http;
 import '../../config/constant.dart';
 import '../../config/global_style.dart';
 import '../../model/kosep/Da035List_model.dart';
+import '../../model/themoon/storelist_model.dart';
 import '../home/tab_home.dart';
 
 class AppPage02 extends StatefulWidget {
@@ -65,15 +64,15 @@ class _AppPage02State extends State<AppPage02>   {
     Uri uri = Uri.parse(encoded);
 
     final response = await http.post(
-        uri,
-        headers: <String, String>{
-      'Content-Type' : 'application/x-www-form-urlencoded',
-      'Accept' : 'application/json'
-    },
-    body: <String, String> {
-          'dbnm' : "ERP_THEMOON",
-          'gs_today' : _etDate.text,
-    },
+      uri,
+      headers: <String, String>{
+        'Content-Type' : 'application/x-www-form-urlencoded',
+        'Accept' : 'application/json'
+      },
+      body: <String, String> {
+        'dbnm' : "ERP_THEMOON",
+        'gs_today' : _etDate.text,
+      },
 
     );
     if(response.statusCode == 200){
@@ -132,9 +131,17 @@ class _AppPage02State extends State<AppPage02>   {
           'planNoList' : resultset,
         }));
     if(response.statusCode == 200){
-      print("저장됨");
+
+      showAlterDialogSucc(context);
+
+
+
       return   true;
     }else{
+
+      showAlterDialog(context);
+
+
       //만약 응답이 ok가 아니면 에러를 던집니다.
       throw Exception('고장부위 불러오는데 실패했습니다');
       return   false;
@@ -160,18 +167,61 @@ class _AppPage02State extends State<AppPage02>   {
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
         uri,
-      headers: <String, String> {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept' : 'application/json'
-      },
-      body: <String, String> {
+        headers: <String, String> {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept' : 'application/json'
+        },
+        body: <String, String> {
           'userid' : _perid,
           'ipaddr' : ipAddress,
           'usernm' : _username,
           'winnm'  : '입고현황',
           'winid'  : '입고현황',
           'buton'  : '010'
+        }
+    );
+    if(response.statusCode == 200){
+      return true;
+    }else{
+      print("object");
+    }
+
+
+  }
+
+  Future log_history_h2() async {
+
+
+
+    String ipAddress = '';
+    for(var interface in await NetworkInterface.list()) {
+      for(var address in interface.addresses) {
+        ipAddress = address.address;
       }
+    }
+
+    String _username = '';
+    String username = (await SessionManager().get("username")).toString();
+    _username = utf8.decode(username.runes.toList());
+
+    var uritxt = CLOUD_URL + '/themoon/loginlog_h';
+    var encoded = Uri.encodeFull(uritxt);
+
+    Uri uri = Uri.parse(encoded);
+    final response = await http.post(
+        uri,
+        headers: <String, String> {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept' : 'application/json'
+        },
+        body: <String, String> {
+          'userid' : _perid,
+          'ipaddr' : ipAddress,
+          'usernm' : _username,
+          'winnm'  : '입고취소',
+          'winid'  : '입고취소',
+          'buton'  : '040'
+        }
     );
     if(response.statusCode == 200){
       return true;
@@ -193,7 +243,7 @@ class _AppPage02State extends State<AppPage02>   {
     return formattedDate;
   }
   Future<void> sessionData() async{
-    
+
     _perid    = (await SessionManager().get("perid")).toString();
     await log_history_h();
     print(_perid);
@@ -258,7 +308,7 @@ class _AppPage02State extends State<AppPage02>   {
                   onPressed: () {
                     setState(() {
                       _etDate.text  ;
-                       PDAlist_getdata3();
+                      PDAlist_getdata3();
 
                     });
                     String ls_etdate = _etDate.text  ;
@@ -295,13 +345,13 @@ class _AppPage02State extends State<AppPage02>   {
               ),
             ),
             storelist.length == 0 || storelist == null ?
-                Text('정보가 없습니다.',
-                style: TextStyle(
-                  color: BLACK_GREY,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                )
+            Text('정보가 없습니다.',
+              style: TextStyle(
+                color: BLACK_GREY,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            )
                 :
             Expanded(child: ListView.builder(itemCount: storelist.length,
               padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -329,24 +379,26 @@ class _AppPage02State extends State<AppPage02>   {
                   ),
                   onPressed: () async
                   {
-                    print(storelistes.toString());
-                    /*print(resultset);
-                    print(resultset2);
-                    print(resultset3);
-                    print(resultset4);
-                    print(resultset5);*/
 
 
                     showDialog(context: context, builder: (context){
                       return AlertDialog(
                         content: Text('입고취소를 하시겠습니까?'),
                         actions: <Widget>[
+                          TextButton(onPressed: () async {
+
+                            Navigator.pop(context);
+
+
+                            await update_fplandata();
+                            log_history_h2();
+
+
+                            // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+                          }, child: Text('OK')),
                           TextButton(onPressed: (){
-                            update_fplandata();
-                            print(resultset);
-                            Navigator.pop(context, "확인");
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
-                          }, child: Text('OK'))
+                            Navigator.pop(context);
+                          }, child: Text('Cancel'))
                         ],
                       );
                     });
@@ -482,26 +534,45 @@ class _AppPage02State extends State<AppPage02>   {
   }
 
 
-
-  void showAlertDialog(BuildContext context, String as_msg) async {
-    String result = await showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('ACTAS 출고등록'),
-          content: Text(as_msg),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
+  void showAlterDialogSucc(BuildContext context) async {
+    String result = await showDialog(context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text('입고등록 취소'),
+            content: Text('취소가 완료되었습니다.'),
+            actions: <Widget>[
+              TextButton(onPressed: (){
                 Navigator.pop(context, "확인");
-              },
-            ),
-          ],
-        );
-      },
-    );
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(
+                        builder: (context) => TabHomePage()));
+              }, child: Text('OK'))
+            ],
+          );
+        });
+  }
+
+
+
+
+
+
+
+  void showAlterDialog(BuildContext context) async {
+    String result = await showDialog(context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text('입고등록 취소'),
+            content: Text('취소중 오류가 발생했습니다. 관리자에게 문의하세요(화면을 나갔다가 바코드를 재인식 해보십시오 혹은 체크된 리스트는 값 입력이 필수입니다).'),
+            actions: <Widget>[
+              TextButton(onPressed: (){
+                Navigator.pop(context, "확인");
+              }, child: Text('OK'))
+            ],
+          );
+        });
   }
 
 }

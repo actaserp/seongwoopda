@@ -2,10 +2,8 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
-import 'package:actthemoon/model/themoon/padlist_model.dart';
 import 'package:flutter/services.dart';
 import 'package:pointmobile_scanner/pointmobile_scanner.dart';
-import 'package:actthemoon/ui/app01/AppPage01_Subpage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
@@ -14,7 +12,9 @@ import 'package:http/http.dart' as http;
 
 import '../../config/constant.dart';
 import '../../config/global_style.dart';
+import '../../model/ca609/padlist_model.dart';
 import '../../model/kosep/Da035List_model.dart';
+import 'AppPage01_Subpage.dart';
 
 class AppPage01 extends StatefulWidget {
   const AppPage01({Key? key}) : super(key: key);
@@ -114,20 +114,20 @@ class _AppPage01State extends State<AppPage01>   {
 
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
-        uri,
+      uri,
       headers: <String, String> {
 
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept' : 'application/json'
       },
       body: <String, String> {
-          'userid' : _perid,
-          'ipaddr' : ipAddress,
-          'usernm' : _username,
-          'winnm'  : '입고등록',
-          'winid'  : '입고등록',
-          'buton'  : '020'
-        },
+        'userid' : _perid,
+        'ipaddr' : ipAddress,
+        'usernm' : _username,
+        'winnm'  : '입고등록',
+        'winid'  : '입고등록',
+        'buton'  : '020'
+      },
     );
     if(response.statusCode == 200){
       return true;
@@ -182,8 +182,8 @@ class _AppPage01State extends State<AppPage01>   {
         padlists.removeWhere((element) {
           if (element.startsWith(prefixToRemove)) {
 
-              // 두번째 이후로 매칭된 요소는 제거한다.
-              return true;
+            // 두번째 이후로 매칭된 요소는 제거한다.
+            return true;
 
           }
           return false;
@@ -326,7 +326,7 @@ class _AppPage01State extends State<AppPage01>   {
       if(call.method == PointmobileScanner.ON_DECODE) {
         setState(() {
           final List lDecodeResult = call.arguments;
-           result = lDecodeResult[1];
+          result = lDecodeResult[1];
 
         });
 
@@ -397,7 +397,7 @@ class _AppPage01State extends State<AppPage01>   {
 
   void _onError(Exception error){
     setState(() {
-        _decodeResult = error.toString();
+      _decodeResult = error.toString();
     });
   }
 

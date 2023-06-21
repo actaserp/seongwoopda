@@ -2,10 +2,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:actthemoon/model/themoon/storelist_model.dart';
-import 'package:actthemoon/ui/app01/AppPage01_Subpage.dart';
-import 'package:actthemoon/ui/authentication/usercheck.dart';
-import 'package:actthemoon/ui/home/tab_home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +14,8 @@ import 'package:pointmobile_scanner/pointmobile_scanner.dart';
 import '../../config/constant.dart';
 import '../../config/global_style.dart';
 import '../../model/kosep/Da035List_model.dart';
+import '../../model/themoon/storelist_model.dart';
+import '../home/tab_home.dart';
 
 class AppPage03 extends StatefulWidget {
   const AppPage03({Key? key}) : super(key: key);
@@ -51,10 +49,16 @@ class _AppPage03State extends State<AppPage03>   {
   List<String> resultset2 = [];
   List<String> resultset3 = [];
   List<String> resultset4 = [];
+  List<String> resultset5 = [];
+
+
+  String checkvalue = 'true';
+
 
 
   @override
   void initState() {
+    storelist.clear();
     sessionData();
     super.initState();
     _etDate.text = getToday();
@@ -129,6 +133,7 @@ class _AppPage03State extends State<AppPage03>   {
             stdate: alllist[i]["stdate"],
             jaeqty: alllist[i]["jaeqty"],
             isChecked: true,
+            textEditingController: TextEditingController()
 
         );
 
@@ -136,14 +141,16 @@ class _AppPage03State extends State<AppPage03>   {
 
         storelists.removeWhere((element) {
 
-            if(element.startsWith(prefixToRemove)){
-                return true;
-            }
-            return false;
+          if(element.startsWith(prefixToRemove)){
+            return true;
+          }
+          return false;
         });
 
         resultset2.add(alllist[i]["pcode"]);
         resultset3.add(alllist[i]["jaeqty"]);
+        resultset5.add(alllist[i]["lotno"]);
+
 
 
         setState(() {
@@ -178,18 +185,18 @@ class _AppPage03State extends State<AppPage03>   {
 
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
-        uri,
+      uri,
       headers: <String, String> {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept' : 'application/json'
       },
       body: <String, String> {
-          'userid': _perid,
-          'ipaddr': ipAddress,
-          'usernm' : _username,
-          'winnm' : '재고실사',
-          'winid' : '재고실사',
-          'buton' : '020'
+        'userid': _perid,
+        'ipaddr': ipAddress,
+        'usernm' : _username,
+        'winnm' : '재고실사',
+        'winid' : '재고실사',
+        'buton' : '020'
       },
     );
     if(response.statusCode == 200){
@@ -243,14 +250,21 @@ class _AppPage03State extends State<AppPage03>   {
 
 
   @override
-  Future<bool> save_tbca630()async {
+  Future<bool> save_tbca630() async {
 
 
     var uritxt = CLOUD_URL + '/themoon/Insert_tb_ca630';
-
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
     print("----------------------------");
+
+
+    // if(resultset4.any((value) => value.trim().isEmpty)) {
+    //   await showAlterDialog(context);
+    //   // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AppPage03()));
+    //   return false;
+    // }
+
 
     final response = await http.post(
         uri,
@@ -263,14 +277,22 @@ class _AppPage03State extends State<AppPage03>   {
           'close_perid': _perid,
           'pcodeList' : resultset2,
           'jaeqtyList': resultset3,
-          'silqty'    : resultset4
+          'silqty'    : resultset4,
+          'lotnoList' : resultset5,
 
 
         }));
     if(response.statusCode == 200){
-      print("저장됨");
+
+      showAlterDialogSucc(context);
+
+
       return   true;
     }else{
+
+      showAlterDialog(context);
+
+
       //만약 응답이 ok가 아니면 에러를 던집니다.
       throw Exception('고장부위 불러오는데 실패했습니다');
       return   false;
@@ -329,28 +351,7 @@ class _AppPage03State extends State<AppPage03>   {
                     ),
                   ),
                 ),
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _etDate.text  ;
-                    });
-                    String ls_etdate = _etDate.text  ;
-                    if(ls_etdate.length == 0){
-                      print("일자를 입력하세요");
-                      return;
-                    }
 
-                    print(_etDate.text );
-                  },
-                  child: Text(
-                    '목록조회',
-                    style: TextStyle(
-                      color: Colors.indigo,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
               ],
             ),
             Container(
@@ -380,7 +381,7 @@ class _AppPage03State extends State<AppPage03>   {
               child: TextButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) => SOFT_BLUE,
+                          (Set<MaterialState> states) => SOFT_BLUE,
                     ),
                     overlayColor: MaterialStateProperty.all(Colors.transparent),
                     shape: MaterialStateProperty.all(
@@ -397,34 +398,41 @@ class _AppPage03State extends State<AppPage03>   {
                       return AlertDialog(
                         content: Text('실사등록 하시겠습니까?'),
                         actions: <Widget>[
+                          TextButton(
+                              onPressed: () async {
+                                for(var item in storelist) {
+                                  if(item.isChecked){
+                                    for (int i = 0; i < storelist.length; i++) {
+                                      String? value = storelist[i].textEditingController?.text;
+                                      resultset4.add(value ?? '');
+                                    }
+                                  }
+                                }
+
+                                Navigator.pop(context);
+
+                                await save_tbca630();
+                                // log_history_h2();
+
+                              }, child: Text('OK')),
                           TextButton(onPressed: (){
 
-                            for(int i=0; i< storelist.length; i++){
-                              String? value = storelist[i].textEditingController?.text;
-                              resultset4.add(value ?? '');
+                            Navigator.pop(context);
 
-                            }
-
-
-                              save_tbca630();
-                              log_history_h2();
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
-
-                          }, child: Text('OK'))
+                          }, child: Text('Cancel'))
                         ],
                       );
                     });
-
                   },
                   child: Padding(padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Text('등록',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
+                    child: Text('등록',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
                   )),
             )
           ],
@@ -510,10 +518,6 @@ class _AppPage03State extends State<AppPage03>   {
 
   Widget _buildListCard(storelist_model storelist){
 
-    storelist.textEditingController = TextEditingController();
-
-    //TextEditingController controller = textControllers[index];
-
     return Card(
         margin: EdgeInsets.only(top: 16),
         shape: RoundedRectangleBorder(
@@ -524,14 +528,11 @@ class _AppPage03State extends State<AppPage03>   {
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: (){
-            //Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage11view(da035Data: da035Data)));
           },
           child: GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: (){
-              // showAlertDialog_chulgoDelete(context, da035Data.lotno, da035Data.deldate, da035Data.delnum, da035Data.delseq);
               print(da035Data);
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage01_Subpage(da035Data: da035Data)));
             },
             child: Container(
               padding: EdgeInsets.all(16),
@@ -560,9 +561,34 @@ class _AppPage03State extends State<AppPage03>   {
                             border: OutlineInputBorder(),
                             counterText: '',
                           ),
-
+                          enabled: storelist.isChecked,
                         ),
-                      )
+                      ),
+                      Expanded(child: Container()),
+                      Checkbox(value: storelist.isChecked,
+                          onChanged: (bool? value){
+                            setState(() {
+                              storelist.isChecked = value ?? true;
+
+                              if(storelist.isChecked) {
+                                resultset2.add(storelist.pcode);
+                                resultset3.add(storelist.jaeqty);
+                                resultset5.add(storelist.lotno);
+
+
+                              }else{
+                                resultset2.remove(storelist.pcode);
+                                resultset3.remove(storelist.jaeqty);
+                                resultset5.remove(storelist.lotno);
+                                resultset4.remove(storelist.textEditingController?.text);
+
+
+                              }
+                              checkvalue = storelist.isChecked ? 'Y' : '';
+
+                            });
+
+                          })
 
                     ],
                   ),
@@ -573,6 +599,70 @@ class _AppPage03State extends State<AppPage03>   {
         )
     );
 
+  }
+
+
+  Future<void> showAlterDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('재고실사 등록'),
+          content: Text('등록중 오류가 발생했습니다. 관리자에게 문의하세요(화면을 나갔다가 바코드를 재인식 해보십시오 혹은 체크된 리스트는 값 입력이 필수입니다).'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, "확인");
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    ).then((result) {
+      // 다이얼로그가 닫힌 후 실행될 코드 작성
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AppPage03()));
+      return Future.value(); // null 반환
+    });
+  }
+
+
+  void showAlterDialogSucc(BuildContext context) async {
+    String result = await showDialog(context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text('재고실사 등록'),
+            content: Text('등록이 완료되었습니다.'),
+            actions: <Widget>[
+              TextButton(onPressed: (){
+                Navigator.pop(context, "확인");
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(
+                        builder: (context) => TabHomePage()));
+              }, child: Text('OK'))
+            ],
+          );
+        });
+  }
+
+
+  void showAlterDialogCheck(BuildContext context) async {
+    String result = await showDialog(context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text('재고실사 등록'),
+            content: Text('체크가 되어있는 리스트는 값을 필요로 합니다.'),
+            actions: <Widget>[
+              TextButton(onPressed: (){
+                Navigator.pop(context, "확인");
+
+              }, child: Text('OK'))
+            ],
+          );
+        });
   }
 
 

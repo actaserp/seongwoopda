@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:actthemoon/model/kosep/Da035List_model.dart';
-import 'package:actthemoon/model/themoon/padlist_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:pointmobile_scanner/pointmobile_scanner.dart';
 import '../../config/constant.dart';
 import '../../config/global_style.dart';
+import '../../model/ca609/padlist_model.dart';
 import '../../model/themoon/storelist_model.dart';
 import '../home/tab_home.dart';
 import 'AppPage01.dart';
@@ -62,7 +61,7 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
   String _perid = '';
   String? _decodeResult = "Unknown";
 
-  
+
   @override
   void initState() {
     sessionData();
@@ -89,7 +88,7 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
     _userid   = (await SessionManager().get("userid")).toString();
     _username = (await SessionManager().get("username")).toString();
     _perid    = (await SessionManager().get("perid")).toString().replaceAll("p", "");
-     print(_perid);
+    print(_perid);
   }
 
 
@@ -108,6 +107,8 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
   }
 
   Future PDAlist_getdata2() async {
+
+
     String _dbnm = await SessionManager().get("dbnm");
 
     var uritxt = CLOUD_URL + "/themoon/list02";
@@ -132,6 +133,8 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
       storelist.clear();
 
       for(int i=0; i< alllist.length; i++){
+
+
         storelist_model emObject = storelist_model(
           cltnm : alllist[i]["cltnm"],
           pname: alllist[i]["pname"],
@@ -145,18 +148,17 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
           textEditingController: TextEditingController(text: alllist[i]["wfokqt"]),
 
 
-
         );
 
         /*Set<String> cltnm = Set();*/
 
 
 
-          resultset.add(alllist[i]["wfokqt"]);
-          resultset2.add(alllist[i]["plan_no"]);
-          resultset3.add(alllist[i]["wono"]);
-          resultset4.add(alllist[i]["pcode"]);
-          resultset5.add(alllist[i]["lotno"]);
+        resultset.add(alllist[i]["wfokqt"]);
+        resultset2.add(alllist[i]["plan_no"]);
+        resultset3.add(alllist[i]["wono"]);
+        resultset4.add(alllist[i]["pcode"]);
+        resultset5.add(alllist[i]["lotno"]);
 
         setState(() {
           storelists.add(emObject);
@@ -182,27 +184,34 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
     print("----------------------------");
 
     final response = await http.post(
-      uri,
-      headers: <String, String> {
-        'Content-Type': 'application/json',
-        'Accept' : 'application/json'
-      },
-      body: json.encode({
-        'dbnm': _dbnm,
-        'close_perid': _perid,
-        'wokqtList' : resultset,
-        'planNoList': resultset2,
-        'wonolist' : resultset3,
-        'close_date': widget.date,
-        'lotnoList' : resultset5,
-        'pcodeList' : resultset4,
-        'end_qty'   : resultset6
+        uri,
+        headers: <String, String> {
+          'Content-Type': 'application/json',
+          'Accept' : 'application/json'
+        },
+        body: json.encode({
+          'dbnm': _dbnm,
+          'close_perid': _perid,
+          'wokqtList' : resultset,
+          'planNoList': resultset2,
+          'wonolist' : resultset3,
+          'close_date': widget.date,
+          'lotnoList' : resultset5,
+          'pcodeList' : resultset4,
+          'end_qty'   : resultset6
 
-      }));
+        }));
     if(response.statusCode == 200){
+
+      showAlterDialogSucc(context);
+
       print("저장됨");
       return   true;
     }else{
+
+      showAlertDialog(context);
+
+
       //만약 응답이 ok가 아니면 에러를 던집니다.
       throw Exception('고장부위 불러오는데 실패했습니다');
       return   false;
@@ -228,18 +237,18 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
 
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
-        uri,
+      uri,
       headers: <String, String> {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept' : 'application/json'
       },
       body: <String, String> {
-          'userid' : _perid,
-          'ipaddr' : ipAddress,
-          'usernm' : _username,
-          'winnm'  : '입고등록',
-          'winid'  : '입고등록',
-          'buton'  : '030'
+        'userid' : _perid,
+        'ipaddr' : ipAddress,
+        'usernm' : _username,
+        'winnm'  : '입고등록',
+        'winid'  : '입고등록',
+        'buton'  : '030'
       },
     );
     if(response.statusCode == 200){
@@ -269,45 +278,45 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
         systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
       ),
 
-        body:
-        WillPopScope(
-            onWillPop: (){
-              Navigator.pop(context);
-              return Future.value(true);
-            },
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _etDate,
-                      readOnly: true,
-                      onTap: () {
-                        _selectDateWithMinMaxDate(context);
-                        print(_etDate.text);
-                      },
-                      maxLines: 1,
-                      cursorColor: Colors.grey[600],
-                      style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                      decoration: InputDecoration(
-                        isDense: true,
-                        contentPadding:  EdgeInsets.all(10),
-                        suffixIcon: Icon(Icons.date_range, color: Colors.indigo),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey[600]!),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey[600]!),
-                        ),
-                        labelText: '입고예정일',
-                        labelStyle: TextStyle(color: BLACK_GREY),
+      body:
+      WillPopScope(
+        onWillPop: (){
+          Navigator.pop(context);
+          return Future.value(true);
+        },
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _etDate,
+                    readOnly: true,
+                    onTap: () {
+                      _selectDateWithMinMaxDate(context);
+                      print(_etDate.text);
+                    },
+                    maxLines: 1,
+                    cursorColor: Colors.grey[600],
+                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding:  EdgeInsets.all(10),
+                      suffixIcon: Icon(Icons.date_range, color: Colors.indigo),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[600]!),
                       ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[600]!),
+                      ),
+                      labelText: '입고예정일',
+                      labelStyle: TextStyle(color: BLACK_GREY),
                     ),
                   ),
-                ],
-              ),
-             /* Container(
+                ),
+              ],
+            ),
+            /* Container(
                 height: MediaQuery.of(context).size.height * 0.56,
                 child: WillPopScope(
                     child: ListView.builder(
@@ -323,77 +332,78 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
                       return Future.value(true);
                     }),
               ),*/
-              Expanded(child: ListView.builder(itemCount: storelist.length,
-                padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
-                physics: AlwaysScrollableScrollPhysics(),
-                itemBuilder: (BuildContext context, int index){
-                  return _buildListCard(storelist[index]);
-                },
-              )),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: double.infinity,
-                child: TextButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                            (Set<MaterialState> states) => SOFT_BLUE,
-                      ),
-                      overlayColor: MaterialStateProperty.all(Colors.transparent),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(3.0),
-                        ),
+            Expanded(child: ListView.builder(itemCount: storelist.length,
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+              physics: AlwaysScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index){
+                return _buildListCard(storelist[index]);
+              },
+            )),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              width: double.infinity,
+              child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) => SOFT_BLUE,
+                    ),
+                    overlayColor: MaterialStateProperty.all(Colors.transparent),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(3.0),
                       ),
                     ),
-                    onPressed: () async
-                    {
-                        print(storelists.toString());
-                        print(resultset);
-                        print(resultset2);
-                        print(resultset3);
-                        print(resultset4);
-                        print(resultset5);
+                  ),
+                  onPressed: () async
+                  {
+                    print(storelists.toString());
+                    print(resultset);
+                    print(resultset2);
+                    print(resultset3);
+                    print(resultset4);
+                    print(resultset5);
 
 
-                        showDialog(context: context, builder: (context){
-                          return AlertDialog(
-                            content: Text('입고등록 하시겠습니까?'),
-                            actions: <Widget>[
-                              TextButton(onPressed: (){
+                    showDialog(context: context, builder: (context){
+                      return AlertDialog(
+                        content: Text('입고등록 하시겠습니까?'),
+                        actions: <Widget>[
+                          TextButton(onPressed: () async {
 
-                                for(var item in storelist){
-                                  if(item.isChecked){
-                                    for(int i=0; i<storelist.length; i++){
-                                      String? value = storelist[i].textEditingController?.text;
-                                      resultset6.add(value ?? '');
-                                    }
-                                  }
+                            for(var item in storelist){
+                              if(item.isChecked){
+                                for(int i=0; i<storelist.length; i++){
+                                  String? value = storelist[i].textEditingController?.text;
+                                  resultset6.add(value ?? '');
                                 }
+                              }
+                            }
 
-                                save_fplandata();
-                                Navigator.pop(context);
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
-                              }, child: Text('OK'))
-                            ],
-                          );
-                        });
-                        //save_fplandata();
+                            Navigator.pop(context);
 
-                    }, child: Padding(padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            await save_fplandata();
+                            // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+                          }, child: Text('OK'))
+                        ],
+                      );
+                    });
+                    //save_fplandata();
+
+                  }, child: Padding(padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Text('입고등록',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white
-                ),
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white
+                  ),
                   textAlign: TextAlign.center,
                 ),)),
-              )
-            ],
-          ),
+            )
+          ],
         ),
+      ),
     );
 
   }
@@ -446,47 +456,47 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
 
                       },
                       child: Text('완료수량: ' + storelist.wfokqt, style: TextStyle(
-                        fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
+                          fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
                       )),
                     ),
                     Checkbox(
                         value: storelist.isChecked,
                         onChanged: (bool? value){
-                      setState(() {
-                        storelist.isChecked = value ?? true;
+                          setState(() {
+                            storelist.isChecked = value ?? true;
 
-                        if(storelist.isChecked) {
-                          resultset.add(storelist.wfokqt);
-                          resultset2.add(storelist.plan_no);
-                          resultset3.add(storelist.wono);
-                          resultset4.add(storelist.pcode);
-                          resultset5.add(storelist.lotno);
-                          resultsum += storelist.wfokqt + "|";
+                            if(storelist.isChecked) {
+                              resultset.add(storelist.wfokqt);
+                              resultset2.add(storelist.plan_no);
+                              resultset3.add(storelist.wono);
+                              resultset4.add(storelist.pcode);
+                              resultset5.add(storelist.lotno);
+                              resultsum += storelist.wfokqt + "|";
 
-                        }else{
-                          resultset.remove(storelist.wfokqt);
-                          resultset2.remove(storelist.plan_no);
-                          resultset3.remove(storelist.wono);
-                          resultset4.remove(storelist.pcode);
-                          resultset5.remove(storelist.lotno);
+                            }else{
+                              resultset.remove(storelist.wfokqt);
+                              resultset2.remove(storelist.plan_no);
+                              resultset3.remove(storelist.wono);
+                              resultset4.remove(storelist.pcode);
+                              resultset5.remove(storelist.lotno);
 
-                          resultsum = resultsum.replaceAll(storelist.wfokqt, "");
+                              resultsum = resultsum.replaceAll(storelist.wfokqt, "");
 
-                        }
-                        checkvalue = storelist.isChecked ? 'Y' : '';
-                        print('값 확인 ::: ' + checkvalue.toString());
-                        print(resultset);
-                        print(resultset2);
-                        print(resultset3);
+                            }
+                            checkvalue = storelist.isChecked ? 'Y' : '';
+                            print('값 확인 ::: ' + checkvalue.toString());
+                            print(resultset);
+                            print(resultset2);
+                            print(resultset3);
 
-                      });
-                    })
+                          });
+                        })
                   ],
                 ),
                 Row(
                   children: [
                     Text("수량 : ", style: TextStyle(
-                      fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
+                        fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
                     )),
                     Container(
                       width: 120,
@@ -568,12 +578,12 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
             TextButton(
               child: Text('OK'),
               onPressed: () async{
-                  setState(() {
-                    arrBarcode = "";
-                    arrBarcodeText.clear();
+                setState(() {
+                  arrBarcode = "";
+                  arrBarcodeText.clear();
 
-                  });
-                  Navigator.pop(context, "닫기");
+                });
+                Navigator.pop(context, "닫기");
               },
             ),
             TextButton(
@@ -589,14 +599,33 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
   }
 
 
-  void showAlertDialog(BuildContext context, String as_msg) async {
+  void showAlterDialogSucc(BuildContext context) async {
+    String result = await showDialog(context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text('입고 등록'),
+            content: Text('등록이 완료되었습니다.'),
+            actions: <Widget>[
+              TextButton(onPressed: (){
+                Navigator.pop(context, "확인");
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(
+                        builder: (context) => TabHomePage()));
+              }, child: Text('OK'))
+            ],
+          );
+        });
+  }
+
+  void showAlertDialog(BuildContext context) async {
     String result = await showDialog(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('ACTAS 입고등록'),
-          content: Text(as_msg),
+          title: Text('입고등록'),
+          content: Text('등록중 오류가 발생했습니다. 관리자에게 문의하세요(화면을 나갔다가 바코드를 재인식 해보십시오 혹은 체크된 리스트는 값 입력이 필수입니다).'),
           actions: <Widget>[
             TextButton(
               child: Text('OK'),
