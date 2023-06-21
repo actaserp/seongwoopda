@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:pointmobile_scanner/pointmobile_scanner.dart';
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:intl/intl.dart';
@@ -217,6 +218,10 @@ class _AppPage01State extends State<AppPage01>   {
 
   Future PDAlist_getdata2() async {
 
+    sum = 0;
+    chk = false;
+
+
 
     String _dbnm = await SessionManager().get("dbnm");
 
@@ -258,7 +263,7 @@ class _AppPage01State extends State<AppPage01>   {
 
 
         );
-        sum +=  double.parse(alllist[i]["wfokqt"]);
+        sum +=  int.parse(alllist[i]["wfokqt"]);
 
         /*Set<String> cltnm = Set();*/
 
@@ -278,6 +283,86 @@ class _AppPage01State extends State<AppPage01>   {
     }
   }
 
+  Future<void> _onBarcodeScannerHandler(MethodCall call) async {
+    try{
+      if(call.method == PointmobileScanner.ON_DECODE) {
+        setState(() {
+          final List lDecodeResult = call.arguments;
+          result = lDecodeResult[1];
+
+        });
+
+        int count = 0;
+
+        _decodeResults.add(result);
+
+        for(String value in _decodeResults){
+          if(value == result){
+            count ++;
+          }
+        }
+
+
+        await PDAlist_getdata(result);
+        await PDAlist_getdata2();
+
+        print(count);
+        print("수량체크");
+        _onDecode(call);
+        print(padlists.toString());
+
+
+
+      } else if (call.method == PointmobileScanner.ON_ERROR){
+        _onError(call.arguments);
+      } else {
+        print(call.arguments);
+      }
+    } catch(e) {
+      print(e);
+    }
+  }
+
+
+  void _onDecode(MethodCall call) async{
+
+    setState(() {
+      final List lDecodeResult = call.arguments;
+      String result = "Symbology: ${lDecodeResult[0]}\nValue: ${lDecodeResult[1]}";
+
+      String result1 = "${lDecodeResult[1]}";
+
+      if(!_decodePda.contains(result1)){
+        _decodePda.add(result1);
+        print(_decodePda);
+        print("object");
+      }
+
+      /*if(!_decodeResults.contains(result)){
+        _decodeResults.add(result);
+      }*/
+
+      if(lDecodeResult.contains("READ_FAIL"))
+      {
+        _decodeCount;
+      }
+      else
+      {
+        _decodeCount++;
+      }
+      /*_decodeResult = "Symbology: ${lDecodeResult[0]}\nValue: ${lDecodeResult[1]}";
+      */
+      _decodeResult = "${lDecodeResult[1]}";
+    });
+
+
+  }
+
+  void _onError(Exception error){
+    setState(() {
+      _decodeResult = error.toString();
+    });
+  }
 
 
   @override
@@ -394,89 +479,10 @@ class _AppPage01State extends State<AppPage01>   {
 
   }
 
-  Future<void> _onBarcodeScannerHandler(MethodCall call) async {
-    try{
-      if(call.method == PointmobileScanner.ON_DECODE) {
-        setState(() {
-          final List lDecodeResult = call.arguments;
-          result = lDecodeResult[1];
-
-        });
-
-        int count = 0;
-
-        _decodeResults.add(result);
-
-        for(String value in _decodeResults){
-          if(value == result){
-            count ++;
-          }
-        }
-
-
-        await PDAlist_getdata(result);
-        await PDAlist_getdata2();
-        if (chk == true){
-          return;
-        }
-        print(count);
-        print("수량체크");
-        _onDecode(call);
-        print(padlists.toString());
 
 
 
-      } else if (call.method == PointmobileScanner.ON_ERROR){
-        _onError(call.arguments);
-      } else {
-        print(call.arguments);
-      }
-    } catch(e) {
-      print(e);
-    }
-  }
 
-
-
-  void _onDecode(MethodCall call) async{
-
-    setState(() {
-      final List lDecodeResult = call.arguments;
-      String result = "Symbology: ${lDecodeResult[0]}\nValue: ${lDecodeResult[1]}";
-
-      String result1 = "${lDecodeResult[1]}";
-
-      if(!_decodePda.contains(result1)){
-        _decodePda.add(result1);
-        print(_decodePda);
-        print("object");
-      }
-
-      /*if(!_decodeResults.contains(result)){
-        _decodeResults.add(result);
-      }*/
-
-      if(lDecodeResult.contains("READ_FAIL"))
-      {
-        _decodeCount;
-      }
-      else
-      {
-        _decodeCount++;
-      }
-      /*_decodeResult = "Symbology: ${lDecodeResult[0]}\nValue: ${lDecodeResult[1]}";
-      */
-      _decodeResult = "${lDecodeResult[1]}";
-    });
-
-
-  }
-
-  void _onError(Exception error){
-    setState(() {
-      _decodeResult = error.toString();
-    });
-  }
 
 
 
@@ -506,7 +512,9 @@ class _AppPage01State extends State<AppPage01>   {
                   /*Text(da035Data.cltnm, style: GlobalStyle.couponName),
                   Text(da035Data.grade, style: GlobalStyle.couponName),
                   Text(da035Data.thick+' ['+da035Data.width+'] '+da035Data.color, style: GlobalStyle.couponName),*/
+
                   Text("품목코드: " + padlistmodel.phm_pcod, style: GlobalStyle.couponName),
+                  Text("품목명: " + padlistmodel.phm_pnam, style: GlobalStyle.couponName),
                   Text("규격: " + padlistmodel.phm_size, style: GlobalStyle.couponName),
                   Text("바코드: " + padlistmodel.code88, style: GlobalStyle.couponName),
                   SizedBox(height: 10),

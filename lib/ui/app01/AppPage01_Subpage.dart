@@ -439,16 +439,11 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
                 Text('품목코드: ' + storelist.pcode, style: GlobalStyle.couponName),
                 Text('거래처: ' + storelist.cltnm, style: GlobalStyle.couponName),
                 Text('품목명: ' + storelist.pname, style: GlobalStyle.couponName),
+                Text('규격: ' + storelist.psize, style: GlobalStyle.couponName),
                 Row(
                   //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
 
-                        Text('규격: ' + storelist.psize, style: GlobalStyle.couponName)
-                      ],
-                    ),
-                    SizedBox(width: 20,),
                     GestureDetector(
                       onTap: (){
 
@@ -456,6 +451,28 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
                       child: Text('완료수량: ' + storelist.wfokqt, style: TextStyle(
                           fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
                       )),
+                    ),
+
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text("수량 : ", style: TextStyle(
+                        fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
+                    )),
+                    Container(
+                      width: 120,
+                      height: 30,
+                      child: TextField(
+                        maxLength: 9,
+                        controller: storelist.textEditingController,
+                        cursorColor: Colors.grey[600],
+                        style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          counterText: '',
+                        ),
+                      ),
                     ),
                     Checkbox(
                         value: storelist.isChecked,
@@ -489,27 +506,6 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
 
                           });
                         })
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text("수량 : ", style: TextStyle(
-                        fontSize: 14, color: SOFT_BLUE, fontWeight: FontWeight.bold
-                    )),
-                    Container(
-                      width: 120,
-                      height: 30,
-                      child: TextField(
-                        maxLength: 9,
-                        controller: storelist.textEditingController,
-                        cursorColor: Colors.grey[600],
-                        style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          counterText: '',
-                        ),
-                      ),
-                    )
                   ],
                 ),
               ],
