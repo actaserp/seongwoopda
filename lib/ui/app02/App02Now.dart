@@ -85,8 +85,102 @@ class _App02NowState extends State<App02Now>   {
     print("임경현");
     print(_custcd);
 
+    await log_history_h();
+  }
+
+  Future log_history_h() async {
+
+    String ipAddress = '';
+    for (var interface in await NetworkInterface.list()) {
+      for (var address in interface.addresses){
+        ipAddress = address.address;
+      }
+    }
+
+
+    String _username  = '';
+    String username = (await SessionManager().get("username")).toString();
+    _username = utf8.decode(username.runes.toList());
+
+    var uritxt = CLOUD_URL + '/ca609/insertLog';
+    var encoded = Uri.encodeFull(uritxt);
+
+    Uri uri = Uri.parse(encoded);
+    final response = await http.post(
+      uri,
+      headers: <String, String> {
+
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept' : 'application/json'
+      },
+      body: <String, String> {
+        'dbnm'   : 'ERP_THEMOON',
+        'custcd' : 'THEMOON',
+        'spjangcd': 'ZZ',
+        'userid' : _perid,
+        'ipaddr' : ipAddress,
+        'usernm' : _username,
+        'winnm'  : '수입검사현황',
+        'winid'  : '수입검사현황',
+        'buton'  : '010'
+      },
+    );
+    if(response.statusCode == 200){
+      print("로그 저장됨");
+      return true;
+    }else{
+      print("통신에러");
+    }
 
   }
+
+  Future log_history_d() async {
+
+    String ipAddress = '';
+    for (var interface in await NetworkInterface.list()) {
+      for (var address in interface.addresses){
+        ipAddress = address.address;
+      }
+    }
+
+
+    String _username  = '';
+    String username = (await SessionManager().get("username")).toString();
+    _username = utf8.decode(username.runes.toList());
+
+    var uritxt = CLOUD_URL + '/ca609/insertLog';
+    var encoded = Uri.encodeFull(uritxt);
+
+    Uri uri = Uri.parse(encoded);
+    final response = await http.post(
+      uri,
+      headers: <String, String> {
+
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept' : 'application/json'
+      },
+      body: <String, String> {
+        'dbnm'   : 'ERP_THEMOON',
+        'custcd' : 'THEMOON',
+        'spjangcd': 'ZZ',
+        'userid' : _perid,
+        'ipaddr' : ipAddress,
+        'usernm' : _username,
+        'winnm'  : '수입검사취소',
+        'winid'  : '수입검사취소',
+        'buton'  : '040'
+      },
+    );
+    if(response.statusCode == 200){
+      print("로그 저장됨");
+      return true;
+    }else{
+      print("통신에러");
+    }
+
+  }
+
+
 
 
 
@@ -560,6 +654,7 @@ class _App02NowState extends State<App02Now>   {
             TextButton(
               child: Text('확인'),
               onPressed: () {
+                log_history_d();
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
               },
             ),
@@ -591,5 +686,7 @@ class _App02NowState extends State<App02Now>   {
 
 
 }
+
+
 
 
