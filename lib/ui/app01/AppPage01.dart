@@ -2,9 +2,10 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
+import 'package:actkosep/model/themoon/padlist_model.dart';
 import 'package:flutter/services.dart';
 import 'package:pointmobile_scanner/pointmobile_scanner.dart';
-
+import 'package:actkosep/ui/app01/AppPage01_Subpage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
@@ -13,10 +14,8 @@ import 'package:http/http.dart' as http;
 
 import '../../config/constant.dart';
 import '../../config/global_style.dart';
-import '../../model/ca609/padlist_model.dart';
 import '../../model/kosep/Da035List_model.dart';
 import '../../model/themoon/storelist_model.dart';
-import 'AppPage01_Subpage.dart';
 
 class AppPage01 extends StatefulWidget {
   const AppPage01({Key? key}) : super(key: key);
@@ -44,6 +43,8 @@ class _AppPage01State extends State<AppPage01>   {
   String pcode = '';
   bool chk = false;
   num sum  = 0;
+  List<num> sum2 = [];
+
 
   String _perid = '';
   String _custcd = "";
@@ -147,6 +148,7 @@ class _AppPage01State extends State<AppPage01>   {
 
 
   Future PDAlist_getdata(String? decodeResult) async {
+
     String _dbnm = await  SessionManager().get("dbnm");
 
     var uritxt = CLOUD_URL + '/themoon/list01';
@@ -242,6 +244,7 @@ class _AppPage01State extends State<AppPage01>   {
       },
     );
     if(response.statusCode == 200){
+
       List<dynamic> alllist = [];
       alllist = jsonDecode(utf8.decode(response.bodyBytes));
       storelist.clear();
@@ -264,6 +267,7 @@ class _AppPage01State extends State<AppPage01>   {
 
         );
         sum +=  int.parse(alllist[i]["wfokqt"]);
+
 
         /*Set<String> cltnm = Set();*/
 
@@ -416,28 +420,7 @@ class _AppPage01State extends State<AppPage01>   {
                     ),
                   ),
                 ),
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _etDate.text;
-                    });
-                    String ls_etdate = _etDate.text  ;
-                    if(ls_etdate.length == 0){
-                      print("일자를 입력하세요");
-                      return;
-                    }
-                    /*da035list_getdata();*/
-                    print(_etDate.text );
-                  },
-                  child: Text(
-                    '목록조회',
-                    style: TextStyle(
-                      color: Colors.indigo,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
+
               ],
             ),
             Container(

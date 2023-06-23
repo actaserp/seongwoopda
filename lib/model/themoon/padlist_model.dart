@@ -7,7 +7,9 @@ class padlist_model{
   late var phm_size;
   late var phm_unit;
   late var code88;
-  int Count;
+  late var Sum2;
+  late var wfokqt_sum;
+
 
   padlist_model({
     required this.phm_pnam,
@@ -15,7 +17,8 @@ class padlist_model{
     this.phm_pcod,
     this.phm_unit,
     this.code88,
-    this.Count = 0,
+    this.Sum2,
+    this.wfokqt_sum
   });
 
   bool startsWith(String prefix){
@@ -24,7 +27,7 @@ class padlist_model{
 
   @override
   String toString() {
-    return '$phm_pcod $phm_pnam $phm_size $phm_unit $code88 $Count';
+    return '$phm_pcod $phm_pnam $phm_size $phm_unit $code88';
   }
 
 

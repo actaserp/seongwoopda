@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:actkosep/model/kosep/Da035List_model.dart';
+import 'package:actkosep/model/themoon/padlist_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:pointmobile_scanner/pointmobile_scanner.dart';
 import '../../config/constant.dart';
 import '../../config/global_style.dart';
-import '../../model/ca609/padlist_model.dart';
 import '../../model/themoon/storelist_model.dart';
 import '../home/tab_home.dart';
 import 'AppPage01.dart';
@@ -366,6 +367,9 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
                     print(resultset5);
 
 
+
+
+
                     showDialog(context: context, builder: (context){
                       return AlertDialog(
                         content: Text('입고등록 하시겠습니까?'),
@@ -380,12 +384,19 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
                                 }
                               }
                             }
-
+                            //Navigator.pop(context);
                             Navigator.pop(context);
 
                             await save_fplandata();
+                            await log_history_h2();
+
                             // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
-                          }, child: Text('OK'))
+                          }, child: Text('OK')),
+
+                          TextButton(onPressed: (){
+                            Navigator.pop(context);
+
+                          }, child: Text('취소'))
                         ],
                       );
                     });

@@ -19,6 +19,8 @@ class storelist_model{
   late var wotqt;
   late var stdate;
   late var jaeqty;
+  late var wfokqt_sum;
+
   bool isChecked = true;
 
   TextEditingController? textEditingController = TextEditingController();
@@ -40,6 +42,7 @@ class storelist_model{
     this.wotqt,
     this.stdate,
     this.jaeqty,
+    this.wfokqt_sum,
     this.textEditingController,
     required this.isChecked,
   });
