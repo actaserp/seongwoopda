@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:pointmobile_scanner/pointmobile_scanner.dart';
 import '../../config/constant.dart';
 import '../../config/global_style.dart';
-import '../../model/ca609/padlist_model.dart';
+import '../../model/themoon/padlist_model.dart';
 import '../../model/themoon/storelist_model.dart';
 import '../home/tab_home.dart';
 import 'AppPage01.dart';
@@ -18,7 +18,9 @@ import 'AppPage01.dart';
 class AppPage01_Subpage extends StatefulWidget {
   final padlist_model padlistmodel;
   final String date;
-  const AppPage01_Subpage({Key? key, required this.padlistmodel, required this.date}) : super(key: key);
+  final VoidCallback removeCardCallback;
+
+  const AppPage01_Subpage({Key? key, required this.padlistmodel, required this.date, required this.removeCardCallback }) : super(key: key);
 
   @override
   State<AppPage01_Subpage> createState() => _AppPage01_SubpageState();
@@ -383,19 +385,22 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
                                 }
                               }
                             }
-                            //Navigator.pop(context);
+
+
                             Navigator.pop(context);
+                            Navigator.pop(context);
+
+                            onOKButtonPressed();
 
                             await save_fplandata();
                             await log_history_h2();
 
                             // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
                           }, child: Text('OK')),
-
                           TextButton(onPressed: (){
                             Navigator.pop(context);
 
-                          }, child: Text('취소'))
+                          }, child: Text('CANCEL'))
                         ],
                       );
                     });
@@ -604,7 +609,7 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
 
 
   void showAlterDialogSucc(BuildContext context) async {
-    String result = await showDialog(context: context,
+    String? result = await showDialog<String>(context: context,
         barrierDismissible: false,
         builder: (BuildContext context){
           return AlertDialog(
@@ -612,15 +617,29 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
             content: Text('등록이 완료되었습니다.'),
             actions: <Widget>[
               TextButton(onPressed: (){
+
+
                 Navigator.pop(context, "확인");
-                Navigator.pushReplacement(context,
+                /* Navigator.pushReplacement(context,
                     MaterialPageRoute(
-                        builder: (context) => TabHomePage()));
+                        builder: (context) => TabHomePage()));*/
               }, child: Text('OK'))
             ],
           );
         });
   }
+
+
+  void onOKButtonPressed() {
+
+
+    widget.removeCardCallback();
+
+    //showAlterDialogSucc(context);
+
+  }
+
+
 
   void showAlertDialog(BuildContext context) async {
     String result = await showDialog(

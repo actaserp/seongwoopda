@@ -2,7 +2,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -555,6 +554,7 @@ class _AppPage03State extends State<AppPage03>   {
                         height: 30,
                         child: TextField(
                           maxLength: 5,
+                          keyboardType: TextInputType.number,
                           controller: storelist.textEditingController,
                           cursorColor: Colors.grey[600],
                           style: TextStyle(fontSize: 16, color: Colors.grey[700]),
