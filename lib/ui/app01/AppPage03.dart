@@ -15,7 +15,6 @@ import '../../config/constant.dart';
 import '../../config/global_style.dart';
 import '../../model/kosep/Da035List_model.dart';
 import '../../model/themoon/storelist_model.dart';
-import '../home/tab_home.dart';
 
 class AppPage03 extends StatefulWidget {
   const AppPage03({Key? key}) : super(key: key);
@@ -53,6 +52,8 @@ class _AppPage03State extends State<AppPage03>   {
 
 
   String checkvalue = 'true';
+
+
 
 
 
@@ -283,6 +284,13 @@ class _AppPage03State extends State<AppPage03>   {
 
         }));
     if(response.statusCode == 200){
+
+      if(response.body == "exist") {
+        showAlterDialogalready(context);
+        return false;
+
+      }
+
 
       showAlterDialogSucc(context);
 
@@ -629,6 +637,28 @@ class _AppPage03State extends State<AppPage03>   {
   }
 
 
+  Future<void> showAlterDialogalready(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('재고실사 등록'),
+          content: Text('이미 집계가 완료된 품목이 있습니다.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, "확인");
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   void showAlterDialogSucc(BuildContext context) async {
     String result = await showDialog(context: context,
         barrierDismissible: false,
@@ -639,9 +669,10 @@ class _AppPage03State extends State<AppPage03>   {
             actions: <Widget>[
               TextButton(onPressed: (){
                 Navigator.pop(context, "확인");
-                Navigator.pushReplacement(context,
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AppPage03()));
+                /*Navigator.pushReplacement(context,
                     MaterialPageRoute(
-                        builder: (context) => TabHomePage()));
+                        builder: (context) => TabHomePage()));*/
               }, child: Text('OK'))
             ],
           );
@@ -664,6 +695,13 @@ class _AppPage03State extends State<AppPage03>   {
             ],
           );
         });
+  }
+
+  void removeCardFromList(storelist_model storelistmodel) {
+    setState(() {
+      storelist.remove(storelistmodel);
+
+    });
   }
 
 
