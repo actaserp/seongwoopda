@@ -51,6 +51,13 @@ class _AppPage03State extends State<AppPage03>   {
   List<String> resultset5 = [];
 
 
+
+  List<String> resultset22 = [];
+  List<String> resultset33 = [];
+  List<String> resultset44 = [];
+  List<String> resultset55 = [];
+
+
   String checkvalue = 'true';
 
 
@@ -133,6 +140,8 @@ class _AppPage03State extends State<AppPage03>   {
             lotno: alllist[i]["lotno"],
             stdate: alllist[i]["stdate"],
             jaeqty: alllist[i]["jaeqty"],
+            indate2: alllist[i]["indate2"],
+            whether2: alllist[i]["whether2"],
             isChecked: true,
             textEditingController: TextEditingController()
 
@@ -276,10 +285,10 @@ class _AppPage03State extends State<AppPage03>   {
         body: json.encode({
           'gs_today': _etDate.text,
           'close_perid': _perid,
-          'pcodeList' : resultset2,
-          'jaeqtyList': resultset3,
+          'pcodeList' : resultset22,
+          'jaeqtyList': resultset33,
           'silqty'    : resultset4,
-          'lotnoList' : resultset5,
+          'lotnoList' : resultset55,
 
 
         }));
@@ -293,7 +302,17 @@ class _AppPage03State extends State<AppPage03>   {
 
 
       showAlterDialogSucc(context);
+      print(resultset2);
+      print(resultset3);
+      print(resultset4);
+      print(resultset5);
 
+      print("----------------------");
+
+      print(resultset22);
+      print(resultset33);
+      print(resultset4);
+      print(resultset55);
 
       return   true;
     }else{
@@ -410,12 +429,28 @@ class _AppPage03State extends State<AppPage03>   {
                               onPressed: () async {
                                 for(var item in storelist) {
                                   if(item.isChecked){
-                                    for (int i = 0; i < storelist.length; i++) {
-                                      String? value = storelist[i].textEditingController?.text;
-                                      resultset4.add(value ?? '');
-                                    }
+
+                                    String? value = item.textEditingController?.text;
+                                    String? value2 = item.pcode;
+                                    String? value3 = item.jaeqty;
+                                    String? value5 = item.lotno;
+
+
+                                    print(value);
+                                    resultset4.add(value ?? '');
+                                    resultset22.add(value2 ?? '');
+                                    resultset33.add(value3 ?? '');
+                                    resultset55.add(value5 ?? '');
+                                    print(resultset4);
+                                    print("gg");
                                   }
                                 }
+
+                                print(storelist.length);
+                                print(storelist[0].textEditingController?.text);
+                                print(storelist[1].textEditingController?.text);
+
+
 
                                 Navigator.pop(context);
 
@@ -551,6 +586,9 @@ class _AppPage03State extends State<AppPage03>   {
                   Text('품목명: ' + storelist.pname, style: GlobalStyle.couponName),
                   Text('규격: ' + storelist.psize, style: GlobalStyle.couponName),
                   Text('재고량: ' + storelist.jaeqty   , style: GlobalStyle.couponName),
+                  Text(storelist.whether2 + ' :' + storelist.indate2, style: TextStyle(
+                      fontSize: 14, color: Colors.redAccent, fontWeight: FontWeight.bold
+                  )),
                   Row(
 
                     children: [
@@ -580,16 +618,16 @@ class _AppPage03State extends State<AppPage03>   {
                               storelist.isChecked = value ?? true;
 
                               if(storelist.isChecked) {
-                                resultset2.add(storelist.pcode);
+                                /*resultset2.add(storelist.pcode);
                                 resultset3.add(storelist.jaeqty);
                                 resultset5.add(storelist.lotno);
+*/
 
 
                               }else{
-                                resultset2.remove(storelist.pcode);
+                                /*resultset2.remove(storelist.pcode);
                                 resultset3.remove(storelist.jaeqty);
-                                resultset5.remove(storelist.lotno);
-                                resultset4.remove(storelist.textEditingController?.text);
+                                resultset5.remove(storelist.lotno);*/
 
 
                               }
@@ -667,8 +705,11 @@ class _AppPage03State extends State<AppPage03>   {
             title: Text('재고실사 등록'),
             content: Text('등록이 완료되었습니다.'),
             actions: <Widget>[
-              TextButton(onPressed: (){
+              TextButton(onPressed: ()  {
                 Navigator.pop(context, "확인");
+
+                //await tbca630_getdata();
+
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AppPage03()));
                 /*Navigator.pushReplacement(context,
                     MaterialPageRoute(

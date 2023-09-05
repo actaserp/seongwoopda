@@ -2,7 +2,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
@@ -395,6 +394,12 @@ class _AppPage02State extends State<AppPage02>   {
                             log_history_h2();
 
 
+                            await PDAlist_getdata3();
+
+                            setState(() {
+
+                            });
+
                             // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
                           }, child: Text('OK')),
                           TextButton(onPressed: (){
@@ -502,7 +507,7 @@ class _AppPage02State extends State<AppPage02>   {
 
 
   Future<Null> _selectDateWithMinMaxDate(BuildContext context) async {
-    var firstDate = DateTime(initialDate.year, initialDate.month - 3, initialDate.day);
+    var firstDate = DateTime(initialDate.year, initialDate.month - 6, initialDate.day);
     var lastDate = DateTime(initialDate.year, initialDate.month, initialDate.day + 7);
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -541,9 +546,9 @@ class _AppPage02State extends State<AppPage02>   {
             actions: <Widget>[
               TextButton(onPressed: (){
                 Navigator.pop(context, "확인");
-                Navigator.pushReplacement(context,
+                /*Navigator.pushReplacement(context,
                     MaterialPageRoute(
-                        builder: (context) => TabHomePage()));
+                        builder: (context) => TabHomePage()));*/
               }, child: Text('OK'))
             ],
           );

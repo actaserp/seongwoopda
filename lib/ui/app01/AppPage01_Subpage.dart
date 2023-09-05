@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -156,11 +155,11 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
 
 
 
-        resultset.add(alllist[i]["wfokqt"]);
+        /*resultset.add(alllist[i]["wfokqt"]);
         resultset2.add(alllist[i]["plan_no"]);
         resultset3.add(alllist[i]["wono"]);
         resultset4.add(alllist[i]["pcode"]);
-        resultset5.add(alllist[i]["lotno"]);
+        resultset5.add(alllist[i]["lotno"]);*/
 
         setState(() {
           storelists.add(emObject);
@@ -208,6 +207,19 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
       showAlterDialogSucc(context);
 
       print("저장됨");
+
+      print(resultset2);
+      print(resultset6);
+
+      resultset.clear();
+      resultset2.clear();
+      resultset3.clear();
+      resultset4.clear();
+      resultset5.clear();
+      resultset6.clear();
+
+
+
       return   true;
     }else{
 
@@ -219,6 +231,7 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
       return   false;
     }
   }
+
 
   Future log_history_h2() async {
 
@@ -361,11 +374,6 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
                   onPressed: () async
                   {
                     print(storelists.toString());
-                    print(resultset);
-                    print(resultset2);
-                    print(resultset3);
-                    print(resultset4);
-                    print(resultset5);
 
 
 
@@ -379,21 +387,47 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
 
                             for(var item in storelist){
                               if(item.isChecked){
-                                for(int i=0; i<storelist.length; i++){
-                                  String? value = storelist[i].textEditingController?.text;
-                                  resultset6.add(value ?? '');
-                                }
+
+                                String? value = item.textEditingController?.text;
+                                String? value22 = item.wfokqt;
+                                String? value2  = item.plan_no;
+                                String? value3 = item.wono;
+                                String? value4 = item.pcode;
+                                String? value5 = item.lotno;
+
+                                print(value);
+
+                                resultset6.add(value ?? '');
+                                resultset.add(value22 ?? '');
+                                resultset2.add(value2 ?? '');
+                                resultset3.add(value3 ?? '');
+                                resultset4.add(value4 ?? '');
+                                resultset5.add(value5 ?? '');
+
+                                print(resultset6);
+                                print("gg");
+
                               }
                             }
 
-
+                            print(storelist.length);
+                            //print(storelist[0].textEditingController?.text);
+                            //print(storelist[1].textEditingController?.text);
+                            print(resultset6);
+                            print("뭘까");
                             Navigator.pop(context);
-                            Navigator.pop(context);
+                            //Navigator.pop(context);
 
                             onOKButtonPressed();
 
                             await save_fplandata();
                             await log_history_h2();
+
+                            await PDAlist_getdata2();
+
+                            setState(() {
+
+                            });
 
                             // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
                           }, child: Text('OK')),
@@ -496,21 +530,23 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
                             storelist.isChecked = value ?? true;
 
                             if(storelist.isChecked) {
-                              resultset.add(storelist.wfokqt);
+                              /* resultset.add(storelist.wfokqt);
                               resultset2.add(storelist.plan_no);
                               resultset3.add(storelist.wono);
                               resultset4.add(storelist.pcode);
-                              resultset5.add(storelist.lotno);
-                              resultsum += storelist.wfokqt + "|";
+                              resultset5.add(storelist.lotno);*/
+
+                              print(resultset);
+                              print("금요알");
 
                             }else{
-                              resultset.remove(storelist.wfokqt);
+                              /*resultset.remove(storelist.wfokqt);
                               resultset2.remove(storelist.plan_no);
                               resultset3.remove(storelist.wono);
                               resultset4.remove(storelist.pcode);
-                              resultset5.remove(storelist.lotno);
+                              resultset5.remove(storelist.lotno);*/
 
-                              resultsum = resultsum.replaceAll(storelist.wfokqt, "");
+
 
                             }
                             checkvalue = storelist.isChecked ? 'Y' : '';

@@ -12,8 +12,8 @@ class padlist_model{
 
 
   padlist_model({
-    required this.phm_pnam,
-    required this.phm_size,
+    this.phm_pnam,
+    this.phm_size,
     this.phm_pcod,
     this.phm_unit,
     this.code88,

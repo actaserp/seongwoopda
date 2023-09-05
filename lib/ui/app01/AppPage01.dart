@@ -13,7 +13,6 @@ import 'package:http/http.dart' as http;
 
 import '../../config/constant.dart';
 import '../../config/global_style.dart';
-
 import '../../model/kosep/Da035List_model.dart';
 import '../../model/themoon/padlist_model.dart';
 import '../../model/themoon/storelist_model.dart';
@@ -181,15 +180,16 @@ class _AppPage01State extends State<AppPage01>   {
       if(alllist.isNotEmpty){
         for (int i = 0; i < alllist.length; i++) {
           padlist_model emObject= padlist_model(
-              phm_pcod: alllist[i]["phm_pcod"],
-              phm_pnam: alllist[i]["phm_pnam"],
-              phm_size: alllist[i]["phm_size"],
-              phm_unit: alllist[i]["phm_unit"],
-              code88: alllist[i]["code88"],
-              wfokqt_sum: alllist[i]["wfokqt_sum"] ?? ""
+            phm_pcod: alllist[i]["phm_pcod"],
+            phm_pnam: alllist[i]["phm_pnam"],
+            phm_size: alllist[i]["phm_size"],
+            phm_unit: alllist[i]["phm_unit"],
+            code88: alllist[i]["code88"],
+            wfokqt_sum: alllist[i]["wfokqt_sum"] ?? "",
+
           );
 
-          //pcode = alllist[i]["phm_pcod"];
+          pcode = alllist[i]["phm_pcod"];
 
 
 
@@ -230,7 +230,7 @@ class _AppPage01State extends State<AppPage01>   {
             wfokqt_sum: "",
           );
 
-          //pcode = alllist[i]["phm_pcod"];
+          pcode = alllist[i]["phm_pcod"] ?? "";
 
           String prefixToRemove = emObject.phm_pcod;
 
@@ -257,7 +257,7 @@ class _AppPage01State extends State<AppPage01>   {
   }
 
 
-  Future PDAlist_getdata2() async {
+  /* Future PDAlist_getdata2() async {
 
     sum = 0;
     chk = false;
@@ -306,7 +306,11 @@ class _AppPage01State extends State<AppPage01>   {
 
 
         );
-        sum +=  int.parse(alllist[i]["wfokqt"]);
+        padlist_model emObject2 = padlist_model(
+          wfokqt_sum: alllist[i]["wfokqt_sum"]
+        );
+
+        //sum +=  int.parse(alllist[i]["wfokqt"]);
 
 
         setState(() {
@@ -314,16 +318,20 @@ class _AppPage01State extends State<AppPage01>   {
         });
 
       }
+
+
+
+
       if(alllist.isNotEmpty){
         chk = true;
       }
-      print("서버통신 성공");
+      print("서버통신 2");
       print(alllist);
       return storelists;
     }else{
-      throw Exception('불러오는데 실패했습니다.');
+      throw Exception('불러오는데 실패했습니다2.');
     }
-  }
+  }*/
 
   Future<void> _onBarcodeScannerHandler(MethodCall call) async {
     try{
@@ -346,7 +354,7 @@ class _AppPage01State extends State<AppPage01>   {
 
 
         await PDAlist_getdata(result);
-        await PDAlist_getdata2();
+        //await PDAlist_getdata2();
 
 
         _onDecode(call);
@@ -606,7 +614,7 @@ class _AppPage01State extends State<AppPage01>   {
 
 
   Future<Null> _selectDateWithMinMaxDate(BuildContext context) async {
-    var firstDate = DateTime(initialDate.year, initialDate.month - 3, initialDate.day);
+    var firstDate = DateTime(initialDate.year, initialDate.month - 8, initialDate.day);
     var lastDate = DateTime(initialDate.year, initialDate.month, initialDate.day + 7);
     final DateTime? picked = await showDatePicker(
       context: context,

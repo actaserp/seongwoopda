@@ -20,6 +20,9 @@ class storelist_model{
   late var stdate;
   late var jaeqty;
   late var wfokqt_sum;
+  late var chk;
+  late var whether2;
+  late var indate2;
 
   bool isChecked = true;
 
@@ -37,6 +40,8 @@ class storelist_model{
     this.plan_no,
     this.cltcd,
     this.pcode,
+    this.whether2,
+    this.indate2,
     this.punit,
     this.wendt,
     this.wotqt,
@@ -45,6 +50,7 @@ class storelist_model{
     this.wfokqt_sum,
     this.textEditingController,
     required this.isChecked,
+    this.chk
   });
 
   bool startsWith(String prefix){
