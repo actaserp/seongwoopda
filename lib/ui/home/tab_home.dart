@@ -1,5 +1,10 @@
 import 'dart:convert';
 
+import 'package:actthemoon/ui/app01/AppPage05.dart';
+import 'package:actthemoon/ui/app01/AppPage06.dart';
+import 'package:actthemoon/ui/app01/AppPage07.dart';
+import 'package:actthemoon/ui/app01/AppPager04list.dart';
+import 'package:actthemoon/ui/app01/AppPager07list.dart';
 import 'package:actthemoon/ui/home.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:actthemoon/config/constant.dart';
@@ -18,6 +23,8 @@ import '../account/tab_account.dart';
 import '../app01/AppPage01.dart';
 import '../app01/AppPage02.dart';
 import '../app01/AppPage03.dart';
+import '../app01/AppPage04.dart';
+import '../app01/AppPager05list.dart';
 import '../app02/App02Now.dart';
 import '../app02/App02Reg.dart';
 
@@ -60,12 +67,19 @@ class _Home1PageState extends State<TabHomePage> {
     _bannerData.add(BannerSliderModel(id: 4, image: HYUNDAI_URL + '/tm1-4-2-S.jpg'));
     _bannerData.add(BannerSliderModel(id: 5, image: HYUNDAI_URL + '/tm1-6-1-S.jpg'));
 
+
+
     _categoryData.add(CategoryModel(id: 1, name: '입 고 등 록', image: GLOBAL_URL+'/menu/store.png', color:0xD3D3D3));
     _categoryData.add(CategoryModel(id: 2, name: '입 고 현 황', image: GLOBAL_URL+'/menu/products.png', color:0xD3D3D3));
     // _categoryData.add(CategoryModel(id: 3, name: '출 고 현 황', image: GLOBAL_URL+'/menu/buy_online.png', color:0xD3D3D3));
     _categoryData.add(CategoryModel(id: 4, name: '재 고 실 사', image: GLOBAL_URL+'/menu/apply_credit.png', color:0xD3D3D3));
     _categoryData.add(CategoryModel(id: 5, name: '수입검사등록', image: GLOBAL_URL+'/menu/store.png', color:0xD3D3D3));
     _categoryData.add(CategoryModel(id: 6, name: '수입검사현황', image: GLOBAL_URL+'/menu/products.png', color:0xD3D3D3));
+    _categoryData.add(CategoryModel(id: 7, name: '기간매출현황', image: GLOBAL_URL+'/menu/apply_credit.png', color:0xD3D3D3));
+    _categoryData.add(CategoryModel(id: 8, name: '판매거래처현황', image: GLOBAL_URL+'/menu/store.png', color:0xD3D3D3));
+    _categoryData.add(CategoryModel(id: 9, name: '현재고현황', image: GLOBAL_URL+'/menu/products.png', color:0xD3D3D3));
+    // _categoryData.add(CategoryModel(id: 3, name: '출 고 현 황', image: GLOBAL_URL+'/menu/buy_online.png', color:0xD3D3D3));
+    _categoryData.add(CategoryModel(id: 10, name: '기간별생산자별현황', image: GLOBAL_URL+'/menu/apply_credit.png', color:0xD3D3D3));
 
 
 
@@ -276,6 +290,18 @@ bottomNavigationBar: SizedBox.shrink(),
                     break;
                   case '수입검사현황' :
                     Navigator.push(context, MaterialPageRoute(builder: (context) => App02Now()));
+                    break;
+                  case '기간매출현황':
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AppPager04list()));
+                    break;
+                  case '판매거래처현황':
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AppPager05list()));
+                    break;
+                  case '현재고현황':
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage06()));
+                    break;
+                  case '기간별생산자별현황':
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AppPager07list()));
                     break;
                   default:
                     break;
