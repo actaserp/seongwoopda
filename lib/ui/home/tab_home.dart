@@ -4,6 +4,7 @@ import 'package:actthemoon/ui/app01/AppPage05.dart';
 import 'package:actthemoon/ui/app01/AppPage06.dart';
 import 'package:actthemoon/ui/app01/AppPage07.dart';
 import 'package:actthemoon/ui/app01/AppPager04list.dart';
+import 'package:http/http.dart' as http;
 import 'package:actthemoon/ui/app01/AppPager07list.dart';
 import 'package:actthemoon/ui/home.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../model/themoon/userlist_model.dart';
 import '../account/tab_account.dart';
 import '../app01/AppPage01.dart';
 import '../app01/AppPage02.dart';
@@ -47,7 +49,9 @@ class _Home1PageState extends State<TabHomePage> {
   Color _color1 = Color(0xFF005288);
   Color _color2 = Color(0xFF37474f);
   var _usernm = "";
+  var _userid = "";
   int _currentImageSlider = 0;
+  bool chk = false;
 
   List<BannerSliderModel> _bannerData = [];
   List<CategoryModel> _categoryData = [];
@@ -59,17 +63,22 @@ class _Home1PageState extends State<TabHomePage> {
 
   @override
   void initState()  {
-    setData();
+     _initializeData();
     //GLOBAL_URL+'/home_banner/1.jpg'));  LOCAL_IMAGES_URL+'/elvimg/1.jpg'
-    _bannerData.add(BannerSliderModel(id: 1, image: HYUNDAI_URL + '/tm1-2-5-S.jpg'));
-    _bannerData.add(BannerSliderModel(id: 2, image: HYUNDAI_URL + '/tm1-1-3-S.jpg'));
-    _bannerData.add(BannerSliderModel(id: 3, image: HYUNDAI_URL + '/tm1-3-1-2-S.jpg'));
-    _bannerData.add(BannerSliderModel(id: 4, image: HYUNDAI_URL + '/tm1-4-2-S.jpg'));
-    _bannerData.add(BannerSliderModel(id: 5, image: HYUNDAI_URL + '/tm1-6-1-S.jpg'));
+   _bannerData.add(BannerSliderModel(id: 1, image: HYUNDAI_URL + '/tm1-2-5-S.jpg'));
+   _bannerData.add(BannerSliderModel(id: 2, image: HYUNDAI_URL + '/tm1-1-3-S.jpg'));
+   _bannerData.add(BannerSliderModel(id: 3, image: HYUNDAI_URL + '/tm1-3-1-2-S.jpg'));
+   _bannerData.add(BannerSliderModel(id: 4, image: HYUNDAI_URL + '/tm1-4-2-S.jpg'));
+   _bannerData.add(BannerSliderModel(id: 5, image: HYUNDAI_URL + '/tm1-6-1-S.jpg'));
+
+     /*_bannerData.add(BannerSliderModel(id: 1, image: 'https://images.khan.co.kr/article/2023/09/01/rcv.YNA.20230724.PYH2023072416680001300_P1.jpg'));*/
+     /*_bannerData.add(BannerSliderModel(id: 2, image: 'https://cdn.gukjenews.com/news/photo/202307/2772317_2809056_5928.jpg'));*/
+     /*_bannerData.add(BannerSliderModel(id: 3, image: 'https://cdn.gukjenews.com/news/photo/202307/2772317_2809056_5928.jpg'));*/
+     /*_bannerData.add(BannerSliderModel(id: 4, image: 'https://cdn.gukjenews.com/news/photo/202307/2772317_2809056_5928.jpg'));*/
 
 
 
-    _categoryData.add(CategoryModel(id: 1, name: '입 고 등 록', image: GLOBAL_URL+'/menu/store.png', color:0xD3D3D3));
+     _categoryData.add(CategoryModel(id: 1, name: '입 고 등 록', image: GLOBAL_URL+'/menu/store.png', color:0xD3D3D3));
     _categoryData.add(CategoryModel(id: 2, name: '입 고 현 황', image: GLOBAL_URL+'/menu/products.png', color:0xD3D3D3));
     // _categoryData.add(CategoryModel(id: 3, name: '출 고 현 황', image: GLOBAL_URL+'/menu/buy_online.png', color:0xD3D3D3));
     _categoryData.add(CategoryModel(id: 4, name: '재 고 실 사', image: GLOBAL_URL+'/menu/apply_credit.png', color:0xD3D3D3));
@@ -83,17 +92,76 @@ class _Home1PageState extends State<TabHomePage> {
 
 
 
-
     super.initState();
 
+  }
+
+  Future<void> _initializeData() async {
+    await setData(); // setData() 함수 비동기 호출
+    userchk(); // userchk() 함수 호출
+
+    // 나머지 초기화 코드
+    _bannerData.add(BannerSliderModel(id: 1, image: HYUNDAI_URL + '/tm1-2-5-S.jpg'));
+    _bannerData.add(BannerSliderModel(id: 2, image: HYUNDAI_URL + '/tm1-1-3-S.jpg'));
+    // 나머지 카테고리 데이터 초기화 코드
   }
 
 
   Future<void> setData() async {
     String username = await  SessionManager().get("username");
+    String userid = await SessionManager().get("userid");
     // 문자열 디코딩
     _usernm = utf8.decode(username.runes.toList());
+    _userid = utf8.decode(userid.runes.toList());
+
   }
+
+
+
+
+  Future userchk() async {
+
+    var uritxt = CLOUD_URL + '/themoon/usercheck';
+    var encoded = Uri.encodeFull(uritxt);
+
+    Uri uri = Uri.parse(encoded);
+    final response = await http.post(
+      uri,
+      headers: <String, String> {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept' : 'application/json'
+      },
+      body: <String, String> {
+        'dbnm': 'ERP_THEMOON',
+        'userid': _userid.toString()
+
+
+      },
+    );
+    if(response.statusCode == 200){
+      List<dynamic> alllist = [];
+
+      alllist = jsonDecode(utf8.decode(response.bodyBytes));
+      userlist.clear();
+
+      for (int i = 0; i < alllist.length; i++) {
+        userlist_model emObject = userlist_model(
+
+            sysmain: alllist[i]['sysmain']
+        );
+        setState(() {
+          userlist.add(emObject);
+
+        });
+      }
+      return userlist;
+    }else{
+      throw Exception('오류발생');
+    }
+
+
+  }
+
 
   @override
   void dispose() {
@@ -292,16 +360,87 @@ bottomNavigationBar: SizedBox.shrink(),
                     Navigator.push(context, MaterialPageRoute(builder: (context) => App02Now()));
                     break;
                   case '기간매출현황':
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => AppPager04list()));
+
+                    if(userlist[0].sysmain == "1")
+                    {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => AppPager04list()));
+                    }
+                    else
+                    {
+                        showDialog(context: context, builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('알림'),
+                            content: Text('접속 권한이 없습니다.'),
+                            actions: <Widget>[
+                              TextButton(onPressed: (){Navigator.pop(context, "확인");}, child: Text('OK'))
+                            ],
+                          );
+
+                        });
+                    }
                     break;
                   case '판매거래처현황':
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => AppPager05list()));
+
+
+                    if(userlist[0].sysmain == "1")
+                    {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => AppPager05list()));
+                    }
+                    else
+                    {
+                      showDialog(context: context, builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('알림'),
+                          content: Text('접속 권한이 없습니다.'),
+                          actions: <Widget>[
+                            TextButton(onPressed: (){Navigator.pop(context, "확인");}, child: Text('OK'))
+                          ],
+                        );
+
+                      });
+                    }
                     break;
                   case '현재고현황':
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage06()));
+
+
+                    if(userlist[0].sysmain == "1")
+                    {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage06()));
+                    }
+                    else
+                    {
+                      showDialog(context: context, builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('알림'),
+                          content: Text('접속 권한이 없습니다.'),
+                          actions: <Widget>[
+                            TextButton(onPressed: (){Navigator.pop(context, "확인");}, child: Text('OK'))
+                          ],
+                        );
+
+                      });
+                    }
                     break;
                   case '기간별생산자별현황':
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => AppPager07list()));
+
+
+                    if(userlist[0].sysmain == "1")
+                    {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => AppPager07list()));
+                    }
+                    else
+                    {
+                      showDialog(context: context, builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('알림'),
+                          content: Text('접속 권한이 없습니다.'),
+                          actions: <Widget>[
+                            TextButton(onPressed: (){Navigator.pop(context, "확인");}, child: Text('OK'))
+                          ],
+                        );
+
+                      });
+                    }
                     break;
                   default:
                     break;

@@ -17,6 +17,11 @@ class tb_da099_02_model{
   late var IAMT;
   late var JAMT;
   late var IONO;
+  late var sumqty;
+  late var sumsamt;
+  late var summamt;
+  late var sumjamt;
+
 
 
 
@@ -45,7 +50,11 @@ class tb_da099_02_model{
    this.MAMT,
    this.IAMT,
    this.JAMT,
-   this.IONO
+   this.IONO,
+   this.sumqty,
+   this.sumsamt,
+   this.summamt,
+   this.sumjamt
 
   });
 

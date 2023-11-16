@@ -16,6 +16,7 @@ class tb_fplan_model{
  late var fdate;
  late var tdate;
  late var psize;
+ late var sum;
 
 
 
@@ -43,8 +44,8 @@ class tb_fplan_model{
    this.whqty, //현재고
    this.fdate,
    this.tdate,
-   this.psize //규격
-
+   this.psize,//규격
+   this.sum
   });
 
 }

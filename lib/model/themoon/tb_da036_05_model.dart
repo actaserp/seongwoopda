@@ -16,6 +16,10 @@ class tb_da036_05_model{
   late var TAX;
   late var FDATE;
   late var TDATE;
+  late var sumouamt;
+  late var suminamt;
+  late var sumhjamt;
+
 
   tb_da036_05_model({
     this.SPCD,
@@ -31,7 +35,10 @@ class tb_da036_05_model{
     this.JYAMT,
     this.TAX,
     this.FDATE,
-    this.TDATE
+    this.TDATE,
+    this.sumhjamt,
+    this.suminamt,
+    this.sumouamt
 });
 
 }

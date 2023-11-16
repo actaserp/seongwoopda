@@ -52,7 +52,7 @@ class _AppPager07listState extends State<AppPager07list> {
   TextEditingController _ettodate = TextEditingController();
   TextEditingController _etcltnm = TextEditingController();
 
-
+  int sumvalue = 0;
 
   String? _etManageTxt;
 
@@ -174,6 +174,7 @@ class _AppPager07listState extends State<AppPager07list> {
         planData.clear();
 
         for (int i = 0; i < alllist.length; i++) {
+
           tb_fplan_model emObject = tb_fplan_model(
 
               divicd: alllist[i]['divicd'] ?? '',
@@ -189,7 +190,9 @@ class _AppPager07listState extends State<AppPager07list> {
               whqty: alllist[i]['whqty'] ?? '',
               fdate: alllist[i]['fdate'] ?? '',
               tdate: alllist[i]['tdate'] ?? '',
-              psize: alllist[i]['psize'] ?? ''
+              psize: alllist[i]['psize'] ?? '',
+              sum: alllist[i]['sum'] ?? '',
+
 
           );
           setState(() {
@@ -200,7 +203,7 @@ class _AppPager07listState extends State<AppPager07list> {
         setState(() {
           _isLoading = false;
         });
-
+        sumvalue = planData[0].sum;
         return planData;
       } else {
         showDialog(context: context,
@@ -417,143 +420,147 @@ class _AppPager07listState extends State<AppPager07list> {
           systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
 
         ),
-        body: Center(
-          child: _isLoading ? CircularProgressIndicator() : ListView(
-            padding: EdgeInsets.all(16),
-            children: [
+        body: Column(
+          children: [
+            Center(
+              child: _isLoading ? CircularProgressIndicator() : ListView(
+                padding: EdgeInsets.all(16),
+                children: [
 
 
 
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Container(
-                  margin: EdgeInsets.only(top: 15),
-                  height: 0.6 * MediaQuery.of(context).size.height,
-                  //height: 0.7 * MediaQuery.of(context).size.height,
-                  width: 1600,
-                  child: ListView(
-                    scrollDirection: Axis.vertical,
-                    children: [
-                      DataTable(
-                          showCheckboxColumn: false,
-                          columnSpacing: 25, dataRowHeight: 40,
-                          headingTextStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-                          headingRowColor:
-                          MaterialStateColor.resolveWith((states) => SOFT_BLUE),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Container(
+                      margin: EdgeInsets.only(top: 15),
+                      height: 0.6 * MediaQuery.of(context).size.height,
+                      //height: 0.7 * MediaQuery.of(context).size.height,
+                      width: 1600,
+                      child: ListView(
+                        scrollDirection: Axis.vertical,
+                        children: [
+                          DataTable(
+                              showCheckboxColumn: false,
+                              columnSpacing: 25, dataRowHeight: 40,
+                              headingTextStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                              headingRowColor:
+                              MaterialStateColor.resolveWith((states) => SOFT_BLUE),
 
-                          columns: <DataColumn>[
-                            DataColumn(label: Text('생산부서')),
-                            DataColumn(label: Text('생산부서명')),
-                            DataColumn(label: Text('품목코드')),
-                            DataColumn(label: Text('품목명')),
-                            DataColumn(label: Text('규격')),
-                            DataColumn(label: Text('전재고')),
-                            DataColumn(label: Text('작지량')),
-                            DataColumn(label: Text('입고량')),
-                            DataColumn(label: Text('달성율')),
-                            DataColumn(label: Text('출고량')),
-                            DataColumn(label: Text('현재고')),
+                              columns: <DataColumn>[
+                                DataColumn(label: Text('생산부서')),
+                                DataColumn(label: Text('생산부서명')),
+                                DataColumn(label: Text('품목코드')),
+                                DataColumn(label: Text('품목명')),
+                                DataColumn(label: Text('규격')),
+                                DataColumn(label: Text('전재고')),
+                                DataColumn(label: Text('작지량')),
+                                DataColumn(label: Text('입고량')),
+                                DataColumn(label: Text('달성율')),
+                                DataColumn(label: Text('출고량')),
+                                DataColumn(label: Text('현재고')),
 
-                          ],
-                          rows: List<DataRow>.generate(planData.length, (index)
-                          {
-                            final tb_fplan_model item = planData[index];
-                            return
-                              DataRow(
-                                  onSelectChanged: (value){
-                                    /*Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) => AppPager13Detail(mfixData: item)));*/
-                                  },
-                                  color: MaterialStateColor.resolveWith((states){
-                                    if (index % 2 == 0){
-                                      return Color(0xB8E5E5E5);
-                                    }else{
-                                      return Color(0x86FFFFFF);
-                                    }
-                                  }),
-                                  cells: [
-                                    DataCell(
-                                        ConstrainedBox(
-                                            constraints: BoxConstraints(minWidth: 70, maxWidth: 70),
-                                            child: Text(item.divicd
-                                            ))),
-                                    DataCell(Container(
-                                      width: 100,
-                                      child: Text(item.divinm,
-                                          overflow: TextOverflow.ellipsis),
-                                    )),
-                                    DataCell(Container(
-                                      width:130,
-                                      child: Text(item.pcode,
-                                          overflow: TextOverflow.ellipsis),
-                                    )),
-                                    DataCell(Text(item.pname,
-                                        overflow: TextOverflow.ellipsis)),
-                                    DataCell(Text(item.psize,
-                                        overflow: TextOverflow.ellipsis)),
-                                    DataCell(
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
+                              ],
+                              rows: List<DataRow>.generate(planData.length, (index)
+                              {
+                                final tb_fplan_model item = planData[index];
+                                return
+                                  DataRow(
+                                      onSelectChanged: (value){
+                                        /*Navigator.push(context, MaterialPageRoute(
+                                          builder: (context) => AppPager13Detail(mfixData: item)));*/
+                                      },
+                                      color: MaterialStateColor.resolveWith((states){
+                                        if (index % 2 == 0){
+                                          return Color(0xB8E5E5E5);
+                                        }else{
+                                          return Color(0x86FFFFFF);
+                                        }
+                                      }),
+                                      cells: [
+                                        DataCell(
                                             ConstrainedBox(
-                                              constraints: BoxConstraints(minWidth: 95, maxWidth: 95),
-                                              child: Text('${item.wjqty}',
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      color: SOFT_BLUE,
-                                                      fontSize: 12,
-                                                      fontWeight: FontWeight.bold
-                                                  )
-                                              ),
-                                            ),
+                                                constraints: BoxConstraints(minWidth: 70, maxWidth: 70),
+                                                child: Text(item.divicd
+                                                ))),
+                                        DataCell(Container(
+                                          width: 100,
+                                          child: Text(item.divinm,
+                                              overflow: TextOverflow.ellipsis),
+                                        )),
+                                        DataCell(Container(
+                                          width:130,
+                                          child: Text(item.pcode,
+                                              overflow: TextOverflow.ellipsis),
+                                        )),
+                                        DataCell(Text(item.pname,
+                                            overflow: TextOverflow.ellipsis)),
+                                        DataCell(Text(item.psize,
+                                            overflow: TextOverflow.ellipsis)),
+                                        DataCell(
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                ConstrainedBox(
+                                                  constraints: BoxConstraints(minWidth: 95, maxWidth: 95),
+                                                  child: Text('${item.wjqty}',
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          color: SOFT_BLUE,
+                                                          fontSize: 12,
+                                                          fontWeight: FontWeight.bold
+                                                      )
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        ),
+                                        DataCell(Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(item.wpqty),
+                                          ],
+                                        )),
+                                        DataCell(Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(item.wiqty),
+                                          ],
+                                        )),
+                                        DataCell(
+                                            Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text((double.parse(item.wiqty) / double.parse(item.wpqty)).toString()),
                                           ],
                                         )
-                                    ),
-                                    DataCell(Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(item.wpqty),
-                                      ],
-                                    )),
-                                    DataCell(Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(item.wiqty),
-                                      ],
-                                    )),
-                                    DataCell(
-                                        Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text((double.parse(item.wiqty) / double.parse(item.wpqty)).toString()),
-                                      ],
-                                    )
-                                    ),
-                                    DataCell(Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(item.woqty),
-                                      ],
-                                    )),
-                                    DataCell(Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(item.whqty),
-                                      ],
-                                    )),
-                                  ]
+                                        ),
+                                        DataCell(Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(item.woqty),
+                                          ],
+                                        )),
+                                        DataCell(Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(item.whqty),
+                                          ],
+                                        )),
+                                      ]
 
-                              );
-                          }
-                          )
-                      ),],
+                                  );
+                              }
+                              )
+                          ),],
+                      ),
+                    ),
                   ),
-                ),
+
+
+                ],
               ),
-
-
-            ],
-          ),
+            ),
+          ],
         )
 
         /*WillPopScope(

@@ -42,6 +42,7 @@ class _AppPager04listState extends State<AppPager04list> {
   String cltnm = "";
 
 
+  
 
   TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
   DateTime _selectedDate = DateTime.now(), initialDate = DateTime.now();
@@ -60,7 +61,9 @@ class _AppPager04listState extends State<AppPager04list> {
 
   NumberFormat amtvalue = NumberFormat.currency(locale: 'ko_KR', symbol: '', decimalDigits: 0);
 
-
+  int sumouamt = 0;
+  int suminamt = 0;
+  int sumhjamt = 0;
 
   @override
   void initState(){
@@ -81,6 +84,8 @@ class _AppPager04listState extends State<AppPager04list> {
 
   Future da036list() async {
     String _dbnm = await  SessionManager().get("dbnm");
+
+
 
     var uritxt = CLOUD_URL + '/themoon/da036list';
     var encoded = Uri.encodeFull(uritxt);
@@ -113,7 +118,6 @@ class _AppPager04listState extends State<AppPager04list> {
 
         for (int i = 0; i < alllist.length; i++) {
           tb_da036_05_model emObject = tb_da036_05_model(
-
               SPCD: alllist[i]['spcd'],
               SPCDNM: alllist[i]['spcdnm'],
               AREA: alllist[i]['area'],
@@ -127,14 +131,19 @@ class _AppPager04listState extends State<AppPager04list> {
               JYAMT: alllist[i]['jyamt'],
               TAX: alllist[i]['tax'],
               FDATE: alllist[i]['fdate'],
-              TDATE: alllist[i]['tdate']
+              TDATE: alllist[i]['tdate'],
+              sumhjamt: alllist[i]['sumhjamt'],
+              suminamt: alllist[i]['suminamt'],
+              sumouamt: alllist[i]['sumouamt']
 
           );
           setState(() {
             da036Data.add(emObject);
           });
         }
-
+       sumouamt = int.parse(da036Data[0].sumouamt);
+       suminamt = int.parse(da036Data[0].suminamt);
+       sumhjamt = int.parse(da036Data[0].sumhjamt);
       return da036Data;
     }else{
       //만약 응답이 ok가 아니면 에러를 던집니다.
@@ -304,13 +313,16 @@ class _AppPager04listState extends State<AppPager04list> {
               ),
 
               SizedBox(
-                height: 40,
+                height: 10,
               ),
+              Text('매출액: ${NumberFormat('#,###').format(sumouamt)}'),
+              Text('입금액: ${NumberFormat('#,###').format(suminamt)}'),
+              Text('잔액계: ${NumberFormat('#,###').format(sumhjamt)}'),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Container(
                   margin: EdgeInsets.only(top: 15),
-                  height: 0.6 * MediaQuery.of(context).size.height,
+                  height: 0.63 * MediaQuery.of(context).size.height,
                   //height: 0.7 * MediaQuery.of(context).size.height,
                   width: 800,
                   child: ListView(
