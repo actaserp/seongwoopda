@@ -139,7 +139,7 @@ class _AppPager05listState extends State<AppPager05list> {
   Future da099list() async {
 
 
-
+    //
     if(cltcd == null || cltcd == "")
       {
         showDialog(context: context,
