@@ -117,6 +117,11 @@ class _AppPager04listState extends State<AppPager04list> {
       da036Data.clear();
 
         for (int i = 0; i < alllist.length; i++) {
+          var totalvalue =  int.parse(alllist[i]['ouamt']) + int.parse(alllist[i]['inamt']) + int.parse(alllist[i]['hjamt']);
+          if(totalvalue == 0)
+          {
+            continue;
+          }
           tb_da036_05_model emObject = tb_da036_05_model(
               SPCD: alllist[i]['spcd'],
               SPCDNM: alllist[i]['spcdnm'],
@@ -315,8 +320,14 @@ class _AppPager04listState extends State<AppPager04list> {
               SizedBox(
                 height: 10,
               ),
-              Text('매출액: ${NumberFormat('#,###').format(sumouamt)}'),
-              Text('입금액: ${NumberFormat('#,###').format(suminamt)}'),
+              Row(
+                children: [
+                  Text('매출액: ${NumberFormat('#,###').format(sumouamt)}'),
+                  SizedBox(width: 10,),
+                  Text('입금액: ${NumberFormat('#,###').format(suminamt)}'),
+                  ],
+              ),
+
               Text('잔액계: ${NumberFormat('#,###').format(sumhjamt)}'),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,

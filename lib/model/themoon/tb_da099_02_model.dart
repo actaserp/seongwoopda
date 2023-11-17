@@ -21,6 +21,8 @@ class tb_da099_02_model{
   late var sumsamt;
   late var summamt;
   late var sumjamt;
+  late var lastjamt;
+
 
 
 
@@ -54,7 +56,9 @@ class tb_da099_02_model{
    this.sumqty,
    this.sumsamt,
    this.summamt,
-   this.sumjamt
+   this.sumjamt,
+    this.lastjamt,
+
 
   });
 

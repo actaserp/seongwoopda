@@ -46,6 +46,8 @@ class _AppPager05listState extends State<AppPager05list> {
   int sumsamt = 0;
   int summamt = 0;
   int sumjamt = 0;
+  int lastjamt = 0;
+
 
 
 
@@ -215,10 +217,10 @@ class _AppPager05listState extends State<AppPager05list> {
             IAMT : alllist[i]['iamt'] ?? '',
             JAMT : alllist[i]['jamt'] ?? '',
             IONO : alllist[i]['iono'] ?? '',
-            sumjamt: alllist[i]['sumjamt'] ?? '',
             summamt: alllist[i]['summamt'] ?? '',
             sumqty: alllist[i]['sumqty'] ?? '',
-            sumsamt: alllist[i]['sumsamt'] ?? ''
+            sumsamt: alllist[i]['sumsamt'] ?? '',
+            lastjamt: alllist[i]['lastjamt'] ?? ''
 
 
         );
@@ -230,10 +232,10 @@ class _AppPager05listState extends State<AppPager05list> {
       setState(() {
         _isLoading = false;
       });
-     sumjamt = int.parse(da099Data[0].sumjamt);
+     sumqty = int.parse(da099Data[0].sumqty);
      sumsamt = int.parse(da099Data[0].sumsamt);
      summamt = int.parse(da099Data[0].summamt);
-     sumjamt = int.parse(da099Data[0].sumjamt);
+     lastjamt = int.parse(da099Data[0].lastjamt);
 
       return da099Data;
     }else{
@@ -444,10 +446,23 @@ class _AppPager05listState extends State<AppPager05list> {
                 ],
               ),
               SizedBox(height: 5,),
-              Text('수량    : ${NumberFormat('#,###').format(sumqty)}'),
-              Text('공급가: ${NumberFormat('#,###').format(sumsamt)}'),
-              Text('합계    : ${NumberFormat('#,###').format(summamt)}'),
-              Text('잔액계: ${NumberFormat('#,###').format(sumjamt)}'),
+              Row(
+                children: [
+                  Text('수량    : ${NumberFormat('#,###').format(sumqty)}'),
+                  SizedBox(width: 10,),
+                  Text('공급가: ${NumberFormat('#,###').format(sumsamt)}'),
+                ],
+              ),
+
+              Row(
+                children: [
+                  Text('합계    : ${NumberFormat('#,###').format(summamt)}'),
+                  SizedBox(width: 10,),
+                  Text('잔액계: ${NumberFormat('#,###').format(lastjamt
+                  )}'),
+                ],
+              ),
+
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Container(
