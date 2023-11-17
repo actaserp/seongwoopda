@@ -138,9 +138,35 @@ class _AppPager05listState extends State<AppPager05list> {
   /**전체 조회하기 **/
   Future da099list() async {
 
+
+
+    if(cltcd == null || cltcd == "")
+      {
+        showDialog(context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('판매거래처현황'),
+                content: Text('거래처를 선택해주세요.'),
+                actions: <Widget>[
+                  TextButton(onPressed: (){
+                    Navigator.of(context).pop();
+                  }, child: Text('확인'))
+                ],
+              );
+            });
+
+        return;
+      }
+
     setState(() {
       _isLoading = true;
     });
+
+    //if(_etcltnm.text == null || _etcltnm.text == "")
+    //  {
+    //    cltcd = '%';
+    //  }
+
 
     String _dbnm = await  SessionManager().get("dbnm");
 
@@ -204,10 +230,10 @@ class _AppPager05listState extends State<AppPager05list> {
       setState(() {
         _isLoading = false;
       });
-      sumjamt = int.parse(da099Data[0].sumjamt);
-      sumsamt = int.parse(da099Data[0].sumsamt);
-      summamt = int.parse(da099Data[0].summamt);
-      sumjamt = int.parse(da099Data[0].sumjamt);
+     sumjamt = int.parse(da099Data[0].sumjamt);
+     sumsamt = int.parse(da099Data[0].sumsamt);
+     summamt = int.parse(da099Data[0].summamt);
+     sumjamt = int.parse(da099Data[0].sumjamt);
 
       return da099Data;
     }else{
