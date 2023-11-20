@@ -458,7 +458,7 @@ class _AppPager05listState extends State<AppPager05list> {
                 children: [
                   Text('합계    : ${NumberFormat('#,###').format(summamt)}'),
                   SizedBox(width: 10,),
-                  Text('잔액계: ${NumberFormat('#,###').format(lastjamt
+                  Text('잔액: ${NumberFormat('#,###').format(lastjamt
                   )}'),
                 ],
               ),
@@ -481,7 +481,7 @@ class _AppPager05listState extends State<AppPager05list> {
                           MaterialStateColor.resolveWith((states) => SOFT_BLUE),
 
                           columns: <DataColumn>[
-                            DataColumn(label: Text('거래처')),
+                            //DataColumn(label: Text('거래처')),
                             DataColumn(label: Text('일자')),
                             DataColumn(label: Text('품목')),
                             DataColumn(label: Text('규격')),
@@ -512,12 +512,12 @@ class _AppPager05listState extends State<AppPager05list> {
                                     }
                                   }),
                                   cells: [
-                                    DataCell(
+                                    /*DataCell(
 
                                         ConstrainedBox(
                                             constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
                                             child: Text(item.CLTNM
-                                            ))),
+                                            ))),*/
                                     DataCell(
 
                                         ConstrainedBox(
