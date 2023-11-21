@@ -586,9 +586,9 @@ class _AppPage03State extends State<AppPage03>   {
                   Text('품목명: ' + storelist.pname, style: GlobalStyle.couponName),
                   Text('규격: ' + storelist.psize, style: GlobalStyle.couponName),
                   Text('재고량: ' + storelist.jaeqty   , style: GlobalStyle.couponName),
-                  Text(storelist.whether2 + ' :' + storelist.indate2, style: TextStyle(
+                  /*Text(storelist.whether2 + ' :' + storelist.indate2, style: TextStyle(
                       fontSize: 14, color: Colors.redAccent, fontWeight: FontWeight.bold
-                  )),
+                  )),*/
                   Row(
 
                     children: [
