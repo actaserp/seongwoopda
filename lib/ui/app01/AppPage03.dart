@@ -446,9 +446,11 @@ class _AppPage03State extends State<AppPage03>   {
                                   }
                                 }
 
+/*
                                 print(storelist.length);
                                 print(storelist[0].textEditingController?.text);
                                 print(storelist[1].textEditingController?.text);
+*/
 
 
 
