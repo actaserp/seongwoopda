@@ -291,6 +291,11 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
         ),
         backgroundColor: GlobalStyle.appBarBackgroundColor,
         systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
+        actions: <Widget>[
+          TextButton(onPressed: (){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+          }, child: Text('홈으로', style: TextStyle(color: Colors.lightBlue, fontSize: 16),))
+        ],
       ),
 
       body:
@@ -415,6 +420,7 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
                             //print(storelist[1].textEditingController?.text);
                             print(resultset6);
                             print("뭘까");
+
                             Navigator.pop(context);
                             //Navigator.pop(context);
 

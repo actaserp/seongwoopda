@@ -9,6 +9,7 @@ import '../../config/constant.dart';
 import '../../model/themoon/popup/econtnm_model.dart';
 import '../../model/themoon/popup/eperlist_model.dart';
 import '../../model/themoon/popup/ereginm_model.dart';
+import '../home/tab_home.dart';
 import 'AppPager04Actnm.dart';
 
 class AppPage04 extends StatefulWidget {
@@ -301,6 +302,11 @@ class _AppPage04State extends State<AppPage04> {
         title: Text('기간별매출현황', style: GlobalStyle.appBarTitle,),
         backgroundColor: GlobalStyle.appBarBackgroundColor,
         systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
+        actions: <Widget>[
+          TextButton(onPressed: (){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+          }, child: Text('홈으로', style: TextStyle(color: Colors.lightBlue, fontSize: 16),))
+        ],
       ),
       body:
       ListView(

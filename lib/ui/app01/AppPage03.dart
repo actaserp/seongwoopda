@@ -15,6 +15,7 @@ import '../../config/constant.dart';
 import '../../config/global_style.dart';
 import '../../model/kosep/Da035List_model.dart';
 import '../../model/themoon/storelist_model.dart';
+import '../home/tab_home.dart';
 
 class AppPage03 extends StatefulWidget {
   const AppPage03({Key? key}) : super(key: key);
@@ -341,6 +342,11 @@ class _AppPage03State extends State<AppPage03>   {
         ),
         backgroundColor: GlobalStyle.appBarBackgroundColor,
         systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
+        actions: <Widget>[
+          TextButton(onPressed: (){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+          }, child: Text('홈으로', style: TextStyle(color: Colors.lightBlue, fontSize: 16),))
+        ],
 
       ),
       body:

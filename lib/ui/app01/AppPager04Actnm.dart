@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import '../../../config/constant.dart';
 import '../../../config/global_style.dart';
 import '../../model/themoon/tbe601list_model.dart';
+import '../home/tab_home.dart';
 
 class AppPager04Actnm extends StatefulWidget {
 
@@ -95,6 +96,11 @@ class _AppPager04ActnmState extends State<AppPager04Actnm> {
           ),
           backgroundColor: GlobalStyle.appBarBackgroundColor,
           systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
+          actions: <Widget>[
+            TextButton(onPressed: (){
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+            }, child: Text('홈으로', style: TextStyle(color: Colors.lightBlue, fontSize: 16),))
+          ],
         ),
         body: WillPopScope(
           onWillPop: (){

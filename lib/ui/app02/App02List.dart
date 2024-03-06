@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:actthemoon/ui/app02/App02Reg.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
@@ -297,6 +298,7 @@ class _App02ListState extends State<App02List>   {
       log_history_h();
       return true;
     }else{
+      openErrorPopup();
       throw Exception('입력 실패했습니다..');
 
     }
@@ -317,6 +319,11 @@ class _App02ListState extends State<App02List>   {
         ),
         backgroundColor: GlobalStyle.appBarBackgroundColor,
         systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
+        actions: <Widget>[
+          TextButton(onPressed: (){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+          }, child: Text('홈으로', style: TextStyle(color: Colors.lightBlue, fontSize: 16),))
+        ],
       ),
 
       body:
@@ -396,7 +403,7 @@ class _App02ListState extends State<App02List>   {
                       return AlertDialog(
                         content: Text('수입검사 등록 하시겠습니까?'),
                         actions: <Widget>[
-                          TextButton(onPressed: (){
+                          TextButton(onPressed: () async {
 
                             for(var item in ca609datal){
                               if(item.isChecked){
@@ -409,12 +416,20 @@ class _App02ListState extends State<App02List>   {
                             }
                             print(resultset5);
 
-                            save_CA();
-                            if(tf = true){
+                            await save_CA();
+                            
+                            if(!tf)
+                            {
+                              openErrorPopup();
+                            }
+                            
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => App02Reg()));
+
+                            /*if(tf = true){
                               openPopup();
                             }else{
                               openErrorPopup();
-                            }
+                            }*/
 
                           }, child: Text('OK')
                           )

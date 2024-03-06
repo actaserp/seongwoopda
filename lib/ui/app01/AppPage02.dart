@@ -267,7 +267,11 @@ class _AppPage02State extends State<AppPage02>   {
         ),
         backgroundColor: GlobalStyle.appBarBackgroundColor,
         systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
-
+        actions: <Widget>[
+          TextButton(onPressed: (){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+          }, child: Text('홈으로', style: TextStyle(color: Colors.lightBlue, fontSize: 16),))
+        ],
       ),
       body:
       WillPopScope(
@@ -479,7 +483,8 @@ class _AppPage02State extends State<AppPage02>   {
                         )),
                       ),*/
                       Checkbox(
-                          value: storelists.isChecked, onChanged: (bool? value){
+                          value: storelists.isChecked,
+                          onChanged: (bool? value){
                         setState(() {
                           storelists.isChecked = value ?? true;
 

@@ -63,6 +63,7 @@ class _Home1PageState extends State<TabHomePage> {
 
   @override
   void initState()  {
+    super.initState();
      _initializeData();
     //GLOBAL_URL+'/home_banner/1.jpg'));  LOCAL_IMAGES_URL+'/elvimg/1.jpg'
    _bannerData.add(BannerSliderModel(id: 1, image: HYUNDAI_URL + '/tm1-2-5-S.jpg'));
@@ -92,13 +93,14 @@ class _Home1PageState extends State<TabHomePage> {
 
 
 
-    super.initState();
+
 
   }
 
   Future<void> _initializeData() async {
+
     await setData(); // setData() 함수 비동기 호출
-    userchk(); // userchk() 함수 호출
+    await userchk(); // userchk() 함수 호출
 
     // 나머지 초기화 코드
     _bannerData.add(BannerSliderModel(id: 1, image: HYUNDAI_URL + '/tm1-2-5-S.jpg'));
@@ -109,7 +111,7 @@ class _Home1PageState extends State<TabHomePage> {
 
   Future<void> setData() async {
     String username = await  SessionManager().get("username");
-    String userid = await SessionManager().get("userid");
+    String userid = (await SessionManager().get("userid")).toString();
     // 문자열 디코딩
     _usernm = utf8.decode(username.runes.toList());
     _userid = utf8.decode(userid.runes.toList());

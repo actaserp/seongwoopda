@@ -11,6 +11,7 @@ import '../../config/constant.dart';
 import '../../model/themoon/popup/econtnm_model.dart';
 import '../../model/themoon/popup/eperlist_model.dart';
 import '../../model/themoon/popup/ereginm_model.dart';
+import '../home/tab_home.dart';
 import 'AppPager04Actnm.dart';
 import 'AppPager05list.dart';
 import 'AppPager07list.dart';
@@ -142,6 +143,11 @@ class _AppPage07State extends State<AppPage07> {
           title: Text('기간별생산자별생산현황', style: GlobalStyle.appBarTitle,),
           backgroundColor: GlobalStyle.appBarBackgroundColor,
           systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
+          actions: <Widget>[
+            TextButton(onPressed: (){
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+            }, child: Text('홈으로', style: TextStyle(color: Colors.lightBlue, fontSize: 16),))
+          ],
         ),
         body:
         ListView(

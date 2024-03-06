@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import '../../config/constant.dart';
 import '../../config/global_style.dart';
 import '../../model/themoon/tb_da099_02_model.dart';
+import '../home/tab_home.dart';
 
 
 class AppPager06list extends StatefulWidget {
@@ -174,9 +175,9 @@ class _AppPager06listState extends State<AppPager06list> {
             style: GlobalStyle.appBarTitle,
           ),
           actions: <Widget>[
-            /*IconButton(onPressed: (){
-
-            }, icon: Icon(Icons.search))*/
+            TextButton(onPressed: (){
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+            }, child: Text('홈으로', style: TextStyle(color: Colors.lightBlue, fontSize: 16),))
           ],
           backgroundColor: GlobalStyle.appBarBackgroundColor,
           systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,

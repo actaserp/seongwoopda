@@ -81,9 +81,7 @@ class _App02NowState extends State<App02Now>   {
     _username = (await SessionManager().get("username")).toString();
     _perid    = (await SessionManager().get("perid")).toString();
     _custcd = (await SessionManager().get("custcd")).toString();
-    print(_perid);
-    print("임경현");
-    print(_custcd);
+   
 
     await log_history_h();
   }
@@ -126,7 +124,7 @@ class _App02NowState extends State<App02Now>   {
       },
     );
     if(response.statusCode == 200){
-      print("로그 저장됨");
+      
       return true;
     }else{
       print("통신에러");
@@ -257,7 +255,7 @@ class _App02NowState extends State<App02Now>   {
     var uritxt = CLOUD_URL + '/ca609/delqc';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
-    print("----------------------------");
+   
 
     final response = await http.post(
         uri,
@@ -356,7 +354,11 @@ class _App02NowState extends State<App02Now>   {
         ),
         backgroundColor: GlobalStyle.appBarBackgroundColor,
         systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
-
+        actions: <Widget>[
+          TextButton(onPressed: (){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+          }, child: Text('홈으로', style: TextStyle(color: Colors.lightBlue, fontSize: 16),))
+        ],
       ),
       body:
       WillPopScope(
@@ -394,10 +396,8 @@ class _App02NowState extends State<App02Now>   {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _etDate.text  ;
-                    });
+                  onPressed: () async {
+
                     String ls_etdate = _etDate.text  ;
                     if(ls_etdate.length == 0){
                       print("일자를 입력하세요");
@@ -411,13 +411,15 @@ class _App02NowState extends State<App02Now>   {
                     resultset6.clear();
                     resultset7.clear();
 
-                    Nowlist_getdata();
+                    await Nowlist_getdata();
+                    setState(() {
+                      _etDate.text  ;
 
+                    });
                     _winid = "수입검사조회";
                     _winnm = "수입검사조회";
 
-                    /*ca609list_getdata();*/
-                    print(_etDate.text );
+                    
                   },
                   child: Text(
                     '목록조회',
@@ -481,14 +483,42 @@ class _App02NowState extends State<App02Now>   {
                                 return AlertDialog(
                                   content: Text('수입검사 취소 하시겠습니까?'),
                                   actions: <Widget>[
-                                    TextButton(onPressed: (){
+                                    TextButton(onPressed: () async {
+        
+                                      print(resultset.length);
+                                      print(resultset2.length);
+                                      print(resultset3.length);
 
-                                      delete_data();
+                                      print("체크");
+
+                                      Navigator.pop(context);
+
+                                      await delete_data();
+
+                                      await Nowlist_getdata();
+
+
+                                      resultset.clear();
+                                      resultset2.clear();
+                                      resultset3.clear();
+                                      resultset4.clear();
+                                      resultset5.clear();
+                                      resultset6.clear();
+                                      resultset7.clear();
+                                      setState(()  {
+
+                                      });
+
+                                      if(!tf)
+                                      {
+                                        openErrorPopup();
+                                      }
+                                      /*
                                       if(tf = true){
                                         openPopup();
                                       }else{
                                         openErrorPopup();
-                                      }
+                                      }*/
                                     }, child: Text('OK')
                                     )
                                   ],
@@ -554,15 +584,7 @@ class _App02NowState extends State<App02Now>   {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          GlobalStyle.iconTime,
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text(/*da035Data.pname*/"collapse" , style: GlobalStyle.couponName),
-                        ],
-                      ),
+
                       GestureDetector(
 
                         child: Text('검사량 : ' + ca609Data.wqty, style: TextStyle(
@@ -595,10 +617,7 @@ class _App02NowState extends State<App02Now>   {
                               }
 
                               checkvalue = ca609Data.isChecked ? 'Y' : '';
-                              print('값 확인 ::: ' + checkvalue.toString());
-                              print(resultset);//dd
-                              print(resultset2);
-                              print(resultset3);
+                             
                             });
                           }
                       ),

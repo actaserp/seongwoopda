@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
+import 'package:actthemoon/ui/home/tab_home.dart';
 import 'package:flutter/services.dart';
 import 'package:get_ip_address/get_ip_address.dart';
 import 'package:pointmobile_scanner/pointmobile_scanner.dart';
@@ -247,6 +248,11 @@ class _App02RegState extends State<App02Reg>   {
         ),
         backgroundColor: GlobalStyle.appBarBackgroundColor,
         systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
+        actions: <Widget>[
+          TextButton(onPressed: (){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+          }, child: Text('홈으로', style: TextStyle(color: Colors.lightBlue, fontSize: 16),))
+        ],
 
       ),
       body:

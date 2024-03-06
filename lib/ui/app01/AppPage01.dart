@@ -16,6 +16,7 @@ import '../../config/global_style.dart';
 import '../../model/kosep/Da035List_model.dart';
 import '../../model/themoon/padlist_model.dart';
 import '../../model/themoon/storelist_model.dart';
+import '../home/tab_home.dart';
 import 'AppPage01_Subpage.dart';
 
 class AppPage01 extends StatefulWidget {
@@ -427,7 +428,11 @@ class _AppPage01State extends State<AppPage01>   {
         ),
         backgroundColor: GlobalStyle.appBarBackgroundColor,
         systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
-
+        actions: <Widget>[
+          TextButton(onPressed: (){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+          }, child: Text('홈으로', style: TextStyle(color: Colors.lightBlue, fontSize: 16),))
+        ],
       ),
       body:
       WillPopScope(

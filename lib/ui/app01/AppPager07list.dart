@@ -12,6 +12,7 @@ import '../../config/constant.dart';
 import '../../config/global_style.dart';
 import '../../model/themoon/popup/popup_model5.dart';
 import '../../model/themoon/tb_da099_02_model.dart';
+import '../home/tab_home.dart';
 
 
 class AppPager07list extends StatefulWidget {
@@ -394,25 +395,9 @@ class _AppPager07listState extends State<AppPager07list> {
             style: GlobalStyle.appBarTitle,
           ),*/
           actions: <Widget>[
-            /*Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: TextButton(onPressed: (){
-
-                    setState(() {
-
-                      //mfixlist_getdata();
-                       tb_last();
-
-                    });
-                    *//*searchBook(_etSearch.text);*//*
-                    *//*searchBook2(_etSearch2.text);*//*
-                  }, child: Text('조회하기')),
-                ),
-
-              ],
-            )*/
+            TextButton(onPressed: (){
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+            }, child: Text('홈으로', style: TextStyle(color: Colors.lightBlue, fontSize: 16),))
           ],
           backgroundColor: GlobalStyle.appBarBackgroundColor,
           systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
