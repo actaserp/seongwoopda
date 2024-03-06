@@ -41,6 +41,8 @@ Future<Map<String, dynamic>> Usercheck(String userid, String userpw) async{
     await SessionManager().set("perid", userinfo['perid']);
     await SessionManager().set("pernm", userinfo['pernm']);
     await SessionManager().set("custcd", userinfo['custcd']);
+    await SessionManager().set("sysmain", userinfo['sysmain']);
+
     // dynamic user_saupnum = await SessionManager().get("saupnum");
 
     //Update session

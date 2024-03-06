@@ -50,6 +50,7 @@ class _Home1PageState extends State<TabHomePage> {
   Color _color2 = Color(0xFF37474f);
   var _usernm = "";
   var _userid = "";
+  var _sysmain = "";
   int _currentImageSlider = 0;
   bool chk = false;
 
@@ -63,7 +64,6 @@ class _Home1PageState extends State<TabHomePage> {
 
   @override
   void initState()  {
-    super.initState();
      _initializeData();
     //GLOBAL_URL+'/home_banner/1.jpg'));  LOCAL_IMAGES_URL+'/elvimg/1.jpg'
    _bannerData.add(BannerSliderModel(id: 1, image: HYUNDAI_URL + '/tm1-2-5-S.jpg'));
@@ -93,14 +93,17 @@ class _Home1PageState extends State<TabHomePage> {
 
 
 
+    super.initState();
 
+    //userchk();
 
   }
 
   Future<void> _initializeData() async {
 
     await setData(); // setData() 함수 비동기 호출
-    await userchk(); // userchk() 함수 호출
+    //await userchk(); // userchk() 함수 호출
+
 
     // 나머지 초기화 코드
     _bannerData.add(BannerSliderModel(id: 1, image: HYUNDAI_URL + '/tm1-2-5-S.jpg'));
@@ -112,9 +115,11 @@ class _Home1PageState extends State<TabHomePage> {
   Future<void> setData() async {
     String username = await  SessionManager().get("username");
     String userid = (await SessionManager().get("userid")).toString();
+    String sysmain = (await SessionManager().get("sysmain")).toString();
     // 문자열 디코딩
     _usernm = utf8.decode(username.runes.toList());
     _userid = utf8.decode(userid.runes.toList());
+    _sysmain = utf8.decode(sysmain.runes.toList());
 
   }
 
@@ -363,7 +368,7 @@ bottomNavigationBar: SizedBox.shrink(),
                     break;
                   case '기간매출현황':
 
-                    if(userlist[0].sysmain == "1")
+                    if(_sysmain == "1")
                     {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => AppPager04list()));
                     }
@@ -384,7 +389,7 @@ bottomNavigationBar: SizedBox.shrink(),
                   case '판매거래처현황':
 
 
-                    if(userlist[0].sysmain == "1")
+                    if(_sysmain == "1")
                     {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => AppPager05list()));
                     }
@@ -405,7 +410,7 @@ bottomNavigationBar: SizedBox.shrink(),
                   case '현재고현황':
 
 
-                    if(userlist[0].sysmain == "1")
+                    if(_sysmain == "1")
                     {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => AppPage06()));
                     }
@@ -426,7 +431,7 @@ bottomNavigationBar: SizedBox.shrink(),
                   case '기간별생산자별현황':
 
 
-                    if(userlist[0].sysmain == "1")
+                    if(_sysmain == "1")
                     {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => AppPager07list()));
                     }
