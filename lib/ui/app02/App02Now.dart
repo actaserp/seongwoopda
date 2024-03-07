@@ -485,18 +485,17 @@ class _App02NowState extends State<App02Now>   {
                                   actions: <Widget>[
                                     TextButton(onPressed: () async {
         
-                                      print(resultset.length);
-                                      print(resultset2.length);
-                                      print(resultset3.length);
 
                                       print("체크");
 
                                       Navigator.pop(context);
 
+                                      print(resultset4.toString());
+                                      print(resultset5.toString());
+
                                       await delete_data();
 
                                       await Nowlist_getdata();
-
 
                                       resultset.clear();
                                       resultset2.clear();
@@ -505,6 +504,8 @@ class _App02NowState extends State<App02Now>   {
                                       resultset5.clear();
                                       resultset6.clear();
                                       resultset7.clear();
+
+                                      await Nowlist_getdata();
                                       setState(()  {
 
                                       });
