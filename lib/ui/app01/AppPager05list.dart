@@ -256,7 +256,7 @@ class _AppPager05listState extends State<AppPager05list> {
           ),
           elevation: GlobalStyle.appBarElevation,
           title: Text(
-            '판매거래처현황 ' + da099Data.length.toString(),
+            '판매거래처현황 ',
             style: GlobalStyle.appBarTitle,
           ),
           actions: <Widget>[

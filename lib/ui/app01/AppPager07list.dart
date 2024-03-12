@@ -257,7 +257,7 @@ class _AppPager07listState extends State<AppPager07list> {
                     Center(
                       child: Padding(padding: EdgeInsets.only(left: 0, top: 0),
                       child: Text(
-                        '기간별생산자별현황  ' + planDatas.length.toString(),
+                        '기간별생산자별현황  ',
                         style: GlobalStyle.appBarTitle,
                       ),),
                     ),
@@ -394,11 +394,7 @@ class _AppPager07listState extends State<AppPager07list> {
             '기간별생산자별현황 ' + planDatas.length.toString(),
             style: GlobalStyle.appBarTitle,
           ),*/
-          actions: <Widget>[
-            TextButton(onPressed: (){
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
-            }, child: Text('홈으로', style: TextStyle(color: Colors.lightBlue, fontSize: 16),))
-          ],
+
           backgroundColor: GlobalStyle.appBarBackgroundColor,
           systemOverlayStyle: GlobalStyle.appBarSystemOverlayStyle,
 
