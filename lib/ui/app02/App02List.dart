@@ -422,7 +422,7 @@ class _App02ListState extends State<App02List>   {
                             {
                               openErrorPopup();
                             }
-                            
+                            Navigator.pop(context);
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => App02Reg()));
 
                             /*if(tf = true){

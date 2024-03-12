@@ -76,6 +76,9 @@ class _App02RegState extends State<App02Reg>   {
 
   @override
   void dispose() {
+
+    print('dispose');
+
     _etDate.dispose();
     ca609Data.clear();
     padlists.clear();
