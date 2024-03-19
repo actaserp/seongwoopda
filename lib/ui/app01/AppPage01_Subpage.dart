@@ -167,7 +167,7 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
 
       }
       print("서버통신 성공");
-      print(alllist);
+
       return storelists;
     }else{
       throw Exception('불러오는데 실패했습니다.');
@@ -364,97 +364,100 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
             ),
             Container(
               width: double.infinity,
-              child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) => SOFT_BLUE,
-                    ),
-                    overlayColor: MaterialStateProperty.all(Colors.transparent),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3.0),
+              child: Visibility(
+                visible: storelist.length > 0,
+                child: TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) => SOFT_BLUE,
+                      ),
+                      overlayColor: MaterialStateProperty.all(Colors.transparent),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3.0),
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () async
-                  {
-                    print(storelists.toString());
+                    onPressed: () async
+                    {
+                      print(storelists.toString());
 
 
 
 
 
-                    showDialog(context: context, builder: (context){
-                      return AlertDialog(
-                        content: Text('입고등록 하시겠습니까?'),
-                        actions: <Widget>[
-                          TextButton(onPressed: () async {
+                      showDialog(context: context, builder: (context){
+                        return AlertDialog(
+                          content: Text('입고등록 하시겠습니까?'),
+                          actions: <Widget>[
+                            TextButton(onPressed: () async {
 
-                            for(var item in storelist){
-                              if(item.isChecked){
+                              for(var item in storelist){
+                                if(item.isChecked){
 
-                                String? value = item.textEditingController?.text;
-                                String? value22 = item.wfokqt;
-                                String? value2  = item.plan_no;
-                                String? value3 = item.wono;
-                                String? value4 = item.pcode;
-                                String? value5 = item.lotno;
+                                  String? value = item.textEditingController?.text;
+                                  String? value22 = item.wfokqt;
+                                  String? value2  = item.plan_no;
+                                  String? value3 = item.wono;
+                                  String? value4 = item.pcode;
+                                  String? value5 = item.lotno;
 
-                                print(value);
+                                  print(value);
 
-                                resultset6.add(value ?? '');
-                                resultset.add(value22 ?? '');
-                                resultset2.add(value2 ?? '');
-                                resultset3.add(value3 ?? '');
-                                resultset4.add(value4 ?? '');
-                                resultset5.add(value5 ?? '');
+                                  resultset6.add(value ?? '');
+                                  resultset.add(value22 ?? '');
+                                  resultset2.add(value2 ?? '');
+                                  resultset3.add(value3 ?? '');
+                                  resultset4.add(value4 ?? '');
+                                  resultset5.add(value5 ?? '');
 
-                                print(resultset6);
-                                print("gg");
+                                  print(resultset6);
+                                  print("gg");
 
+                                }
                               }
-                            }
 
-                            print(storelist.length);
-                            //print(storelist[0].textEditingController?.text);
-                            //print(storelist[1].textEditingController?.text);
-                            print(resultset6);
-                            print("뭘까");
+                              print(storelist.length);
+                              //print(storelist[0].textEditingController?.text);
+                              //print(storelist[1].textEditingController?.text);
+                              print(resultset6);
+                              print("뭘까");
 
-                            Navigator.pop(context);
-                            //Navigator.pop(context);
+                              Navigator.pop(context);
+                              //Navigator.pop(context);
 
-                            onOKButtonPressed();
+                              onOKButtonPressed();
 
-                            await save_fplandata();
-                            await log_history_h2();
+                              await save_fplandata();
+                              await log_history_h2();
 
-                            await PDAlist_getdata2();
+                              await PDAlist_getdata2();
 
-                            setState(() {
+                              setState(() {
 
-                            });
+                              });
 
-                            // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
-                          }, child: Text('OK')),
-                          TextButton(onPressed: (){
-                            Navigator.pop(context);
+                              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+                            }, child: Text('OK')),
+                            TextButton(onPressed: (){
+                              Navigator.pop(context);
 
-                          }, child: Text('CANCEL'))
-                        ],
-                      );
-                    });
-                    //save_fplandata();
+                            }, child: Text('CANCEL'))
+                          ],
+                        );
+                      });
+                      //save_fplandata();
 
-                  }, child: Padding(padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: Text('입고등록',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
-                  ),
-                  textAlign: TextAlign.center,
-                ),)),
+                    }, child: Padding(padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  child: Text('입고등록',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                    ),
+                    textAlign: TextAlign.center,
+                  ),)),
+              ),
             )
           ],
         ),

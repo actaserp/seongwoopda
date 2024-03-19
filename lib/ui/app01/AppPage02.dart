@@ -369,60 +369,63 @@ class _AppPage02State extends State<AppPage02>   {
             ),
             Container(
               width: double.infinity,
-              child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) => SOFT_BLUE,
-                    ),
-                    overlayColor: MaterialStateProperty.all(Colors.transparent),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3.0),
+              child: Visibility(
+                visible: storelistes.length > 0,
+                child: TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) => SOFT_BLUE,
+                      ),
+                      overlayColor: MaterialStateProperty.all(Colors.transparent),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3.0),
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () async
-                  {
+                    onPressed: () async
+                    {
 
 
-                    showDialog(context: context, builder: (context){
-                      return AlertDialog(
-                        content: Text('입고취소를 하시겠습니까?'),
-                        actions: <Widget>[
-                          TextButton(onPressed: () async {
+                      showDialog(context: context, builder: (context){
+                        return AlertDialog(
+                          content: Text('입고취소를 하시겠습니까?'),
+                          actions: <Widget>[
+                            TextButton(onPressed: () async {
 
-                            Navigator.pop(context);
-
-
-                            await update_fplandata();
-                            log_history_h2();
+                              Navigator.pop(context);
 
 
-                            await PDAlist_getdata3();
+                              await update_fplandata();
+                              log_history_h2();
 
-                            setState(() {
 
-                            });
+                              await PDAlist_getdata3();
 
-                            // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
-                          }, child: Text('OK')),
-                          TextButton(onPressed: (){
-                            Navigator.pop(context);
-                          }, child: Text('Cancel'))
-                        ],
-                      );
-                    });
-                    //save_fplandata();
+                              setState(() {
 
-                  }, child: Padding(padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: Text('입고취소',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
-                  ),
-                  textAlign: TextAlign.center,
-                ),)),
+                              });
+
+                              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabHomePage()));
+                            }, child: Text('OK')),
+                            TextButton(onPressed: (){
+                              Navigator.pop(context);
+                            }, child: Text('Cancel'))
+                          ],
+                        );
+                      });
+                      //save_fplandata();
+
+                    }, child: Padding(padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  child: Text('입고취소',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                    ),
+                    textAlign: TextAlign.center,
+                  ),)),
+              ),
             )
           ],
         ),

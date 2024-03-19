@@ -377,76 +377,79 @@ class _App02ListState extends State<App02List>   {
             ),
             Container(
               width: double.infinity,
-              child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) => SOFT_BLUE,
-                    ),
-                    overlayColor: MaterialStateProperty.all(Colors.transparent),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3.0),
+              child: Visibility(
+                visible: ca609Datas.length > 0,
+                child: TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) => SOFT_BLUE,
+                      ),
+                      overlayColor: MaterialStateProperty.all(Colors.transparent),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3.0),
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () async
-                  {
+                    onPressed: () async
+                    {
 
-                    print(resultset);
-                    print(resultset2);
-                    print(resultset3);
-                    print(resultset4);
-                    print(resultset5);
+                      print(resultset);
+                      print(resultset2);
+                      print(resultset3);
+                      print(resultset4);
+                      print(resultset5);
 
 
-                    showDialog(context: context, builder: (context){
-                      return AlertDialog(
-                        content: Text('수입검사 등록 하시겠습니까?'),
-                        actions: <Widget>[
-                          TextButton(onPressed: () async {
+                      showDialog(context: context, builder: (context){
+                        return AlertDialog(
+                          content: Text('수입검사 등록 하시겠습니까?'),
+                          actions: <Widget>[
+                            TextButton(onPressed: () async {
 
-                            for(var item in ca609datal){
-                              if(item.isChecked){
-                                for(int i=0; i<ca609datal.length; i++){
-                                  String? value = ca609datal[i].textEditingController?.text;
-                                  resultset5.add(value ?? '0');
+                              for(var item in ca609datal){
+                                if(item.isChecked){
+                                  for(int i=0; i<ca609datal.length; i++){
+                                    String? value = ca609datal[i].textEditingController?.text;
+                                    resultset5.add(value ?? '0');
 
+                                  }
                                 }
                               }
-                            }
-                            print(resultset5);
+                              print(resultset5);
 
-                            await save_CA();
-                            
-                            if(!tf)
-                            {
-                              openErrorPopup();
-                            }
-                            Navigator.pop(context);
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => App02Reg()));
+                              await save_CA();
 
-                            /*if(tf = true){
-                              openPopup();
-                            }else{
-                              openErrorPopup();
-                            }*/
+                              if(!tf)
+                              {
+                                openErrorPopup();
+                              }
+                              Navigator.pop(context);
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => App02Reg()));
 
-                          }, child: Text('OK')
-                          )
-                        ],
-                      );
-                    });
-                    //save_fplandata();
+                              /*if(tf = true){
+                                openPopup();
+                              }else{
+                                openErrorPopup();
+                              }*/
 
-                  }, child: Padding(padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: Text('수입검사 등록',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
-                  ),
-                  textAlign: TextAlign.center,
-                ),)),
+                            }, child: Text('OK')
+                            )
+                          ],
+                        );
+                      });
+                      //save_fplandata();
+
+                    }, child: Padding(padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  child: Text('수입검사 등록',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                    ),
+                    textAlign: TextAlign.center,
+                  ),)),
+              ),
             )
           ],
         ),
