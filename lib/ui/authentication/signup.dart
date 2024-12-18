@@ -1,7 +1,7 @@
-import 'package:actthemoon/ui/home.dart';
+import 'package:actseongwoo/ui/home.dart';
 import 'package:flutter/material.dart';
-import 'package:actthemoon/config/constant.dart';
-import 'package:actthemoon/config/global_style.dart';
+import 'package:actseongwoo/config/constant.dart';
+import 'package:actseongwoo/config/global_style.dart';
 
 class SignupPage extends StatefulWidget {
   final bool fromList;

@@ -1,7 +1,7 @@
 import 'dart:ui';
-import 'package:actthemoon/config/constant.dart';
+import 'package:actseongwoo/config/constant.dart';
 
-import 'package:actthemoon/ui/splash_screen.dart';
+import 'package:actseongwoo/ui/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';

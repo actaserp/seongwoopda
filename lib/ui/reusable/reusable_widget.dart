@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:actthemoon/config/constant.dart';
+import 'package:actseongwoo/config/constant.dart';
 import 'package:flutter/material.dart';
 class ReusableWidget{
 

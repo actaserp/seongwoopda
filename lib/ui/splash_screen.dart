@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:actthemoon/config/constant.dart';
-import 'package:actthemoon/ui/authentication/signin.dart';
+import 'package:actseongwoo/config/constant.dart';
+import 'package:actseongwoo/ui/authentication/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

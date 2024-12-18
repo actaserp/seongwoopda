@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.kosep.actthemoon">
+    package="com.kosep.actseongwoo">
    <application
-        android:label="ACT두문"
+        android:label="ACT성우"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

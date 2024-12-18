@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:actthemoon/config/constant.dart';
-import 'package:actthemoon/config/global_style.dart';
+import 'package:actseongwoo/config/constant.dart';
+import 'package:actseongwoo/config/global_style.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   @override

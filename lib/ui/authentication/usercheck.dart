@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:actthemoon/config/constant.dart';
+import 'package:actseongwoo/config/constant.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:get_ip_address/get_ip_address.dart';
 import 'package:http/http.dart' as http;

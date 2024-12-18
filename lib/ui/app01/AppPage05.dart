@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:actthemoon/config/global_style.dart';
-import 'package:actthemoon/ui/app01/AppPager04list.dart';
+import 'package:actseongwoo/config/global_style.dart';
+import 'package:actseongwoo/ui/app01/AppPager04list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

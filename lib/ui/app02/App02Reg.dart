@@ -2,7 +2,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
-import 'package:actthemoon/ui/home/tab_home.dart';
+import 'package:actseongwoo/ui/home/tab_home.dart';
 import 'package:flutter/services.dart';
 import 'package:get_ip_address/get_ip_address.dart';
 import 'package:pointmobile_scanner/pointmobile_scanner.dart';

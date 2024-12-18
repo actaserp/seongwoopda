@@ -1,7 +1,7 @@
-import 'package:actthemoon/config/constant.dart';
-import 'package:actthemoon/config/global_style.dart';
-import 'package:actthemoon/ui/reusable/reusable_widget.dart';
-import 'package:actthemoon/ui/reusable/global_function.dart';
+import 'package:actseongwoo/config/constant.dart';
+import 'package:actseongwoo/config/global_style.dart';
+import 'package:actseongwoo/ui/reusable/reusable_widget.dart';
+import 'package:actseongwoo/ui/reusable/global_function.dart';
 import 'package:flutter/material.dart';
 
 class EditPhoneNumberPage extends StatefulWidget {

@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 
-import 'package:actthemoon/model/themoon/tb_fplan_model.dart';
+import 'package:actseongwoo/model/themoon/tb_fplan_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
