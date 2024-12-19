@@ -134,7 +134,7 @@ class _App02RegState extends State<App02Reg>   {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm'   : 'ERP_THEMOON',
+        'dbnm'   : 'ERP_SWSPANEL',
         'custcd' : 'THEMOON',
         'spjangcd': 'ZZ',
         'userid' : _perid,
@@ -170,7 +170,7 @@ class _App02RegState extends State<App02Reg>   {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm': "ERP_THEMOON",
+        'dbnm': "ERP_SWSPANEL",
         'code88': decodeResult ?? '',
         'custcd': _custcd
       },

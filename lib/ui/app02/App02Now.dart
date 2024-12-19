@@ -112,7 +112,7 @@ class _App02NowState extends State<App02Now>   {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm'   : 'ERP_THEMOON',
+        'dbnm'   : 'ERP_SWSPANEL',
         'custcd' : 'THEMOON',
         'spjangcd': 'ZZ',
         'userid' : _perid,
@@ -158,7 +158,7 @@ class _App02NowState extends State<App02Now>   {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm'   : 'ERP_THEMOON',
+        'dbnm'   : 'ERP_SWSPANEL',
         'custcd' : 'THEMOON',
         'spjangcd': 'ZZ',
         'userid' : _perid,
@@ -199,7 +199,7 @@ class _App02NowState extends State<App02Now>   {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm': "ERP_THEMOON",
+        'dbnm': "ERP_SWSPANEL",
         'custcd': 'THEMOON',
         'spjangcd': 'ZZ',
         'qcdate': _etDate.text
@@ -264,7 +264,7 @@ class _App02NowState extends State<App02Now>   {
           'Accept' : 'application/json'
         },
         body: <String, String> {
-          'dbnm': 'ERP_THEMOON',
+          'dbnm': 'ERP_SWSPANEL',
           'custcd': 'THEMOON',
           'spjangcd': 'ZZ',
           'baldate': resultset.join(','),

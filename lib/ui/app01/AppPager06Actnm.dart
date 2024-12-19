@@ -39,7 +39,7 @@ class _AppPager06ActnmState extends State<AppPager06Actnm> {
   Future getactnminfo() async {
 
 
-    var uritxt = CLOUD_URL + '/themoon/ca501list';
+    var uritxt = CLOUD_URL + '/seongwoo/ca501list';
     var encoded = Uri.encodeFull(uritxt);
 
 
@@ -52,7 +52,7 @@ class _AppPager06ActnmState extends State<AppPager06Actnm> {
       },
       body: <String, String> {
 
-        'dbnm': 'ERP_THEMOON',
+        'dbnm': 'ERP_SWSPANEL',
         'pnam': _searchTerm,
 
 

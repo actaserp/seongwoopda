@@ -99,7 +99,7 @@ class _AppPage04State extends State<AppPage04> {
   Future getactnminfo() async {
 
 
-    var uritxt = CLOUD_URL + '/themoon/MainList';
+    var uritxt = CLOUD_URL + '/seongwoo/MainList';
     var encoded = Uri.encodeFull(uritxt);
 
 
@@ -112,7 +112,7 @@ class _AppPage04State extends State<AppPage04> {
       },
       body: <String, String> {
 
-        'dbnm': 'ERP_THEMOON',
+        'dbnm': 'ERP_SWSPANEL',
         'cltnm': _etcltnm.text,
         'cltcd': cltcd,
         'frdate': _etfrdate.text,
@@ -152,7 +152,7 @@ class _AppPage04State extends State<AppPage04> {
   /**** 관리처 조회  **/
   @override
   Future pop_Manage()async {
-    var uritxt = CLOUD_URL + '/themoon/pop_Per';
+    var uritxt = CLOUD_URL + '/seongwoo/pop_Per';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
@@ -162,7 +162,7 @@ class _AppPage04State extends State<AppPage04> {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm' : 'ERP_THEMOON',
+        'dbnm' : 'ERP_SWSPANEL',
 
       },
     );
@@ -197,7 +197,7 @@ class _AppPage04State extends State<AppPage04> {
   /**** 대분류 조회  **/
   @override
   Future pop_Main()async {
-    var uritxt = CLOUD_URL + '/themoon/pop_Main';
+    var uritxt = CLOUD_URL + '/seongwoo/pop_Main';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
@@ -207,7 +207,7 @@ class _AppPage04State extends State<AppPage04> {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm' : 'ERP_THEMOON',
+        'dbnm' : 'ERP_SWSPANEL',
         'contnm': '%',
       },
     );
@@ -243,7 +243,7 @@ class _AppPage04State extends State<AppPage04> {
   @override
   Future pop_ereginm()async {
     //_dbnm = await  SessionManager().get("dbnm");
-    var uritxt = CLOUD_URL + '/themoon/pop_Mid';
+    var uritxt = CLOUD_URL + '/seongwoo/pop_Mid';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
@@ -253,7 +253,7 @@ class _AppPage04State extends State<AppPage04> {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm': 'ERP_THEMOON',
+        'dbnm': 'ERP_SWSPANEL',
         'hcod': _etMainTxt.toString(),
       },
     );

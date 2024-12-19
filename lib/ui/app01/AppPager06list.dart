@@ -77,7 +77,7 @@ class _AppPager06listState extends State<AppPager06list> {
   Future da099list() async {
 
     try {
-      var uritxt = CLOUD_URL + '/themoon/ca602_01';
+      var uritxt = CLOUD_URL + '/seongwoo/ca602_01';
       var encoded = Uri.encodeFull(uritxt);
 
       Uri uri = Uri.parse(encoded);
@@ -88,7 +88,7 @@ class _AppPager06listState extends State<AppPager06list> {
           'Accept': 'application/json'
         },
         body: <String, String>{
-          'dbnm': 'ERP_THEMOON',
+          'dbnm': 'ERP_SWSPANEL',
           'store': widget.store,
           'pgun': widget.pgun,
           'agrb': widget.agrb ?? '',

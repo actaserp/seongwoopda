@@ -21,7 +21,7 @@ Future<Map<String, dynamic>> Usercheck(String userid, String userpw) async{
     body: <String, String> {
       'userid': userid,
       'userpw': userpw,
-      'dbnm': 'ERP_THEMOON'
+      'dbnm': 'ERP_SWSPANEL'
     },
   );
   if(response.statusCode == 200){
@@ -92,7 +92,7 @@ Future<bool> save_log() async
   _username = utf8.decode(username.runes.toList());
 
 
-  var uritxt = CLOUD_URL + '/themoon/loginlog';
+  var uritxt = CLOUD_URL + '/seongwoo/loginlog';
   var encoded = Uri.encodeFull(uritxt);
   Uri uri = Uri.parse(encoded);
 
@@ -143,7 +143,7 @@ Future<bool> save_log_h() async
   _username = utf8.decode(username.runes.toList());
 
 
-  var uritxt = CLOUD_URL + '/themoon/loginlog_h';
+  var uritxt = CLOUD_URL + '/seongwoo/loginlog_h';
   var encoded = Uri.encodeFull(uritxt);
   Uri uri = Uri.parse(encoded);
 

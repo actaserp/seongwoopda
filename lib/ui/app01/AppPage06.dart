@@ -112,7 +112,7 @@ class _AppPage06State extends State<AppPage06> {
   @override
   Future pop_agrb()async {
     //_dbnm = await  SessionManager().get("dbnm");
-    var uritxt = CLOUD_URL + '/themoon/agrdlist';
+    var uritxt = CLOUD_URL + '/seongwoo/agrdlist';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
@@ -122,7 +122,7 @@ class _AppPage06State extends State<AppPage06> {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm': 'ERP_THEMOON',
+        'dbnm': 'ERP_SWSPANEL',
         'pgun': _etpgunTxt.toString(),
       },
     );
@@ -157,7 +157,7 @@ class _AppPage06State extends State<AppPage06> {
   @override
   Future pop_bgrb()async {
     //_dbnm = await  SessionManager().get("dbnm");
-    var uritxt = CLOUD_URL + '/themoon/bgrdlist';
+    var uritxt = CLOUD_URL + '/seongwoo/bgrdlist';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
@@ -167,7 +167,7 @@ class _AppPage06State extends State<AppPage06> {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm': 'ERP_THEMOON',
+        'dbnm': 'ERP_SWSPANEL',
         'param': _etagrbTxt.toString(),
       },
     );
@@ -200,7 +200,7 @@ class _AppPage06State extends State<AppPage06> {
   /**** 창고 조회  **/
   @override
   Future pop_Store()async {
-    var uritxt = CLOUD_URL + '/themoon/store';
+    var uritxt = CLOUD_URL + '/seongwoo/store';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
@@ -210,7 +210,7 @@ class _AppPage06State extends State<AppPage06> {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm' : 'ERP_THEMOON',
+        'dbnm' : 'ERP_SWSPANEL',
 
       },
     );
@@ -244,7 +244,7 @@ class _AppPage06State extends State<AppPage06> {
   /**** 품목분류 조회  **/
   @override
   Future pop_pgun()async {
-    var uritxt = CLOUD_URL + '/themoon/pgun';
+    var uritxt = CLOUD_URL + '/seongwoo/pgun';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
@@ -254,7 +254,7 @@ class _AppPage06State extends State<AppPage06> {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm' : 'ERP_THEMOON',
+        'dbnm' : 'ERP_SWSPANEL',
 
       },
     );

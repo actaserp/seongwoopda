@@ -128,7 +128,7 @@ class _Home1PageState extends State<TabHomePage> {
 
   Future userchk() async {
 
-    var uritxt = CLOUD_URL + '/themoon/usercheck';
+    var uritxt = CLOUD_URL + '/seongwoo/usercheck';
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);
@@ -139,7 +139,7 @@ class _Home1PageState extends State<TabHomePage> {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm': 'ERP_THEMOON',
+        'dbnm': 'ERP_SWSPANEL',
         'userid': _userid.toString()
 
 

@@ -119,7 +119,7 @@ class _AppPage01State extends State<AppPage01>   {
     String username = (await SessionManager().get("username")).toString();
     _username = utf8.decode(username.runes.toList());
 
-    var uritxt = CLOUD_URL + '/themoon/loginlog_h';
+    var uritxt = CLOUD_URL + '/seongwoo/loginlog_h';
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);
@@ -156,7 +156,7 @@ class _AppPage01State extends State<AppPage01>   {
 
     String _dbnm = await  SessionManager().get("dbnm");
 
-    var uritxt = CLOUD_URL + '/themoon/list01';
+    var uritxt = CLOUD_URL + '/seongwoo/list01';
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);
@@ -167,7 +167,7 @@ class _AppPage01State extends State<AppPage01>   {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm': "ERP_THEMOON",
+        'dbnm': "ERP_SWSPANEL",
         'code88': decodeResult ?? '',
         'wendt': _etDate.text,
       },

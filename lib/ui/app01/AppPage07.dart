@@ -83,7 +83,7 @@ class _AppPage07State extends State<AppPage07> {
   /**** 관리처 조회  **/
   @override
   Future pop_Manage()async {
-    var uritxt = CLOUD_URL + '/themoon/TB_JC002';
+    var uritxt = CLOUD_URL + '/seongwoo/TB_JC002';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
@@ -93,7 +93,7 @@ class _AppPage07State extends State<AppPage07> {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm' : 'ERP_THEMOON',
+        'dbnm' : 'ERP_SWSPANEL',
 
       },
     );

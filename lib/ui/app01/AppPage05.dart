@@ -84,7 +84,7 @@ class _AppPage05State extends State<AppPage05> {
   Future getactnminfo() async {
 
 
-    var uritxt = CLOUD_URL + '/themoon/MainList';
+    var uritxt = CLOUD_URL + '/seongwoo/MainList';
     var encoded = Uri.encodeFull(uritxt);
 
 
@@ -97,7 +97,7 @@ class _AppPage05State extends State<AppPage05> {
       },
       body: <String, String> {
 
-        'dbnm': 'ERP_THEMOON',
+        'dbnm': 'ERP_SWSPANEL',
         'cltnm': _etcltnm.text,
         'cltcd': cltcd,
         'frdate': _etfrdate.text,
@@ -137,7 +137,7 @@ class _AppPage05State extends State<AppPage05> {
   /**** 관리처 조회  **/
   @override
   Future pop_Manage()async {
-    var uritxt = CLOUD_URL + '/themoon/pop_Per';
+    var uritxt = CLOUD_URL + '/seongwoo/pop_Per';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
@@ -147,7 +147,7 @@ class _AppPage05State extends State<AppPage05> {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm' : 'ERP_THEMOON',
+        'dbnm' : 'ERP_SWSPANEL',
 
       },
     );

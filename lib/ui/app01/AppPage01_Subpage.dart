@@ -112,7 +112,7 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
 
     String _dbnm = await SessionManager().get("dbnm");
 
-    var uritxt = CLOUD_URL + "/themoon/list02";
+    var uritxt = CLOUD_URL + "/seongwoo/list02";
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);
@@ -123,7 +123,7 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm': "ERP_THEMOON",
+        'dbnm': "ERP_SWSPANEL",
         'wendt': _etDate.text,
         'pcode': widget.padlistmodel.phm_pcod,
       },
@@ -179,7 +179,7 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
   @override
   Future<bool> save_fplandata()async {
     _dbnm = await  SessionManager().get("dbnm");
-    var uritxt = CLOUD_URL + '/themoon/Update_TB_FPLAN';
+    var uritxt = CLOUD_URL + '/seongwoo/Update_TB_FPLAN';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
     print("----------------------------");
@@ -247,7 +247,7 @@ class _AppPage01_SubpageState extends State<AppPage01_Subpage> {
     _username = utf8.decode(username.runes.toList());
 
 
-    var uritxt = CLOUD_URL + '/themoon/loginlog_h';
+    var uritxt = CLOUD_URL + '/seongwoo/loginlog_h';
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);

@@ -80,7 +80,7 @@ class _AppPager07listState extends State<AppPager07list> {
   /**** 관리처 조회  **/
   @override
   Future pop_Manage()async {
-    var uritxt = CLOUD_URL + '/themoon/TB_JC002';
+    var uritxt = CLOUD_URL + '/seongwoo/TB_JC002';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
@@ -90,7 +90,7 @@ class _AppPager07listState extends State<AppPager07list> {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm' : 'ERP_THEMOON',
+        'dbnm' : 'ERP_SWSPANEL',
 
       },
     );
@@ -151,7 +151,7 @@ class _AppPager07listState extends State<AppPager07list> {
 
       String _dbnm = await SessionManager().get("dbnm");
 
-      var uritxt = CLOUD_URL + '/themoon/tb_last';
+      var uritxt = CLOUD_URL + '/seongwoo/tb_last';
       var encoded = Uri.encodeFull(uritxt);
 
       Uri uri = Uri.parse(encoded);
@@ -162,7 +162,7 @@ class _AppPager07listState extends State<AppPager07list> {
           'Accept': 'application/json'
         },
         body: <String, String>{
-          'dbnm': 'ERP_THEMOON',
+          'dbnm': 'ERP_SWSPANEL',
           'ps_tdate': _ettodate.text,
           'ps_fdate': _etfrdate.text,
           'divicd': getAreaParameterValue()

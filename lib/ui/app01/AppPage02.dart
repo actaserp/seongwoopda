@@ -59,7 +59,7 @@ class _AppPage02State extends State<AppPage02>   {
 
   Future PDAlist_getdata3() async {
 
-    var uritxt = CLOUD_URL + "/themoon/list03";
+    var uritxt = CLOUD_URL + "/seongwoo/list03";
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
 
@@ -70,7 +70,7 @@ class _AppPage02State extends State<AppPage02>   {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm' : "ERP_THEMOON",
+        'dbnm' : "ERP_SWSPANEL",
         'gs_today' : _etDate.text,
       },
 
@@ -117,7 +117,7 @@ class _AppPage02State extends State<AppPage02>   {
   @override
   Future<bool> update_fplandata()async {
 
-    var uritxt = CLOUD_URL + '/themoon/Update_cancel';
+    var uritxt = CLOUD_URL + '/seongwoo/Update_cancel';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
 
@@ -161,7 +161,7 @@ class _AppPage02State extends State<AppPage02>   {
     String username = (await SessionManager().get("username")).toString();
     _username = utf8.decode(username.runes.toList());
 
-    var uritxt = CLOUD_URL + '/themoon/loginlog_h';
+    var uritxt = CLOUD_URL + '/seongwoo/loginlog_h';
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);
@@ -204,7 +204,7 @@ class _AppPage02State extends State<AppPage02>   {
     String username = (await SessionManager().get("username")).toString();
     _username = utf8.decode(username.runes.toList());
 
-    var uritxt = CLOUD_URL + '/themoon/loginlog_h';
+    var uritxt = CLOUD_URL + '/seongwoo/loginlog_h';
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);

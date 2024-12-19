@@ -141,7 +141,7 @@ class _App02ListState extends State<App02List>   {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm'   : 'ERP_THEMOON',
+        'dbnm'   : 'ERP_SWSPANEL',
         'custcd' : 'THEMOON',
         'spjangcd': 'ZZ',
         'userid' : _perid,
@@ -186,7 +186,7 @@ class _App02ListState extends State<App02List>   {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm': 'ERP_THEMOON',
+        'dbnm': 'ERP_SWSPANEL',
         'custcd': _custcd,
         'spjangcd': _spjangcd,
         'pcode' : widget.padlistmodel.phm_pcod

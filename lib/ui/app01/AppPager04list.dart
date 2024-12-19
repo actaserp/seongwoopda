@@ -87,7 +87,7 @@ class _AppPager04listState extends State<AppPager04list> {
 
 
 
-    var uritxt = CLOUD_URL + '/themoon/da036list';
+    var uritxt = CLOUD_URL + '/seongwoo/da036list';
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);
@@ -98,7 +98,7 @@ class _AppPager04listState extends State<AppPager04list> {
         'Accept' : 'application/json'
       },
       body: <String, String> {
-        'dbnm': 'ERP_THEMOON',
+        'dbnm': 'ERP_SWSPANEL',
         'cltnm': _etcltnm.text.toString(),
         'cltcd': cltcd,
         'frdate':_etfrdate.text.toString(),
