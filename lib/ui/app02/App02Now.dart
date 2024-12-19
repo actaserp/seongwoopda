@@ -100,7 +100,7 @@ class _App02NowState extends State<App02Now>   {
     String username = (await SessionManager().get("username")).toString();
     _username = utf8.decode(username.runes.toList());
 
-    var uritxt = CLOUD_URL + '/ca609/insertLog';
+    var uritxt = CLOUD_URL + '/ca609sw/insertLog';
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);
@@ -146,7 +146,7 @@ class _App02NowState extends State<App02Now>   {
     String username = (await SessionManager().get("username")).toString();
     _username = utf8.decode(username.runes.toList());
 
-    var uritxt = CLOUD_URL + '/ca609/insertLog';
+    var uritxt = CLOUD_URL + '/ca609sw/insertLog';
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);
@@ -188,7 +188,7 @@ class _App02NowState extends State<App02Now>   {
   Future Nowlist_getdata() async {
     String _dbnm = await  SessionManager().get("dbnm");
 
-    var uritxt = CLOUD_URL + '/ca609/list03';
+    var uritxt = CLOUD_URL + '/ca609sw/list03';
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);
@@ -252,7 +252,7 @@ class _App02NowState extends State<App02Now>   {
   @override
   Future<bool> delete_data()async {
     _dbnm = await  SessionManager().get("dbnm");
-    var uritxt = CLOUD_URL + '/ca609/delqc';
+    var uritxt = CLOUD_URL + '/ca609sw/delqc';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
    
@@ -301,7 +301,7 @@ class _App02NowState extends State<App02Now>   {
     _username = utf8.decode(username.runes.toList());
 
 
-    var uritxt = CLOUD_URL + '/ca609/insertLog';
+    var uritxt = CLOUD_URL + '/ca609sw/insertLog';
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);

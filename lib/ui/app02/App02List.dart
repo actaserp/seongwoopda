@@ -129,7 +129,7 @@ class _App02ListState extends State<App02List>   {
     String username = (await SessionManager().get("username")).toString();
     _username = utf8.decode(username.runes.toList());
 
-    var uritxt = CLOUD_URL + '/ca609/insertLog';
+    var uritxt = CLOUD_URL + '/ca609sw/insertLog';
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);
@@ -175,7 +175,7 @@ class _App02ListState extends State<App02List>   {
   Future ca609list_getdata() async {
     String _dbnm = await  SessionManager().get("dbnm");
 
-    var uritxt = CLOUD_URL + "/ca609/list02";
+    var uritxt = CLOUD_URL + "/ca609sw/list02";
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);
@@ -259,7 +259,7 @@ class _App02ListState extends State<App02List>   {
   @override
   Future<bool> save_CA() async {
     _dbnm = await  SessionManager().get("dbnm");
-    var uritxt = CLOUD_URL + '/ca609/Update_TB_CA';
+    var uritxt = CLOUD_URL + '/ca609sw/Update_TB_CA';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
     print("----------------------------");

@@ -122,7 +122,7 @@ class _App02RegState extends State<App02Reg>   {
     String username = (await SessionManager().get("username")).toString();
     _username = utf8.decode(username.runes.toList());
 
-    var uritxt = CLOUD_URL + '/ca609/insertLog';
+    var uritxt = CLOUD_URL + '/ca609sw/insertLog';
     var encoded = Uri.encodeFull(uritxt);
 
     Uri uri = Uri.parse(encoded);
@@ -160,7 +160,7 @@ class _App02RegState extends State<App02Reg>   {
   Future PDAlist_getdata(String? decodeResult, int arg) async {
     String _dbnm = await  SessionManager().get("dbnm");
 
-    var uritxt = CLOUD_URL + '/ca609/list01';
+    var uritxt = CLOUD_URL + '/ca609sw/list01';
     var encoded = Uri.encodeFull(uritxt);
     Uri uri = Uri.parse(encoded);
     final response = await http.post(
