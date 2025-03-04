@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
-import 'package:get_ip_address/get_ip_address.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:pointmobile_scanner/pointmobile_scanner.dart';
@@ -15,6 +14,7 @@ import '../../config/constant.dart';
 import '../../config/global_style.dart';
 import '../../model/kosep/Da035List_model.dart';
 import '../../model/themoon/storelist_model.dart';
+import '../../services/BarcodeScannerService.dart';
 import '../home/tab_home.dart';
 
 class AppPage03 extends StatefulWidget {
@@ -67,20 +67,55 @@ class _AppPage03State extends State<AppPage03>   {
 
   @override
   void initState() {
+    super.initState();
+
+    // Clear existing storelist and initialize session data
     storelist.clear();
     sessionData();
-    super.initState();
+
+    // Set initial date
     _etDate.text = getToday();
 
+    // Set up the barcode scanner's method call handler
+    BarcodeScannerService.setMethodCallHandler(
+          (decodedValue) => _onBarcodeDecoded(decodedValue),
+          (errorMessage) => _onError(errorMessage),
+    );
 
-    PointmobileScanner.channel.setMethodCallHandler(_onBarcodeScannerHandler);
-    PointmobileScanner.initScanner();
-    PointmobileScanner.enableScanner();
-    PointmobileScanner.enableBeep();
-    PointmobileScanner.enableSymbology(PointmobileScanner.SYM_CODE128);
-    PointmobileScanner.enableSymbology(PointmobileScanner.SYM_EAN13);
-    PointmobileScanner.enableSymbology(PointmobileScanner.SYM_QR);
-    PointmobileScanner.enableSymbology(PointmobileScanner.SYM_UPCA);
+    // Initialize and configure the scanner
+    Future.delayed(Duration.zero, () async {
+      BarcodeScannerService.startScan();
+      await BarcodeScannerService.setSymbologyEnable(13, true); // CODE128 활성화
+      await BarcodeScannerService.setSymbologyEnable(25, true); // EAN13 활성화
+      await BarcodeScannerService.setSymbologyEnable(49, true); // QR 활성화
+    });
+  }
+
+  // Callback function for barcode decoding
+  void _onBarcodeDecoded(String decodedValue) async {
+
+    if(decodedValue == null || decodedValue.isEmpty || decodedValue == "NOT READ"){
+      debugPrint("바코드 값이 없음");
+      return;
+    }
+
+    setState(() {
+      if (!_decodeResults.contains(decodedValue)) {
+        _decodeResults.add(decodedValue);
+      }
+    });
+
+    // Example: Log the decoded value
+    debugPrint('Decoded Barcode: $decodedValue');
+
+    // Custom logic for the decoded barcode
+    int count = _decodeResults.where((value) => value == decodedValue).length;
+    await tbca630_getdata(decodedValue, count);
+  }
+
+// Callback function for error handling
+  void _onError(String errorMessage) {
+    debugPrint('Scanner Error: $errorMessage');
   }
 
   @override
@@ -131,6 +166,10 @@ class _AppPage03State extends State<AppPage03>   {
       List<dynamic> alllist = [];
       alllist =  jsonDecode(utf8.decode(response.bodyBytes))  ;
 
+      if(alllist.isEmpty){
+        _showAlertDialog("알림", "해당 품목이 없습니다.");
+        return;
+      }
 
       for (int i = 0; i < alllist.length; i++) {
         storelist_model emObject= storelist_model(
@@ -496,7 +535,7 @@ class _AppPage03State extends State<AppPage03>   {
 
   }
 
-  Future<void> _onBarcodeScannerHandler(MethodCall call) async {
+  /*Future<void> _onBarcodeScannerHandler(MethodCall call) async {
     try{
       if(call.method == PointmobileScanner.ON_DECODE) {
         setState(() {
@@ -532,7 +571,7 @@ class _AppPage03State extends State<AppPage03>   {
     } catch(e) {
       print(e);
     }
-  }
+  }*/
 
 
   void _onDecode(MethodCall call) async {
@@ -560,11 +599,11 @@ class _AppPage03State extends State<AppPage03>   {
   }
 
 
-  void _onError(Exception error){
+  /*void _onError(Exception error){
     setState(() {
       _decodeResult = error.toString();
     });
-  }
+  }*/
 
 
   Widget _buildListCard(storelist_model storelist){
@@ -744,6 +783,26 @@ class _AppPage03State extends State<AppPage03>   {
             ],
           );
         });
+  }
+
+  void _showAlertDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              child: Text("확인"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void removeCardFromList(storelist_model storelistmodel) {
